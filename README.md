@@ -1,6 +1,8 @@
 # Concough Project
 
-------------------
+[![Generic badge](https://img.shields.io/badge/Python-2-blue.svg)](https://python.org/)
+[![Generic badge](https://img.shields.io/badge/Django-1.9.11-green.svg)](https://www.djangoproject.com/)
+
 This project is the backend section of greater project that was a startup that got about **+50k** users.
 
 ### Prerequisites
