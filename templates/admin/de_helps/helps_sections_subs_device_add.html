@@ -1,0 +1,74 @@
+{% extends 'admin/contest_layout.html' %}
+{% block title %}مدیریت راهنما - {{section.title}} | {{selected_sub.title}} | دستگاه جدید{% endblock %}
+{% block content %}
+{{ block.super }}
+{% load filters %}
+{% load afilters %}
+<div class="panel panel-default cpanel">
+    <div class="panel-heading">
+    <h5><span class="fa fa-desktop"></span>&nbsp;&nbsp;
+        <a href="{% url 'admin.home' %}">پنل مدیریت سامانه</a>&nbsp;&nbsp;
+        <span class="fa fa-angle-left small"></span>&nbsp;&nbsp;
+        <a href="{% url 'admin.help_manage.sections' %}">مدیریت راهنما</a>&nbsp;&nbsp;
+        <span class="fa fa-angle-left small"></span>&nbsp;&nbsp;
+        <a href="{% url 'admin.help_manage.sections.langs.list' unique_id=section.unique_id.hex %}">{{section.title}}</a>&nbsp;&nbsp;
+        <span class="fa fa-angle-left small"></span>&nbsp;&nbsp;
+        <a href="{% url 'admin.help_manage.sections.langs.subs' unique_id=section.unique_id.hex lang=lang %}">{{section.data|dict_value:lang|dict_value:'title'}}</a>&nbsp;&nbsp;
+        <span class="fa fa-angle-left small"></span>&nbsp;&nbsp;
+        <a href="{% url 'admin.help_manage.sections.langs.subs' unique_id=section.unique_id.hex lang=lang  %}?q={{selected_sub.slug}}">{{selected_sub.title}}</a>&nbsp;&nbsp;
+        <span class="fa fa-angle-left small"></span>&nbsp;&nbsp;
+دستگاه جدید
+    </h5>
+        </div>
+    <div class="panel-body">
+        <br>
+    <div class="container-fluid">
+        <br>
+    <div class="">
+    <div class="col-sm-12">
+        <form class="form-horizontal" method="post" action="{% url 'admin.help_manage.sections.langs.subs.devices.add' unique_id=section.unique_id.hex lang=lang sub_unique_id=selected_sub.unique_id.hex %}">
+            {% csrf_token %}
+            {% if has_form_message %}
+                {% ifequal form_message 1 %}
+                    <div class="alert alert-danger text-center">
+                        مشخصات تکراری وارد شده است!
+                    </div>
+                {% endifequal %}
+            {% endif %}
+            <div class="form-group">
+                <label class="control-label col-sm-2" for="{{ form.device.id_for_label }}">دستگاه:</label>
+                <div class="col-sm-3">
+                {{ form.device }}
+                </div>
+                <div class="col-sm-6">
+                    <span class="text-danger">{{ form.deivce.errors.0 }}</span>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="control-label col-sm-2" for="{{ form.dexcription.id_for_label }}">توضیحات:</label>
+                <div class="col-sm-10">
+                {{ form.description }}
+                </div>
+                <div class="col-sm-3">
+                    <span class="text-danger">{{ form.description.errors.0 }}</span>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-sm-2">&nbsp;</div>
+                <div class="col-sm-2">
+                    <button type="submit" class="btn btn-primary btn-block">اضافه</button>
+                </div>
+                <div class="col-sm-1">
+                    <a href="{% url 'admin.help_manage.sections.langs.subs' unique_id=section.unique_id.hex lang=lang  %}?q={{selected_sub.slug}}" class="btn btn-link">بازگشت</a>
+                </div>
+            </div>
+        </form>
+    </div>
+    </div>
+    </div></div></div>
+{%  endblock %}
+{% block js %}
+{% load static %}
+<script type="text/javascript" src="{% static 'ckeditor/ckeditor-init.js' %}"></script>
+<script type="text/javascript" src="{% static 'ckeditor/ckeditor/ckeditor.js' %}"></script>
+{% endblock %}

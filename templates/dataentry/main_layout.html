@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+{% load staticfiles %}
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title>{% block title %}کنکوق{% endblock %}</title>
+    <meta name="viewport" content="width=device-width, minimum-scale=1.0, initial-scale=1.0, user-scalable=yes">
+    <link rel="stylesheet" type="text/css" href="https://cdn.zhycan.com/css/bootstrap-3.min.css">
+    <link rel="stylesheet" type="text/css" href="https://cdn.zhycan.com/css/bootstrap-rtl-3.min.css">
+    <link rel="stylesheet" type="text/css" href="https://cdn.zhycan.com/css/font-awesome.min.css">
+    <link rel="stylesheet" type="text/css" href="https://cdn.zhycan.com/concough/css/general.css">
+</head>
+<body>
+<div class="container-fluid">
+    <header class="">
+        <nav class="navbar navbar-default" style="border: none; background: inherit; background: #2b669a">
+            <div class="container-fluid">
+                <div class="navbar-header">
+                    <a class="navbar-brand" href="{% url 'main.admin.home' %}"
+                       style="font-size: 2em; padding-right: 50px; color: #FFF; text-shadow: 1px 0px #000">کنکوق</a>
+
+                </div>
+                <p class="navbar-text navbar-left" style="color: #CCC">سلام ...&nbsp;
+                    <a class="user-info" tabindex="0" role="button" data-toggle="popover" data-trigger="focus"
+                       data-placement="bottom" data-html="true" href="#" style="color: #FFF">{{ user.get_full_name }}</a>
+                    <div class="user-info-popover hide">
+                            <a class="" href="{% url 'main.auth.passchange' %}">تغییر گذرواژه</a>
+                            <hr>
+                            <a class="btn btn-danger text-center" href="{% url 'main.auth.logout' %}"><span class="fa fa-power-off"></span>&nbsp;&nbsp;&nbsp;<span>خروج</span></a>
+                            </div>
+                {% comment %}
+                    &nbsp;&nbsp;&nbsp;<a class="btn btn-danger fa fa-power-off" href="{% url 'main.auth.logout' %}" data-toggle="tooltip"
+                               data-placement="bottom" data-original-title="خروج"></a>
+                {% endcomment %}
+                </p>
+            </div>
+        </nav>
+    </header>
+    <div class="row">
+        <div style="margin-right: 50px;">
+            <div class="col-md-2 col-sm-4" style="color: #AAA; padding: 7px 0px;"><h4><span
+                    class="fa fa-desktop"></span>&nbsp;&nbsp;&nbsp;پنل مدیریت سامانه</h4></div>
+        </div>
+    </div>
+    {% load cache %}
+    <div class="row">
+        <div style="margin-left: 50px; margin-right: 50px;">
+            <div class="col-md-2 col-sm-4" id="left-menu">
+                {% cache 3600 sidebar user.username|add:msel %}
+                <div class="list-group">
+                    {% for x in menul %}
+                        {% if x.4 in perms %}
+                        {% ifequal x.0 msel %}
+                            {% with "active" as cls %}
+                                <a href="{% url x.2 %}" class="list-group-item {{ cls }}"><span
+                                        class="{{ x.3 }}"></span>&nbsp;&nbsp;&nbsp;&nbsp;{{ x.1 }}</a>
+                            {% endwith %}
+                        {% else %}
+                            <a href="{% url x.2 %}" class="list-group-item"><span class="{{ x.3 }}"></span>&nbsp;&nbsp;&nbsp;&nbsp;{{ x.1 }}
+                            </a>
+                        {% endifequal %}
+                        {% endif %}
+                    {% endfor %}
+                </div>
+                {% endcache %}
+            </div>
+            <div class="col-md-10 col-sm-8 main-frame" style="padding-right: 50px; min-height: 400px">
+                {% block content %}{%  endblock %}
+                <br>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript" rel="script" src="https://cdn.zhycan.com/js/jquery-3.2.1.min.js"></script>
+<script type="text/javascript" rel="script" src="https://cdn.zhycan.com/js/tether.min.js"></script>
+<script type="text/javascript" rel="script" src="https://cdn.zhycan.com/js/modernizr.min.js"></script>
+<script type="text/javascript" rel="script" src="https://cdn.zhycan.com/js/bootstrap-3.min.js"></script>
+<script type="text/javascript" rel="script" src="https://cdn.zhycan.com/concough/js/general.js"></script>
+
+</body>
+</html>

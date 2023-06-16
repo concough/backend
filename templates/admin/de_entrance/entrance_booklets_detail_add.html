@@ -1,0 +1,107 @@
+{% extends 'admin/contest_layout.html' %}
+{% block title %}کنکورها - جدید{% endblock %}
+{% block content %}
+{{ block.super }}
+<div class="panel panel-default cpanel">
+    <div class="panel-heading">
+    <h5><span class="fa fa-desktop"></span>&nbsp;&nbsp;
+        <a href="{% url 'admin.home' %}">پنل مدیریت سامانه</a>&nbsp;&nbsp;
+        <span class="fa fa-angle-left small"></span>&nbsp;&nbsp;
+        <a href="{% url 'admin.de_entrance' %}">کنکورها</a>&nbsp;&nbsp;
+        <span class="fa fa-angle-left small"></span>&nbsp;&nbsp;
+        {% if has_error %}
+            خطا
+        {% else %}
+            <a href="{% url 'admin.de_entrance.booklets' pk=entrance_booklet.entrance.id %}">
+            {{ entrance_booklet.entrance.entrance_set.title }}: <span class="text-muted">
+            {{ entrance_booklet.entrance.entrance_type.title }}-{{ entrance_booklet.entrance.organization.title }} ({{ entrance_booklet.entrance.year }}/{{ entrance_booklet.entrance.month }})</span></a>&nbsp;&nbsp;
+            <span class="fa fa-angle-left small"></span>&nbsp;&nbsp;
+            <a href="{% url 'admin.de_entrance.booklets.list' pk=entrance_booklet.entrance.id %}">{{ entrance_booklet.title }}</a>&nbsp;&nbsp;
+            <span class="fa fa-angle-left small"></span>&nbsp;&nbsp;
+            ماده درسی جدید
+        {% endif %}
+    </h5>
+    </div><br>
+    <div class="panel-body"><br>
+    <div class="container-fluid">
+    {% if has_error %}
+        {% ifequal error_no 1 %}
+        <div class="alert alert-danger" role="alert">
+             چنین رکوردی موجود نیست
+            <br>
+            <a href="{% url 'admin.de_entrance' %}" class="btn btn-danger">بازگشت</a>
+        </div>
+        {% endifequal %}
+    {% else %}
+    <br>
+    <div class="">
+    <div class="col-sm-12">
+        <form class="form-horizontal" method="post" action="{% url 'admin.de_entrance.booklets.detail.add' pk=entrance_booklet.id %}">
+            {% csrf_token %}
+            {% if has_form_message %}
+                {% ifequal form_message 1 %}
+                    <div class="alert alert-danger text-center">
+                        مشخصات تکراری وارد شده است!
+                    </div>
+                {% endifequal %}
+            {% endif %}
+            <div class="form-group">
+                <label class="control-label col-sm-2" for="{{ form.lesson.id_for_label }}">درس:</label>
+                <div class="col-sm-4">
+                {{ form.lesson }}
+                </div>
+                <div class="col-sm-6">
+                    <span class="text-danger">{{ form.lesson.errors.0 }}</span>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="control-label col-sm-2" for="{{ form.q_from.id_for_label }}">از شماره:</label>
+                <div class="col-sm-2">
+                {{ form.q_from }}
+                </div>
+                <div class="col-sm-6">
+                    <span class="text-danger">{{ form.q_from.errors.0 }}</span>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="control-label col-sm-2" for="{{ form.q_to.id_for_label }}">تا شماره:</label>
+                <div class="col-sm-2">
+                {{ form.q_to }}
+                </div>
+                <div class="col-sm-4">
+                    <span class="text-danger">{{ form.q_to.errors.0 }}</span>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="control-label col-sm-2" for="{{ form.order.id_for_label }}">ردیف:</label>
+                <div class="col-sm-2">
+                {{ form.order }}
+                </div>
+                <div class="col-sm-4">
+                    <span class="text-danger">{{ form.order.errors.0 }}</span>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="control-label col-sm-2" for="{{ form.duration.id_for_label }}">مدت زمان:</label>
+                <div class="col-sm-2">
+                {{ form.duration }}
+                </div>
+                <div class="col-sm-4">
+                    <span class="text-danger">{{ form.duration.errors.0 }}</span>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-sm-2">&nbsp;</div>
+                <div class="col-sm-2">
+                    <button type="submit" class="btn btn-primary btn-block">اضافه</button>
+                </div>
+                <div class="col-sm-1">
+                    <a href="{% url 'admin.de_entrance.booklets.list' pk=entrance_booklet.entrance.id %}" class="btn btn-link">بازگشت</a>
+                </div>
+            </div>
+        </form>
+    </div>
+    </div>
+    {% endif %}
+    </div></div></div>
+{%  endblock %}

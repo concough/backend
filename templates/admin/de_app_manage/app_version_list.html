@@ -1,0 +1,75 @@
+{% extends 'admin/contest_layout.html' %}
+{% block title %}مدیریت اپلیکیشن ها - ورژن ها{% endblock %}
+{% block content %}
+{{ block.super }}
+<div class="panel panel-default cpanel">
+    <div class="panel-heading">
+    <h5><span class="fa fa-desktop"></span>&nbsp;&nbsp;
+        <a href="{% url 'admin.home' %}">پنل مدیریت سامانه</a>&nbsp;&nbsp;
+        <span class="fa fa-angle-left small"></span>&nbsp;&nbsp;
+        <a href="{% url 'admin.app_manage' %}">اپلیکیشن</a>&nbsp;&nbsp;
+        <span class="fa fa-angle-left small"></span>&nbsp;&nbsp;
+ورژن اپ ها
+    </h5>
+        </div><br>
+    <div class="panel-body"><br>
+    <br>
+    <div class="container-fluid">
+    <div class="row">
+    <div class="col-sm-6 col-sm-push-6">
+                        <div class="panel panel-success">
+                <div class="panel-heading">ورژن جدید</div>
+                <div class="panel-body">
+
+        <form class="form-inline" method="post" action="{% url 'admin.app_manage.versions' %}">
+            {% csrf_token %}
+            {% if has_form_message %}
+                {% ifequal form_message 1 %}
+                    <div class="alert alert-danger text-center">
+                        مشخصات تکراری وارد شده است!
+                    </div>
+                {% endifequal %}
+            {% endif %}
+            <div class="form-group">
+                <label class="sr-only" for="{{ form.device.id_for_label }}">دستگاه</label>
+                {{ form.device }}
+            </div>
+            <div class="form-group">
+                <label class="sr-only" for="{{ form.version.id_for_label }}">ورژن</label>
+                {{ form.version }}
+            </div>
+            <button type="submit" class="btn btn-success">اضافه</button>&nbsp;&nbsp;&nbsp;
+            <span class="text-danger">{{ form.device.errors.0 }}</span>
+        </form></div></div>
+    </div>
+    <div class="col-sm-6 col-sm-pull-6">
+        {% if versions %}
+        <table class="table table-hover">
+            <thead>
+                <tr>
+                    <th>دستگاه</th>
+                    <th>ورژن</th>
+                    <th>&nbsp;</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for vers in versions %}
+                    <tr>
+                        <td class="col-md-4 col-sm-4">
+                            {{ vers.device }}
+                        </td>
+                        <td class="col-md-4 col-sm-4">
+                            {{ vers.version }}
+                        </td>
+                        <td><a class="btn btn-xs text-danger glyphicon glyphicon-off" href="{% url 'admin.app_manage.versions.del' pk=vers.id %}"></a></td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        {% else %}
+            <div class="text-muted text-center">رکوردی ثبت نشده است!</div>
+        {% endif %}
+    </div>
+    </div>
+    </div></div></div>
+{%  endblock %}

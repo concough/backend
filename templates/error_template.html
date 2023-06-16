@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+{% load staticfiles %}
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title>{% block title %}{% endblock %}</title>
+    <link rel="apple-touch-icon" sizes="57x57" href="https://cdn.zhycan.com/zhycan/images/favicon/apple-icon-57x57.png">
+    <link rel="apple-touch-icon" sizes="60x60" href="https://cdn.zhycan.com/zhycan/images/favicon/apple-icon-60x60.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="https://cdn.zhycan.com/zhycan/images/favicon/apple-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="76x76" href="https://cdn.zhycan.com/zhycan/images/favicon/apple-icon-76x76.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="https://cdn.zhycan.com/zhycan/images/favicon/apple-icon-114x114.png">
+    <link rel="apple-touch-icon" sizes="120x120" href="https://cdn.zhycan.com/zhycan/images/favicon/apple-icon-120x120.png">
+    <link rel="apple-touch-icon" sizes="144x144" href="https://cdn.zhycan.com/zhycan/images/favicon/apple-icon-144x144.png">
+    <link rel="apple-touch-icon" sizes="152x152" href="https://cdn.zhycan.com/zhycan/images/favicon/apple-icon-152x152.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="https://cdn.zhycan.com/zhycan/images/favicon/apple-icon-180x180.png">
+    <link rel="icon" type="image/png" sizes="192x192"  href="https://cdn.zhycan.com/zhycan/images/favicon/android-icon-192x192.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="https://cdn.zhycan.com/zhycan/images/favicon/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="96x96" href="https://cdn.zhycan.com/zhycan/images/favicon/favicon-96x96.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="https://cdn.zhycan.com/zhycan/images/favicon/favicon-16x16.png">
+    <link rel="manifest" href="https://cdn.zhycan.com/zhycan/images/favicon/manifest.json">
+    <meta name="msapplication-TileColor" content="#ffffff">
+    <meta name="msapplication-TileImage" content="https://cdn.zhycan.com/zhycan/images/favicon/ms-icon-144x144.png">
+    <meta name="theme-color" content="#ffffff">
+    <link rel="stylesheet" type="text/css" href="https://cdn.zhycan.com/css/bootstrap-4.min.css">
+    <link rel="stylesheet" type="text/css" href="https://cdn.zhycan.com/concough/css/style.css">
+
+</head>
+<body>
+<div class="page">
+    <header>
+
+<nav class="navbar navbar-toggleable-md navbar-light navbar-white">
+    <div class="container text-center">
+        <a class=" navbar-brand mr-auto "  href="/">
+    <!--        <img src="https://www.google.com/images/branding/product/ico/googleg_lodp.ico" width="30" height="30" class="d-inline-block align-middle mr-2" alt="">-->
+            <span class="navbar-text h2 text-400 text-center"  >
+                <span class="text-primary">z</span><span class="text-success">h</span><span class="text-warning">y</span><span class="text-danger">c</span><span class="text-muted">a</span><span class="text-black">n</span>
+            </span>
+        </a>
+                <ul class="nav navbar-nav ml-auto ">
+                    <li class="nav-item h4" style="font-weight: 400; letter-spacing: -1.5px;">Concough</li>
+                    </ul>
+
+
+        </div>
+</nav>
+    </header>
+    <br>
+    <div class="container text-center">
+        {% block content %}{% endblock %}
+    </div>
+</div>
+<script type="text/javascript" rel="script" src="https://cdn.zhycan.com/js/jquery-3.2.1.min.js"></script>
+<script type="text/javascript" rel="script" src="https://cdn.zhycan.com/js/tether.min.js"></script>
+<script type="text/javascript" rel="script" src="https://cdn.zhycan.com/js/modernizr.min.js"></script>
+<script type="text/javascript" rel="script" src="https://cdn.zhycan.com/js/bootstrap-4.min.js"></script>
+
+
+</body>
+</html>

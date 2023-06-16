@@ -1,0 +1,258 @@
+{% extends 'admin/contest_layout.html' %}
+{% block title %}
+    {% if has_error %}
+        کنکور - بروز خطا
+    {% else %}
+        کنکور - {{ entrance.entrance_set.title }}: {{ entrance.entrance_type.title }} ({{ entrance.year }}/{{ entrance.month }})
+    {% endif %}
+{% endblock %}
+{% block content %}
+{{ block.super }}
+<div class="panel panel-default cpanel">
+    <div class="panel-heading">
+    <h5><span class="fa fa-desktop"></span>&nbsp;&nbsp;
+        <a href="{% url 'admin.home' %}">پنل مدیریت سامانه</a>&nbsp;&nbsp;
+        <span class="fa fa-angle-left small"></span>&nbsp;&nbsp;
+        <a href="{% url 'admin.de_entrance' %}">کنکورها</a>&nbsp;&nbsp;
+        <span class="fa fa-angle-left small"></span>&nbsp;&nbsp;
+        {% if has_error %}
+            خطا
+        {% else %}
+            {{ entrance.entrance_set.title }}: <span class="text-muted">{{ entrance.entrance_type.title }} ({{ entrance.year }}/{{ entrance.month }})</span>
+        {% endif %}
+    </h5>
+    </div>
+    <br>
+    <div class="panel-body"><br>
+    <div class="container-fluid">
+    {% if has_error %}
+        {% ifequal error_no 1 %}
+        <div class="alert alert-danger" role="alert">
+             چنین رکوردی موجود نیست
+            <br>
+            <a href="{% url 'admin.de_entrance' %}" class="btn btn-danger">بازگشت</a>
+        </div>
+        {% endifequal %}
+    {% else %}
+            {% load static %}
+            {% load filters %}
+            {% if entrance.entrance_set.image %}
+            <img class="img-thumbnail img-circle pull-right" src="{{ entrance.entrance_set.image.url }}" alt="" width="120" height="120" style="margin-left: 15px;">
+                {%  else %}
+            <img class="img-thumbnail img-circle pull-right" src="{% static 'image/noimage.jpg' %}" alt="no image" style="margin-left: 15px;" width="120" height="120">
+                {% endif %}
+            <div class="container-fluid" style="overflow: hidden">
+                {% if 'main.de_entrance_publish' in perms %}
+                <div class="pull-left">
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <span class="text-muted">
+                            پنل وظایف
+                                </span>
+                            </div>
+                        <div class="panel-body">
+                            {% if entrance.is_editing %}
+                                <a href="{% url 'admin.de_entrance.is_editing.change' pk=entrance.id state='done' %}" class="btn btn-success btn-block">اتمام ویرایش</a>
+                            {% else %}
+                                <a href="{% url 'admin.de_entrance.is_editing.change' pk=entrance.id state='start' %}" class="btn btn-warning btn-block">شروع ویرایش</a>
+                            {% endif %}
+                            <button type="button" class="btn btn-primary btn-block"
+                            data-toggle="modal" data-target="#chooseSupervisor"
+                            data-title="کنکور - {{ entrance.entrance_set.title }}: {{ entrance.entrance_type.title }} ({{ entrance.year }}/{{ entrance.month }})"
+                            data-entrance_id="{{entrance.id}}">تعیین پنل وظایف</button>
+                            {% if entrance.assigned_to_task %}
+                            <a href="{% url 'admin.de_jobs.entrance.detail' unique_id=entrance.unique_key.hex %}" class="btn btn-info btn-block">مشاهده پنل وظایف</a>
+                            {% endif %}
+                        </div>
+                        </div>
+
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <span class="text-muted">
+                            آخرین تاریخ انتشار:
+                                {% if entrance.published %}
+                                    <b>{{ entrance.last_published|jalali }}</b>
+                                    {% else %}
+                                    انتشار نیافته
+                                    {% endif %}
+                            </span>
+                        </div>
+                        <div class="panel-body">
+                            <a href="{% url 'admin.de_entrance.publish' pk=entrance.id %}" class="btn btn-primary btn-block">بسته بندی</a>
+                        </div>
+                        {% if entrance.published %}
+                        <div class="panel-footer">
+                            <a href="{% url 'admin.de_entrance.publish.list' pk=entrance.id %}">لیست بسته های منتشره</a><br>
+                            <a href="{% url 'admin.de_entrance.publish.reset' pk=entrance.id %}">ریست</a>
+                        </div>
+                        {% endif %}
+                    </div>
+                    {% if entrance.published %}
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <span class="text-muted">
+                            انتشار بسته های تگ:
+                            </span>
+                        </div>
+                        <div class="panel-body">
+                            <a href="{% url 'admin.de_entrance.tags.packages.list' pk=entrance.id %}" >لیست بسته ها</a>
+                        </div>
+                    </div>
+                    {% endif %}
+                </div>
+                    {% endif %}
+                <h3><a href="{% url 'admin.de_entrance.booklets' pk=entrance.id %}">{{ entrance.entrance_set.title }}&nbsp;({{ entrance.entrance_set.group.title }})</a>
+                </h3>
+                <h5>{{ entrance.entrance_type.title }} - {{ entrance.organization.title }}</h5>
+                <h5 class="text-success">سال {{ entrance.year }}&nbsp;ماه {{ entrance.month}}</h5>
+                <br>
+                <br>
+                <br>
+                <br>
+                <div class="row">
+                    <div class="col-lg-6 col-md-12 col-sm-12">
+                <h4 class="">
+                    <span class="search-box">
+
+                        <a href="{% url 'admin.de_entrance.extra_data.add' pk=entrance.id %}" class="btn btn-success pull-left">اضافه کردن اطلاعات جدید</a>
+                        <a href="{% url 'admin.de_entrance.extra_data.clear' pk=entrance.id %}" class="btn btn-danger pull-left">پاک کردن</a>
+                    </span>
+                    <span class="fa fa-info-circle text-success"></span>&nbsp;&nbsp;اطلاعات اضافی کنکور
+                </h4>
+                    <hr>
+                        {% if edata %}
+                            {% for key, value in edata.items %}
+                                <span class="text-muted">{{ key }}:</span>&nbsp;&nbsp;&nbsp;&nbsp;<strong>{{ value }}</strong><br>
+                            {% endfor %}
+                        {% else %}
+                            <div class="text-muted text-center">هیچ اطلاعاتی ثبت نشده است!</div>
+                        {% endif %}
+                <br>
+                <br>
+                <br>
+                <br>
+                <br>
+                    </div>
+
+                </div>
+                <h4 class="">
+                    <span class="search-box">
+                        <a href="{% url 'admin.de_entrance.booklets.add' pk=entrance.id %}" class="btn btn-success pull-left">دفترچه جدید</a>
+                    </span>
+                    <span class="fa fa-file-text text-success"></span>&nbsp;&nbsp;دفترچه ها
+                </h4>
+            <hr>
+            <div class="container-fluid">
+                {% if booklets %}
+                <div class="panel-group" id="accordion">
+                    {% for booklet in booklets %}
+                    <div class="panel ">
+                        <div class="panel-heading" id="heading{{ booklet.id }}">
+                          <h4 class="panel-title">
+                            <a class="accordion-toggle btn-link" data-toggle="collapse" href="#collapse{{ booklet.id }}">
+                                <span>{{ booklet.title }}</span>
+                            </a>
+                              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                <span class="fa fa-clock-o text-info"></span>
+                                {{ booklet.duration }}&nbsp;دقیقه
+                              {% if booklet.optional %}
+                              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                              <span class="text-info">--- اختیاری ---</span>
+                                {% endif %}
+                              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                <a href="{% url 'admin.de_entrance.booklets.del' pk=booklet.id %}" class="btn btn-sm btn-default text-danger fa fa-power-off"
+                                    data-toggle="tooltip" data-placement="top" data-original-title="حذف"></a>
+
+                          </h4>
+                        </div>
+                        <div id="collapse{{ booklet.id }}" class="panel-collapse collapse in" aria-labelledby="heading{{ booklet.id }}">
+                          <div class="panel-body">
+                              {% if booklet.bookletdetails %}
+                                <div class="container-fluid">
+                                    <a href="{% url 'admin.de_entrance.booklets.detail.add' pk=booklet.id %}">ماده درسی جدید</a>
+                                    <br><br>
+                                    <table class="table table-hover">
+                                        <thead>
+                                            <tr>
+                                                <th>ردیف</th>
+                                                <th>ماده درسی</th>
+                                                <th>از سوال</th>
+                                                <th>تا سوال</th>
+                                                <th>تعداد سوالات</th>
+                                                <th>زمان</th>
+                                                <th>عملیات</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            {% for det in booklet.bookletdetails.all %}
+                                                <tr>
+                                                    <td>{{ det.order }}</td>
+                                                    <td>
+                                                        {% if 'main.de_questions' in perms %}
+                                                        <a href="{% url 'admin.de_entrance.questions.list' pk=det.id %}">{{ det.lesson.full_title }}</a>
+                                                        {% else %}
+                                                            {{ det.lesson.full_title }}
+                                                        {% endif %}
+                                                    </td>
+                                                    <td>{{ det.q_from }}</td>
+                                                    <td>{{ det.q_to }}</td>
+                                                    <td>{{ det.q_count }}</td>
+                                                    <td>{{ det.duration}}</td>
+                                                    <td><a href="{% url 'admin.de_entrance.booklets.detail.del' pk=det.id %}" class="btn btn-sm btn-default text-danger fa fa-power-off"
+                                    data-toggle="tooltip" data-placement="top" data-original-title="حذف"></a></td>
+                                                </tr>
+                                            {% endfor %}
+                                        </tbody>
+                                    </table>
+                                </div>
+                              {% else %}
+                                  <div class="text-center text-muted">ماده درسی برای این دفترچه ثبت نشده است</div>
+                              {% endif %}
+                          </div>
+                        </div>
+                      </div>
+                    <br><br><br><br>
+                    {% endfor %}
+                </div>
+                {% else %}
+                    <div class="text-center text-muted">دفترچه ای موجود نیست</div>
+                {% endif %}
+                </div>
+            </div>
+    {% endif %}
+            <div class="modal fade" id="chooseSupervisor" tabindex="-1" role="dialog" aria-labelledby="chooseSupervisorLabel">
+              <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <form class="form-horizontal" method="post" action="{% url 'admin.de_entrance.create_job' %}" enctype="multipart/form-data">
+                        {% csrf_token %}
+                  <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="exampleModalLabel"></h4>
+                  </div>
+                  <div class="modal-body">
+                        {{job_assign_form.entrance_id}}
+                        <div class="form-group">
+                            <label class="control-label col-sm-3" for="{{ job_assign_form.job_supervisor.id_for_label }}">مسئول پنل وظایف:</label>
+                            <div class="col-sm-4">
+                            {{ job_assign_form.job_supervisor }}
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-sm-3" for="{{ job_assign_form.orig_file.id_for_label }}">فایل:</label>
+                            <div class="col-sm-6">
+                            {{ job_assign_form.orig_file }}
+                            </div>
+                        </div>
+
+                  </div>
+                  <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">بیخیال</button>
+                    <button type="submit" class="btn btn-primary">ذخیره</button>
+                  </div>
+                    </form>
+                </div>
+              </div>
+            </div>
+
+    </div></div></div>
+{% endblock %}

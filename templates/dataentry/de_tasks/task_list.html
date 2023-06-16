@@ -1,0 +1,74 @@
+{% extends 'dataentry/main_layout.html' %}
+{% block title %}کارها{% endblock %}
+{% block content %}
+    <h3><span class="fa fa-desktop"></span>&nbsp;&nbsp;
+        <a href="{% url 'dataentry.home' %}">پنل مدیریت سامانه</a>&nbsp;&nbsp;
+        <span class="fa fa-angle-left small"></span>&nbsp;&nbsp;
+        کارها
+    </h3>
+    <hr>
+    <div class="container-fluid">
+    <h4>
+        <span class="fa fa-list text-success"></span>&nbsp;&nbsp;<span class="">لیست</span>
+    </h4>
+    <br>
+    <div class="row">
+    <div class="col-sm-12">
+        {% if tasks %}
+            <nav class="">
+            <ul class="pager pager-lg">
+                    <li><a href="?page=1"><span>&rarr;</span>&nbsp;ابتدا</a></li>
+                    {% if tasks.has_previous %}
+                        <li><a href="?page={{ tasks.previous_page_number }}">قبلی</a></li>
+                    {% else %}
+                        <li class="disabled"><a href="#">قبلی</a></li>
+                    {% endif %}
+
+                    &nbsp;&nbsp;&nbsp;&nbsp;صفحه {{ tasks.number }} از {{ tasks.paginator.num_pages }}&nbsp;&nbsp;&nbsp;&nbsp;
+
+                    {% if tasks.has_next %}
+                        <li><a href="?page={{ tasks.next_page_number }}">بعدی</a></li>
+                    {% else %}
+                        <li class="disabled"><a href="#">بعدی</a></li>
+                    {% endif %}
+                    <li><a href="?page={{ tasks.paginator.num_pages }}">انتها&nbsp;<span>&larr;</span></a></li>
+            </ul>
+            </nav>
+
+        <table class="table table-hover">
+            <thead>
+                <tr>
+                    <th>کنکور</th>
+                    <th>زمان ایجاد</th>
+                    <th>عملیات</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% load static %}
+                {% load filters %}
+                {% for task in tasks %}
+                    <tr>
+                        <td class="col-md-6 col-sm-5">
+                            <a href="{% url 'dataentry.tasks.details' pk=task.id %}">
+                            {{ task.entrance.organization.title }}-{{ task.entrance.entrance_type.title }}:
+                            {{ task.entrance.entrance_set.title }}&nbsp;{{ task.entrance.year }}/{{ task.entrance.month }}
+                                </a>
+                        </td>
+                        <td>
+                            {{ task.create_time|jalali }}
+                        </td>
+                        <td class="col-sm-1 col-sm-1">
+                            <a href="{% url 'dataentry.messages' %}?tid={{ task.id }}" class="btn btn-sm btn-default text-info fa fa-send-o"
+                                    data-toggle="tooltip" data-placement="top" data-original-title="پیغام ها"></a>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        {% else %}
+            <div class="text-muted text-center">رکوردی ثبت نشده است!</div>
+        {% endif %}
+    </div>
+    </div>
+    </div>
+{%  endblock %}

@@ -1,0 +1,68 @@
+{% extends 'admin/main_layout.html' %}
+{% block title %}کارها - جدید{% endblock %}
+{% block content %}
+    <h3><span class="fa fa-desktop"></span>&nbsp;&nbsp;
+        <a href="{% url 'admin.home' %}">پنل مدیریت سامانه</a>&nbsp;&nbsp;
+        <span class="fa fa-angle-left small"></span>&nbsp;&nbsp;
+        <a href="{% url 'admin.tasks' %}">کارها</a>&nbsp;&nbsp;
+        <span class="fa fa-angle-left small"></span>&nbsp;&nbsp;
+        جدید
+    </h3>
+    <hr>
+    <div class="container-fluid">
+    <h4>
+    <span class="fa fa-plus text-success"></span>&nbsp;&nbsp;<span class="">مشخصات کار جدید</span>
+    </h4>
+    <br>
+    <div class="">
+    <div class="col-sm-12">
+        <form class="form-horizontal" method="post" action="{% url 'admin.tasks.add' %}">
+            {% csrf_token %}
+            {% if has_form_message %}
+                {% ifequal form_message 1 %}
+                    <div class="alert alert-danger text-center">
+                        مشخصات تکراری وارد شده است!
+                    </div>
+                {% endifequal %}
+            {% endif %}
+            <div class="form-group">
+                <label class="control-label col-sm-2" for="{{ form.owner.id_for_label }}">مسئول:</label>
+                <div class="col-sm-3">
+                {{ form.owner }}
+                </div>
+                <div class="col-sm-6">
+                    <span class="text-danger">{{ form.owner.errors.0 }}</span>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="control-label col-sm-2" for="{{ form.user.id_for_label }}">ویرایشگر</label>
+                <div class="col-sm-4">
+                {{ form.user }}
+                </div>
+                <div class="col-sm-4">
+                    <span class="text-danger">{{ form.user.errors.0 }}</span>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="control-label col-sm-2" for="{{ form.entrance.id_for_label }}">کنکور:</label>
+                <div class="col-sm-6">
+                {{ form.entrance }}
+                </div>
+                <div class="col-sm-4">
+                    <span class="text-danger">{{ form.entrance.errors.0 }}</span>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-sm-2">&nbsp;</div>
+                <div class="col-sm-2">
+                    <button type="submit" class="btn btn-primary btn-block">اضافه</button>
+                </div>
+                <div class="col-sm-1">
+                    <a href="{% url 'admin.tasks' %}" class="btn btn-link">بازگشت</a>
+                </div>
+            </div>
+        </form>
+    </div>
+    </div>
+    </div>
+{%  endblock %}

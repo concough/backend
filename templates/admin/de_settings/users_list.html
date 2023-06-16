@@ -1,0 +1,93 @@
+{% extends 'admin/contest_layout.html' %}
+{% block title %}مدیریت کاربران{% endblock %}
+{% block content %}
+{{ block.super }}
+<div class="panel panel-default cpanel">
+    <div class="panel-heading">
+    <h5><span class="fa fa-desktop"></span>&nbsp;&nbsp;
+        <a href="{% url 'admin.home' %}">پنل مدیریت سامانه</a>&nbsp;&nbsp;
+        <span class="fa fa-angle-left small"></span>&nbsp;&nbsp;
+        <a href="{% url 'admin.de_settings' %}">تنظیمات</a>&nbsp;&nbsp;
+        <span class="fa fa-angle-left small"></span>&nbsp;&nbsp;
+        مدیریت کاربران
+    </h5>
+        </div><br>
+    <div class="panel-body"><br>
+            <div class="container-fluid">
+    <div role="tabpanel">
+      <ul class="nav nav-tabs" role="tablist">
+        <li role="presentation" class="active"><a href="{% url 'admin.de_settings.user_mgmt' %}"  role="tab">کاربران</a></li>
+        <li role="presentation"><a href="{% url 'admin.de_settings.user_mgmt.checker_state' %}"  role="tab">مدیریت وضعیت کاربران بررسی کننده</a></li>
+        <li role="presentation"><a href="{% url 'admin.de_settings.user_mgmt.financial' %}"  role="tab">اطلاعات مالی کاربران</a></li>
+
+      </ul>
+    </div>
+    <br><br>
+
+    <div class="container-fluid">
+    <h4>
+        <span class="search-box">
+                <form method="post">
+                    {% csrf_token %}
+            <div class="input-group col-sm-3 pull-left">
+                    <input placeholder="جستجو" type="text" class="form-control" name="q" value="" autofocus="autofocus">
+                    <div class="input-group-addon"><span class=" fa fa-search"></span></div>
+                    <button type="submit" class="hidden"></button>
+            </div>
+                </form>
+            <a href="{% url 'admin.de_settings.user_mgmt.add' %}" class="btn btn-success pull-left">کاربر جدید</a>
+        </span>
+        <br>
+    </h4>
+    <br><br>
+    <div class="row">
+    <div class="col-sm-12">
+        {% if users %}
+        <table class="table table-hover">
+            <thead>
+                <tr>
+                    <th>نام کامل</th>
+                    <th>نام کاربری</th>
+                    <th>پست الکترونیکی</th>
+                    <th>گروه ها</th>
+                    <th>وضعیت</th>
+                    <th>عملیات</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for u in users %}
+                    <tr>
+                        <td>{{ u.get_full_name }}</td>
+                        <td>{{ u.username }}</td>
+                        <td>{{ u.email }}</td>
+                        <td>
+                            {% for g in u.groups.all %}
+                                {{ g.name }}،&nbsp;
+                            {% endfor %}
+                        </td>
+                        <td>
+                            {% if u.is_active %}
+                                <span class="text-info">فعال</span>
+                            {% else %}
+                                <span class="text-muted"><i>غیر فعال</i></span>
+                            {% endif %}
+                        </td>
+                        <td>
+                            <a class="btn btn-xs text-warning fa fa-pencil" href="{% url 'admin.de_settings.user_mgmt.edit' pk=u.id %}"></a>
+                            {% if u.is_active %}
+                            <a class="btn btn-xs text-danger fa fa-lock" href="{% url 'admin.de_settings.user_mgmt.deactivate' pk=u.id %}"></a>
+                            {% else %}
+                            <a class="btn btn-xs text-success fa fa-unlock" href="{% url 'admin.de_settings.user_mgmt.activate' pk=u.id %}"></a>
+                            {% endif %}
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        {% else %}
+            <div class="text-muted text-center">رکوردی ثبت نشده است!</div>
+        {% endif %}
+    </div>
+    </div></div>
+    </div></div></div>
+{%  endblock %}

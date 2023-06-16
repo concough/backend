@@ -1,0 +1,87 @@
+{% extends 'admin/contest_layout.html' %}
+{% block title %}اطلاعات مالی کاربران | جدید{% endblock %}
+{% block content %}
+{{ block.super }}
+<div class="panel panel-default cpanel">
+    <div class="panel-heading">
+    <h5><span class="fa fa-desktop"></span>&nbsp;&nbsp;
+        <a href="{% url 'admin.home' %}">پنل مدیریت سامانه</a>&nbsp;&nbsp;
+        <span class="fa fa-angle-left small"></span>&nbsp;&nbsp;
+        <a href="{% url 'admin.de_settings' %}">تنظیمات</a>&nbsp;&nbsp;
+        <span class="fa fa-angle-left small"></span>&nbsp;&nbsp;
+        <a href="{% url 'admin.de_settings.user_mgmt' %}">اطلاعات مالی کاربران</a>&nbsp;&nbsp;
+        <span class="fa fa-angle-left small"></span>&nbsp;&nbsp;
+        ویرایش اطلاعات
+    </h5>
+        </div><br>
+    <div class="panel-body"><br>
+            <div class="container-fluid">
+    <div role="tabpanel">
+      <ul class="nav nav-tabs" role="tablist">
+        <li role="presentation" ><a href="{% url 'admin.de_settings.user_mgmt' %}"  role="tab">کاربران</a></li>
+        <li role="presentation"><a href="{% url 'admin.de_settings.user_mgmt.checker_state' %}"  role="tab">مدیریت وضعیت کاربران بررسی کننده</a></li>
+        <li role="presentation" class="active"><a href="{% url 'admin.de_settings.user_mgmt.financial' %}"  role="tab">اطلاعات مالی کاربران</a></li>
+
+      </ul>
+    </div>
+    <br><br>
+
+    <h4>
+        <span class="fa fa-plus text-success"></span>&nbsp;&nbsp;<span class="">ویرایش اطلاعات:
+        <span class="text-primary">{{ userf.user }}</span>
+    </span>
+    </h4>
+
+    <div class="container-fluid">
+    <br><br>
+    <div class="">
+        <form class="form-horizontal" method="post" action="{% url 'admin.de_settings.user_mgmt.financial.edit' userf.id %}">
+            {% csrf_token %}
+            {% if has_form_message %}
+                {% ifequal form_message 1 %}
+                    <div class="alert alert-danger text-center">
+                        مشخصات تکراری وارد شده است!
+                    </div>
+                {% endifequal %}
+            {% endif %}
+            <div class="form-group">
+                <label class="control-label col-sm-2" for="{{ form.bank_name.id_for_label }}">نام بانک عامل:</label>
+                <div class="col-sm-3">
+                {{ form.bank_name }}
+                </div>
+                <div class="col-sm-4">
+                    <span class="text-danger">{{ form.bank_name.errors.0 }}</span>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="control-label col-sm-2" for="{{ form.bank_account_no.id_for_label }}">شماره حساب:</label>
+                <div class="col-sm-4">
+                {{ form.bank_account_no }}
+                </div>
+                <div class="col-sm-2">
+                    <span class="text-danger">{{ form.bank_account_no.errors.0 }}</span>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="control-label col-sm-2" for="{{ form.bank_shaba.id_for_label }}">شماره شبا:</label>
+                <div class="col-sm-6">
+                {{ form.bank_shaba }}
+                </div>
+                <div class="col-sm-2">
+                    <span class="text-danger">{{ form.bank_shaba.errors.0 }}</span>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-sm-2">&nbsp;</div>
+                <div class="col-sm-2">
+                    <button type="submit" class="btn btn-primary btn-block">ذخیره</button>
+                </div>
+                <div class="col-sm-1">
+                    <a href="{% url 'admin.de_settings.user_mgmt.financial' %}" class="btn btn-link">بازگشت</a>
+                </div>
+            </div>
+        </form>
+    </div>
+
+    </div></div></div></div>
+{%  endblock %}

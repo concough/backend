@@ -1,0 +1,45 @@
+{% extends 'admin/contest_layout.html' %}
+{% load staticfiles %}
+{% block title %}گزارش ها | جزئیات کمپین {{camp.title}}{% endblock %}
+{% block meta %}
+<meta http-equiv="refresh" content="600">
+{% endblock %}
+{% block content %}
+{{ block.super }}
+{% load filters %}
+{% load afilters %}
+<div class="panel panel-default cpanel">
+    <div class="panel-heading">
+    <h5><span class="fa fa-desktop"></span>&nbsp;&nbsp;
+        <a href="{% url 'admin.home' %}">پنل مدیریت سامانه</a>&nbsp;&nbsp;
+        <span class="fa fa-angle-left small"></span>&nbsp;&nbsp;
+        <a href="{% url 'admin.reports.campaign' %}">گزارش ها | کمپین</a>&nbsp;&nbsp;
+        <span class="fa fa-angle-left small"></span>&nbsp;&nbsp;
+        جزئیات {{camp.title}}
+    </h5>
+
+    </div>
+    <div class="panel-body">
+<br>
+    <div class="container-fluid"><br>
+        <br>
+    <div class="row">
+        <div class="col col-12">
+            <canvas id="myChart" height="100"></canvas>
+        </div>
+    </div>
+    </div></div></div>
+{%  endblock %}
+{% block js %}
+{{ block.super }}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.4.0/Chart.min.js"></script>
+<script type="text/javascript">
+var ctx = document.getElementById('myChart').getContext('2d');
+var myBarChart = new Chart(ctx, {
+    type: 'bar',
+    data: {{display_array|safe}},
+    options: {}
+});
+</script>
+
+{% endblock %}

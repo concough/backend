@@ -1,0 +1,116 @@
+{% extends 'admin/contest_layout.html' %}
+{% block title %}مدیریت کاربران | کاربر جدید{% endblock %}
+{% block content %}
+{{ block.super }}
+<div class="panel panel-default cpanel">
+    <div class="panel-heading">
+    <h5><span class="fa fa-desktop"></span>&nbsp;&nbsp;
+        <a href="{% url 'admin.home' %}">پنل مدیریت سامانه</a>&nbsp;&nbsp;
+        <span class="fa fa-angle-left small"></span>&nbsp;&nbsp;
+        <a href="{% url 'admin.de_settings' %}">تنظیمات</a>&nbsp;&nbsp;
+        <span class="fa fa-angle-left small"></span>&nbsp;&nbsp;
+        <a href="{% url 'admin.de_settings.user_mgmt' %}">مدیریت کاربران</a>&nbsp;&nbsp;
+        <span class="fa fa-angle-left small"></span>&nbsp;&nbsp;
+        کاربر جدید
+    </h5>
+        </div><br>
+    <div class="panel-body"><br>
+            <div class="container-fluid">
+    <div role="tabpanel">
+      <ul class="nav nav-tabs" role="tablist">
+        <li role="presentation" class="active"><a href="{% url 'admin.de_settings.user_mgmt' %}"  role="tab">کاربران</a></li>
+        <li role="presentation"><a href="{% url 'admin.de_settings.user_mgmt.checker_state' %}"  role="tab">مدیریت وضعیت کاربران بررسی کننده</a></li>
+        <li role="presentation"><a href="{% url 'admin.de_settings.user_mgmt.financial' %}"  role="tab">اطلاعات مالی کاربران</a></li>
+      </ul>
+    </div>
+    <br><br>
+
+    <div class="container-fluid">
+    <br><br>
+    <div class="">
+        <form class="form-horizontal" method="post" action="{% url 'admin.de_settings.user_mgmt.add' %}">
+            {% csrf_token %}
+            {% if has_form_message %}
+                {% ifequal form_message 1 %}
+                    <div class="alert alert-danger text-center">
+                        مشخصات تکراری وارد شده است!
+                    </div>
+                {% endifequal %}
+            {% endif %}
+            <div class="form-group">
+                <label class="control-label col-sm-2" for="{{ form.username.id_for_label }}">نام کاربری:</label>
+                <div class="col-sm-4">
+                {{ form.username }}
+                </div>
+                <div class="col-sm-6">
+                    <span class="text-danger">{{ form.username.errors.0 }}</span>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="control-label col-sm-2" for="{{ form.email.id_for_label }}">پست الکترونیکی:</label>
+                <div class="col-sm-8">
+                {{ form.email }}
+                </div>
+                <div class="col-sm-2">
+                    <span class="text-danger">{{ form.email.errors.0 }}</span>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="control-label col-sm-2" for="{{ form.first_name.id_for_label }}">نام:</label>
+                <div class="col-sm-3">
+                {{ form.first_name }}
+                </div>
+                <div class="col-sm-2">
+                    <span class="text-danger">{{ form.first_name.errors.0 }}</span>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="control-label col-sm-2" for="{{ form.last_name.id_for_label }}">نام خانوادگی:</label>
+                <div class="col-sm-4">
+                {{ form.last_name }}
+                </div>
+                <div class="col-sm-2">
+                    <span class="text-danger">{{ form.last_name.errors.0 }}</span>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="control-label col-sm-2" for="{{ form.password.id_for_label }}">گذرواژه:</label>
+                <div class="col-sm-4">
+                {{ form.password }}
+                </div>
+                <div class="col-sm-2">
+                    <span class="text-danger">{{ form.password.errors.0 }}</span>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="control-label col-sm-2" for="{{ form.is_staff.id_for_label }}">عوامل مجموعه:</label>
+                <div class="col-sm-4">
+                {{ form.is_staff }}
+                </div>
+                <div class="col-sm-2">
+                    <span class="text-danger">{{ form.is_staff.errors.0 }}</span>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="control-label col-sm-2" for="{{ form.temp_groups.id_for_label }}">گروه ها:</label>
+                <div class="col-sm-4">
+                {{ form.temp_groups }}
+                </div>
+                <div class="col-sm-2">
+                    <span class="text-danger">{{ form.temp_groups.errors.0 }}</span>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-sm-2">&nbsp;</div>
+                <div class="col-sm-2">
+                    <button type="submit" class="btn btn-primary btn-block">اضافه</button>
+                </div>
+                <div class="col-sm-1">
+                    <a href="{% url 'admin.de_settings.user_mgmt' %}" class="btn btn-link">بازگشت</a>
+                </div>
+            </div>
+        </form>
+    </div>
+
+    </div></div></div></div>
+{%  endblock %}

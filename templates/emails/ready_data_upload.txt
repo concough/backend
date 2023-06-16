@@ -1,0 +1,11 @@
+--------------- کنکوق ----------------
+یک فایل کنکور بر روی سایت بارگذاری شد.
+
+ویرایشگر: {{ record.task.user.get_full_name }}
+کنکور: {{ record.task.entrance }}
+درس: {{ record.entrance_booklet_detail.lesson }}
+
+تاریخ: {{ date }}
+لینک: {{ link }}
+
+--------------- تمام -----------------

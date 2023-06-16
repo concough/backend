@@ -1,0 +1,75 @@
+{% extends 'admin/contest_layout.html' %}
+{% block title %}اطلاعات مالی کاربران{% endblock %}
+{% block content %}
+{{ block.super }}
+<div class="panel panel-default cpanel">
+    <div class="panel-heading">
+    <h5><span class="fa fa-desktop"></span>&nbsp;&nbsp;
+        <a href="{% url 'admin.home' %}">پنل مدیریت سامانه</a>&nbsp;&nbsp;
+        <span class="fa fa-angle-left small"></span>&nbsp;&nbsp;
+        <a href="{% url 'admin.de_settings' %}">تنظیمات</a>&nbsp;&nbsp;
+        <span class="fa fa-angle-left small"></span>&nbsp;&nbsp;
+اطلاعات مالی کاربران
+    </h5>
+        </div><br>
+    <div class="panel-body"><br>
+            <div class="container-fluid">
+    <div role="tabpanel">
+      <ul class="nav nav-tabs" role="tablist">
+        <li role="presentation" ><a href="{% url 'admin.de_settings.user_mgmt' %}"  role="tab">کاربران</a></li>
+        <li role="presentation"><a href="{% url 'admin.de_settings.user_mgmt.checker_state' %}"  role="tab">مدیریت وضعیت کاربران بررسی کننده</a></li>
+        <li role="presentation" class="active"><a href="{% url 'admin.de_settings.user_mgmt.financial' %}"  role="tab">اطلاعات مالی کاربران</a></li>
+      </ul>
+    </div>
+    <br><br>
+
+    <div class="container-fluid">
+    <h4>
+        <span class="search-box">
+            <div class="input-group col-sm-3 pull-left">
+                <input placeholder="جستجو" type="text" class="form-control" name="q" value="" autofocus="autofocus">
+                <div class="input-group-addon"><span class=" fa fa-search"></span></div>
+            </div>
+            <a href="{% url 'admin.de_settings.user_mgmt.financial.add' %}" class="btn btn-success pull-left">اطلاعات مالی جدید</a>
+        </span>
+        <br>
+    </h4>
+    <br><br>
+    <div class="row">
+    <div class="col-sm-12">
+        {% load filters %}
+        {% if uf %}
+        <table class="table table-hover">
+            <thead>
+                <tr>
+                    <th>نام کامل</th>
+                    <th>نام کاربری</th>
+                    <th>نام بانک</th>
+                    <th>شبا</th>
+                    <th>آخرین تغییرات</th>
+                    <th>عملیات</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for f in uf %}
+                    <tr>
+                        <td>{{ f.user.get_full_name }}</td>
+                        <td>{{ f.user.username }}</td>
+                        <td>{{ f.bank_name }}</td>
+                        <td>{{ f.bank_shaba }}</td>
+                        <td>{{ f.updated|jalali }}</td>
+                        <td>
+                            <a class="btn btn-xs text-warning glyphicon glyphicon-pencil" href="{% url 'admin.de_settings.user_mgmt.financial.edit' pk=f.id %}"></a>
+                            <a class="btn btn-xs text-danger glyphicon glyphicon-off" href="{% url 'admin.de_settings.user_mgmt.financial.del' pk=f.id %}"></a>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        {% else %}
+            <div class="text-muted text-center">رکوردی ثبت نشده است!</div>
+        {% endif %}
+    </div>
+    </div></div>
+    </div></div></div>
+{%  endblock %}

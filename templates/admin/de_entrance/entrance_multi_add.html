@@ -1,0 +1,94 @@
+{% extends 'admin/contest_layout.html' %}
+{% block title %}پکیج کنکورها - جدید{% endblock %}
+{% block content %}
+{{ block.super }}
+<div class="panel panel-default cpanel">
+    <div class="panel-heading">
+    <h5><span class="fa fa-desktop"></span>&nbsp;&nbsp;
+        <a href="{% url 'admin.home' %}">پنل مدیریت سامانه</a>&nbsp;&nbsp;
+        <span class="fa fa-angle-left small"></span>&nbsp;&nbsp;
+        <a href="{% url 'admin.de_entrance_multi' %}">پکیج آزمون ها</a>&nbsp;&nbsp;
+        <span class="fa fa-angle-left small"></span>&nbsp;&nbsp;
+        جدید
+    </h5>
+        </div>
+    <div class="panel-body">
+        <br>
+    <div class="container-fluid">
+        <br>
+        <div>
+            انواع آزمون ها:
+            <br><br>
+            {% for t in type_list %}
+                {% if t.id == type  %}
+                <a class="label label-primary" href="?type={{t.id}}">{{t.title}}</a>
+                {% else %}
+                <a class="label label-default" href="?type={{t.id}}">{{t.title}}</a>
+                {% endif %}
+            {% endfor %}
+        </div>
+        {% if group_list %}
+        <br><br>
+        <div>
+گروه ها:
+            <br><br>
+            {% for g in group_list %}
+                {% if group == g.id %}
+                <a class="label label-primary" href="?type={{type}}&group={{g.id}}">{{g.title}}</a>
+                {% else %}
+                <a class="label label-default" href="?type={{type}}&group={{g.id}}">{{g.title}}</a>
+                {% endif %}
+            {% endfor %}
+        </div>
+        {% endif %}
+        {% if set_list %}
+        <br><br>
+        <div>
+            مجموعه ها:
+            <br><br>
+            {% for s in set_list %}
+                {% if set == s.id %}
+                <a class="label label-primary" href="?type={{type}}&group={{group}}&set={{s.id}}">{{s.title}}</a>
+                {% else %}
+                <a class="label label-default" href="?type={{type}}&group={{group}}&set={{s.id}}">{{s.title}}</a>
+                {% endif %}
+            {% endfor %}
+        </div>
+        {% endif %}
+    {% if form %}
+        <hr><br><br>
+    <div class="">
+    <div class="col-sm-12">
+        <form class="form-horizontal" method="post">
+            {% csrf_token %}
+            {% if has_form_message %}
+                {% ifequal form_message 1 %}
+                    <div class="alert alert-danger text-center">
+                        مشخصات تکراری وارد شده است!
+                    </div>
+                {% endifequal %}
+            {% endif %}
+            <div class="form-group">
+                <label class="control-label col-sm-2" for="{{ form.entrances.id_for_label }}">آزمون ها:</label>
+                <div class="col-sm-6">
+                {{ form.entrances }}
+                </div>
+                <div class="col-sm-4">
+                    <span class="text-danger">{{ form.entrances.errors.0 }}</span>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-sm-2">&nbsp;</div>
+                <div class="col-sm-2">
+                    <button type="submit" class="btn btn-primary btn-block">اضافه</button>
+                </div>
+                <div class="col-sm-1">
+                    <a href="{% url 'admin.de_entrance' %}" class="btn btn-link">بازگشت</a>
+                </div>
+            </div>
+        </form>
+    </div>
+    </div>
+        {% endif %}
+    </div></div></div>
+{%  endblock %}

@@ -1,0 +1,311 @@
+[
+  {
+    "fields": {
+      "title": "ریاضی و فنی"
+    },
+    "model": "main.examinationgroup",
+    "pk": 1
+  },
+  {
+    "fields": {
+      "title": "علوم تجربی"
+    },
+    "model": "main.examinationgroup",
+    "pk": 2
+  },
+  {
+    "fields": {
+      "title": "علوم انسانی"
+    },
+    "model": "main.examinationgroup",
+    "pk": 3
+  },
+  {
+    "fields": {
+      "title": "هنر"
+    },
+    "model": "main.examinationgroup",
+    "pk": 4
+  },
+  {
+    "fields": {
+      "title": "زبانهای خارجی"
+    },
+    "model": "main.examinationgroup",
+    "pk": 5
+  },
+  {
+    "fields": {
+      "title": "ریاضی و فنی",
+      "group": 1
+    },
+    "model": "main.entranceset",
+    "pk": 1
+  },
+  {
+    "fields": {
+      "title": "علوم تجربی",
+      "group": 2
+    },
+    "model": "main.entranceset",
+    "pk": 2
+  },
+  {
+    "fields": {
+      "title": "علوم انسانی",
+      "group": 3
+    },
+    "model": "main.entranceset",
+    "pk": 3
+  },
+  {
+    "fields": {
+      "title": "هنر",
+      "group": 4
+    },
+    "model": "main.entranceset",
+    "pk": 4
+  },
+  {
+    "fields": {
+      "title": "زبانهای خارجی",
+      "group": 5
+    },
+    "model": "main.entranceset",
+    "pk": 5
+  },
+  {
+    "fields": {
+      "title": "زبان و ادبیات فارسی",
+      "full_title": "زبان و ادبیات فارسی",
+      "entrance_type": 1
+    },
+    "model": "main.entrancelesson",
+    "pk": 1
+  },
+  {
+    "fields": {
+      "title": "زبان عربی",
+      "full_title": "زبان عربی",
+      "entrance_type": 1
+    },
+    "model": "main.entrancelesson",
+    "pk": 2
+  },
+  {
+    "fields": {
+      "title": "فرهنگ و معارف اسلامی",
+      "full_title": "فرهنگ و معارف اسلامی",
+      "entrance_type": 1
+    },
+    "model": "main.entrancelesson",
+    "pk": 3
+  },
+  {
+    "fields": {
+      "title": "زبان خارجی",
+      "full_title": "زبان خارجی(انگلیسی؛ آلمانی؛ فرانسه؛ روسی؛ ایتالیایی)",
+      "entrance_type": 1
+    },
+    "model": "main.entrancelesson",
+    "pk": 4
+  },
+  {
+    "fields": {
+      "title": "ریاضی",
+      "full_title": "ریاضی",
+      "entrance_type": 1
+    },
+    "model": "main.entrancelesson",
+    "pk": 5
+  },
+  {
+    "fields": {
+      "title": "فیزیک",
+      "full_title": "فیزیک",
+      "entrance_type": 1
+    },
+    "model": "main.entrancelesson",
+    "pk": 6
+  },
+  {
+    "fields": {
+      "title": "شیمی",
+      "full_title": "شیمی",
+      "entrance_type": 1
+    },
+    "model": "main.entrancelesson",
+    "pk": 7
+  },
+  {
+    "fields": {
+      "title": "زیست شناسی",
+      "full_title": "زیست شناسی",
+      "entrance_type": 1
+    },
+    "model": "main.entrancelesson",
+    "pk": 8
+  },
+  {
+    "fields": {
+      "title": "زمین شناسی",
+      "full_title": "زمین شناسی",
+      "entrance_type": 1
+    },
+    "model": "main.entrancelesson",
+    "pk": 9
+  },
+  {
+    "fields": {
+      "title": "اقتصاد",
+      "full_title": "اقتصاد",
+      "entrance_type": 1
+    },
+    "model": "main.entrancelesson",
+    "pk": 10
+  },
+  {
+    "fields": {
+      "title": "تاریخ و جغرافیا",
+      "full_title": "تاریخ و جغرافیا",
+      "entrance_type": 1
+    },
+    "model": "main.entrancelesson",
+    "pk": 11
+  },
+  {
+    "fields": {
+      "title": "علوم اجتماعی",
+      "full_title": "علوم اجتماعی",
+      "entrance_type": 1
+    },
+    "model": "main.entrancelesson",
+    "pk": 12
+  },
+  {
+    "fields": {
+      "title": "فلسفه و منطق",
+      "full_title": "فلسفه و منطق",
+      "entrance_type": 1
+    },
+    "model": "main.entrancelesson",
+    "pk": 13
+  },
+  {
+    "fields": {
+      "title": "روانشناسی",
+      "full_title": "روانشناسی",
+      "entrance_type": 1
+    },
+    "model": "main.entrancelesson",
+    "pk": 14
+  },
+  {
+    "fields": {
+      "title": "درک عمومی هنر",
+      "full_title": "درک عمومی هنر",
+      "entrance_type": 1
+    },
+    "model": "main.entrancelesson",
+    "pk": 15
+  },
+  {
+    "fields": {
+      "title": "درک عمومی ریاضی و فیزیک",
+      "full_title": "درک عمومی ریاضی و فیزیک",
+      "entrance_type": 1
+    },
+    "model": "main.entrancelesson",
+    "pk": 16
+  },
+  {
+    "fields": {
+      "title": "ترسیم فنی",
+      "full_title": "ترسیم فنی",
+      "entrance_type": 1
+    },
+    "model": "main.entrancelesson",
+    "pk": 17
+  },
+  {
+    "fields": {
+      "title": "خلاقیت تصویری و تجسمی",
+      "full_title": "خلاقیت تصویری و تجسمی",
+      "entrance_type": 1
+    },
+    "model": "main.entrancelesson",
+    "pk": 18
+  },
+  {
+    "fields": {
+      "title": "خلاقیت نمایشی",
+      "full_title": "خلاقیت نمایشی",
+      "entrance_type": 1
+    },
+    "model": "main.entrancelesson",
+    "pk": 19
+  },
+  {
+    "fields": {
+      "title": "خلاقیت موسیقی",
+      "full_title": "خلاقیت موسیقی",
+      "entrance_type": 1
+    },
+    "model": "main.entrancelesson",
+    "pk": 20
+  },
+  {
+    "fields": {
+      "title": "خواص مواد",
+      "full_title": "خواص مواد",
+      "entrance_type": 1
+    },
+    "model": "main.entrancelesson",
+    "pk": 21
+  },
+  {
+    "fields": {
+      "title": "زبان تخصصی انگلیسی",
+      "full_title": "زبان تخصصی انگلیسی",
+      "entrance_type": 1
+    },
+    "model": "main.entrancelesson",
+    "pk": 22
+  },
+  {
+    "fields": {
+      "title": "زبان خارجی آلمانی",
+      "full_title": "زبان خارجی آلمانی",
+      "entrance_type": 1
+    },
+    "model": "main.entrancelesson",
+    "pk": 23
+  },
+  {
+    "fields": {
+      "title": "زبان تخصصی آلمانی",
+      "full_title": "زبان تخصصی آلمانی",
+      "entrance_type": 1
+    },
+    "model": "main.entrancelesson",
+    "pk": 24
+  },
+  {
+    "fields": {
+      "title": "زبان خارجی فرانسه",
+      "full_title": "زبان خارجی فرانسه",
+      "entrance_type": 1
+    },
+    "model": "main.entrancelesson",
+    "pk": 25
+  },
+  {
+    "fields": {
+      "title": "زبان تخصصی فرانسه",
+      "full_title": "زبان تخصصی فرانسه",
+      "entrance_type": 1
+    },
+    "model": "main.entrancelesson",
+    "pk": 26
+  }
+]

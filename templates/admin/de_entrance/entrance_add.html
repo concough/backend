@@ -1,0 +1,82 @@
+{% extends 'admin/contest_layout.html' %}
+{% block title %}کنکورها - جدید{% endblock %}
+{% block content %}
+{{ block.super }}
+<div class="panel panel-default cpanel">
+    <div class="panel-heading">
+    <h5><span class="fa fa-desktop"></span>&nbsp;&nbsp;
+        <a href="{% url 'admin.home' %}">پنل مدیریت سامانه</a>&nbsp;&nbsp;
+        <span class="fa fa-angle-left small"></span>&nbsp;&nbsp;
+        <a href="{% url 'admin.de_entrance' %}">کنکورها</a>&nbsp;&nbsp;
+        <span class="fa fa-angle-left small"></span>&nbsp;&nbsp;
+        جدید
+    </h5>
+        </div>
+    <div class="panel-body">
+        <br>
+    <div class="container-fluid">
+        <br>
+    <div class="">
+    <div class="col-sm-12">
+        <form class="form-horizontal" method="post" action="{% url 'admin.de_entrance.add' %}">
+            {% csrf_token %}
+            {% if has_form_message %}
+                {% ifequal form_message 1 %}
+                    <div class="alert alert-danger text-center">
+                        مشخصات تکراری وارد شده است!
+                    </div>
+                {% endifequal %}
+            {% endif %}
+            <div class="form-group">
+                <label class="control-label col-sm-2" for="{{ form.organization.id_for_label }}">سازمان:</label>
+                <div class="col-sm-3">
+                {{ form.organization }}
+                </div>
+                <div class="col-sm-6">
+                    <span class="text-danger">{{ form.organization.errors.0 }}</span>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="control-label col-sm-2" for="{{ form.entrance_type.id_for_label }}">نوع کنکور:</label>
+                <div class="col-sm-4">
+                {{ form.entrance_type }}
+                </div>
+                <div class="col-sm-4">
+                    <span class="text-danger">{{ form.entrance_type.errors.0 }}</span>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="control-label col-sm-2" for="{{ form.entrance_set.id_for_label }}">مجموعه کنکور:</label>
+                <div class="col-sm-6">
+                {{ form.entrance_set }}
+                </div>
+                <div class="col-sm-4">
+                    <span class="text-danger">{{ form.entrance_set.errors.0 }}</span>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="control-label col-sm-2" for="{{ form.year.id_for_label }}">تاریخ:</label>
+                <div class="col-sm-2">
+                {{ form.year }}
+                </div>
+                <div class="col-sm-2">
+                {{ form.month }}
+                </div>
+                <div class="col-sm-4">
+                    <span class="text-danger">{{ form.year.errors.0 }}</span>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-sm-2">&nbsp;</div>
+                <div class="col-sm-2">
+                    <button type="submit" class="btn btn-primary btn-block">اضافه</button>
+                </div>
+                <div class="col-sm-1">
+                    <a href="{% url 'admin.de_entrance' %}" class="btn btn-link">بازگشت</a>
+                </div>
+            </div>
+        </form>
+    </div>
+    </div>
+    </div></div></div>
+{%  endblock %}

@@ -1,0 +1,103 @@
+{% extends 'admin/contest_layout.html' %}
+{% block title %}دفترچه کنکورها - جدید{% endblock %}
+{% block content %}
+{{ block.super }}
+<div class="panel panel-default cpanel">
+    <div class="panel-heading">
+    <h5><span class="fa fa-desktop"></span>&nbsp;&nbsp;
+        <a href="{% url 'admin.home' %}">پنل مدیریت سامانه</a>&nbsp;&nbsp;
+        <span class="fa fa-angle-left small"></span>&nbsp;&nbsp;
+        <a href="{% url 'admin.de_entrance' %}">کنکورها</a>&nbsp;&nbsp;
+        <span class="fa fa-angle-left small"></span>&nbsp;&nbsp;
+        {% if has_error %}
+            خطا
+        {% else %}
+            <a href="{% url 'admin.de_entrance.booklets' pk=entrance.id %}">
+            {{ entrance.entrance_set.title }}: <span class="text-muted">{{ entrance.entrance_type.title }} ({{ entrance.year }}/{{ entrance.month }})</span>
+            </a>&nbsp;&nbsp;
+            <span class="fa fa-angle-left small"></span>&nbsp;&nbsp;
+            <a href="{% url 'admin.de_entrance.booklets.list' pk=entrance.id %}">دفترچه ها
+            </a>&nbsp;&nbsp;
+            <span class="fa fa-angle-left small"></span>&nbsp;&nbsp;
+            دفترچه جدید
+        {% endif %}
+
+    </h5>
+        </div>
+    <br>
+    <div class="panel-body">
+    <div class="container-fluid">
+    {% if has_error %}
+        {% ifequal error_no 1 %}
+        <div class="alert alert-danger" role="alert">
+             چنین رکوردی موجود نیست
+            <br>
+            <a href="{% url 'admin.de_entrance' %}" class="btn btn-danger">بازگشت</a>
+        </div>
+        {% endifequal %}
+    {% else %}
+    <br>
+    <div class="">
+    <div class="col-sm-12">
+        <form class="form-horizontal" method="post" action="{% url 'admin.de_entrance.booklets.add' pk=entrance.id %}">
+            {% csrf_token %}
+            {% if has_form_message %}
+                {% ifequal form_message 1 %}
+                    <div class="alert alert-danger text-center">
+                        مشخصات تکراری وارد شده است!
+                    </div>
+                {% endifequal %}
+            {% endif %}
+            <div class="form-group">
+                <label class="control-label col-sm-2" for="{{ form.title.id_for_label }}">عنوان:</label>
+                <div class="col-sm-4">
+                {{ form.title }}
+                </div>
+                <div class="col-sm-6">
+                    <span class="text-danger">{{ form.title.errors.0 }}</span>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="control-label col-sm-2" for="{{ form.duration.id_for_label }}">زمان پاسخگویی:</label>
+                <div class="col-sm-2">
+                {{ form.duration }}
+                </div>
+                <div class="col-sm-6">
+                    <span class="text-danger">{{ form.duration.errors.0 }}</span>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="control-label col-sm-2" for="{{ form.order.id_for_label }}">دفترچه شماره:</label>
+                <div class="col-sm-2">
+                {{ form.order }}
+                </div>
+                <div class="col-sm-4">
+                    <span class="text-danger">{{ form.order.errors.0 }}</span>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="control-label col-sm-2" for="{{ form.optional.id_for_label }}">
+                    اختیاری:
+                    </label>
+                <div class="col-sm-2">
+                {{ form.optional }}
+                    </div>
+                <div class="col-sm-4">
+                    <span class="text-danger">{{ form.optional.errors.0 }}</span>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-sm-2">&nbsp;</div>
+                <div class="col-sm-2">
+                    <button type="submit" class="btn btn-primary btn-block">اضافه</button>
+                </div>
+                <div class="col-sm-1">
+                    <a href="{% url 'admin.de_entrance.booklets' pk=entrance.id %}" class="btn btn-link">بازگشت</a>
+                </div>
+            </div>
+        </form>
+    </div>
+    </div>
+    {% endif %}
+    </div></div></div>
+{%  endblock %}

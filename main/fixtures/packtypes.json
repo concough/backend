@@ -1,0 +1,16 @@
+[
+  {
+    "fields": {
+      "title": "CREATE"
+    },
+    "model": "main.entrancepackagetype",
+    "pk": 1
+  },
+  {
+    "fields": {
+      "title": "UPDATE"
+    },
+    "model": "main.entrancepackagetype",
+    "pk": 2
+  }
+]

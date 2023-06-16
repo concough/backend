@@ -1,0 +1,221 @@
+{% extends 'admin/contest_layout.html' %}
+{% load staticfiles %}
+{% block title %}
+{% if has_error %}
+کنکور - بروز خطا
+{% else %}
+سوالات کنکور -
+{{ booklet_detail.booklet.entrance.entrance_set.title}}: {{ booklet_detail.booklet.entrance.entrance_type.title }} ({{ booklet_detail.booklet.entrance.year}}/{{ booklet_detail.booklet.entrance.month}})
+{% endif %}
+{% endblock %}
+{% block content %}
+{{ block.super }}
+<div class="panel panel-default cpanel">
+    <div class="panel-heading">
+<h5><span class="fa fa-desktop"></span>&nbsp;&nbsp;
+    <a href="{% url 'admin.home' %}">پنل مدیریت سامانه</a>&nbsp;&nbsp;
+    <span class="fa fa-angle-left small"></span>&nbsp;&nbsp;
+    <a href="{% url 'admin.de_entrance' %}">کنکورها</a>&nbsp;&nbsp;
+    <span class="fa fa-angle-left small"></span>&nbsp;&nbsp;
+    {% if has_error %}
+    خطا
+    {% else %}
+    <a href="{% url 'admin.de_entrance.booklets' pk=booklet_detail.booklet.entrance.id %}">
+        {{booklet_detail.booklet.entrance.entrance_set.title}}: <span class="text-muted">
+            {{ booklet_detail.booklet.entrance.entrance_type.title }}-{{ booklet_detail.booklet.entrance.organization.title }} ({{ booklet_detail.booklet.entrance.year }}/{{ booklet_detail.booklet.entrance.month }})</span></a>&nbsp;&nbsp;
+    <span class="fa fa-angle-left small"></span>&nbsp;&nbsp;
+    <a href="{% url 'admin.de_entrance.booklets.list' pk=booklet_detail.booklet.entrance.id %}">{{booklet_detail.booklet.title}}</a>&nbsp;&nbsp;
+    <span class="fa fa-angle-left small"></span>&nbsp;&nbsp;
+    <a href="{% url 'admin.de_entrance.booklets.list' pk=booklet_detail.booklet.entrance.id %}">{{booklet_detail.lesson.title }}</a>&nbsp;&nbsp;
+    <span class="fa fa-angle-left small"></span>&nbsp;&nbsp;
+    عکس سوالات
+    {% endif %}
+</h5>
+</div>
+    <br>
+    <div class="panel-body"><br>
+<div class="container-fluid">
+    {% if has_error %}
+    {% ifequal error_no 1 %}
+    <div class="alert alert-danger" role="alert">
+        چنین رکوردی موجود نیست
+        <br>
+        <a href="{% url 'admin.de_entrance' %}" class="btn btn-danger">بازگشت</a>
+    </div>
+    {% endifequal %}
+    {% else %}
+    {% load static %}
+    {% load filters %}
+    <div class="row">
+        {% if booklet_detail.booklet.entrance.entrance_set.image %}
+        <img class="img-thumbnail img-circle pull-right"
+             src="{{ booklet_detail.booklet.entrance.entrance_set.image.url }}" alt="" width="80" height="80"
+             style="margin-left: 15px;">
+        {% else %}
+        <img class="img-thumbnail img-circle pull-right" src="{% static 'image/noimage.jpg' %}" alt="no image"
+             style="margin-left: 15px;" width="80" height="80">
+        {% endif %}
+        <div class="container-fluid" style="overflow: hidden">
+            <div class="pull-left text-center">
+                <h3 style="position: relative; margin-bottom: 20px"><span class="label label-success">سال {{ booklet_detail.booklet.entrance.year }}&nbsp;ماه {{ booklet_detail.booklet.entrance.month}}</span></h3>
+                <h4 class="">{{ booklet_detail.booklet.title }}</h4>
+            </div>
+            <h3><a href="{% url 'admin.de_entrance.booklets' pk=booklet_detail.booklet.entrance.id %}">
+                {{ booklet_detail.booklet.entrance.entrance_set.title }}&nbsp;({{booklet_detail.booklet.entrance.entrance_set.group.title }})</a></h3>
+            <h5>{{ booklet_detail.booklet.entrance.entrance_type.title }} - {{booklet_detail.booklet.entrance.organization.title }}</h5>
+            <h5 class="">
+                {% for key, value in edata.items %}
+                        <span class="label label-warning">
+                        <span>{{ key }}:</span>&nbsp;
+                        <span>{{ value }}</span></span>
+                {% endfor %}
+            </h5>
+
+        </div>
+    </div>
+    <hr>
+    <div class="row">
+        <h2 class="text-center text-success">
+            {{ booklet_detail.lesson.full_title }}
+        </h2>
+    </div>
+    <hr>
+    <div class="row">
+        <div class="container-fluid">
+            <ul class="nav nav-pills" role="tablist">
+                <li role="presentation"><a href="{% url 'admin.de_entrance.questions.list' pk=booklet_detail.id %}">سوالات</a>
+                </li>
+                <li role="presentation" class="active"><a
+                        href="{% url 'admin.de_entrance.pquestions.list' pk=booklet_detail.id %}">عکس سوالات</a></li>
+                <li role="presentation"><a href="{% url 'admin.de_entrance.tags.list' pk=booklet_detail.id %}">کلیدواژه ها</a></li>
+
+            </ul>
+        </div>
+        <br>
+        {% if questions %}
+        <div class="col-sm-6 col-sm-push-6">
+            <div >
+            <div class="panel panel-success">
+                <div class="panel-heading">بارگذاری عکس سوال</div>
+                <div class="panel-body">
+
+                    <form class="form-inline" method="post"
+                          action="{% url 'admin.de_entrance.pquestions.list' pk=booklet_detail.id %}"
+                          enctype="multipart/form-data">
+                        {% csrf_token %}
+                        {% if has_form_message %}
+                        {% ifequal form_message 1 %}
+                        <div class="alert alert-danger text-center">
+                            مشخصات تکراری وارد شده است!
+                        </div>
+                        {% endifequal %}
+                        {% endif %}
+                        <div class="form-group">
+                            <label class="sr-only" for="{{ form.question.id_for_label }}">شماره سوال:</label>
+                            {{ form.question }}
+                        </div>
+                        <div class="form-group">
+                            <label class="sr-only" for="{{ form.image.id_for_label }}">عکس سوال:</label>
+                            {{ form.image }}
+                        </div>
+                        <div class="form-group">
+                            <label class="sr-only" for="{{ form.order.id_for_label }}">ترتیب:</label>
+                            {{ form.order }}
+                        </div>
+                        <button type="submit" class="btn btn-success">اضافه</button>
+                        &nbsp;&nbsp;&nbsp;
+                        <span class="text-danger">{{ form.image.errors.0 }}</span>
+                    </form>
+                </div>
+            </div>
+            <div class="panel panel-success upload-huge">
+                <div class="panel-heading">بارگذاری کل سوالات</div>
+                <div class="panel-body">
+
+                    <form class="form-inline" method="post" action="#" enctype="multipart/form-data">
+                        {% csrf_token %}
+<div class="text-muted text-center dropable" style="padding-top: 1rem; padding-bottom: 1rem;">
+<span class="glyphicon glyphicon-arrow-down" style="font-size: 3rem;"></span><h3>Drop Photos Here to Upload</h3>
+        <div class="progress">
+          <div class="progress-bar progress-bar-success" role="progressbar" style="width: 0%;">0%</div>
+        </div>
+</div>
+                        <input id="fileupload" type="file" name="image" multiple
+                               class="hide"
+                               data-url="{% url 'admin.de_entrance.pquestions.ajax' pk=booklet_detail.id %}"
+                               data-form-data='{"csrfmiddlewaretoken": "{{ csrf_token }}"}'></form>
+                </div>
+                <div class="panel-footer text-left">
+
+                </div>
+            </div>
+</div>
+        </div>
+        <div class="col-sm-6 col-sm-pull-6">
+            <table class="table table-hover">
+                <thead>
+                <tr>
+                    <th>سوال</th>
+                    <th>عکس ها</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for q in questions %}
+                <tr data-qid="{{ q.id }}">
+                    <td>{{ q.question_number }}</td>
+                    <td>
+                        {% for img in q.qs_images.all %}
+                                            <span class="img_container">
+                                                <span class="img_order">
+                                                    <span class="label label-info">{{ img.order }}</span>
+                                                </span>
+                                             <img class="img-sel img-thumbnail"
+                                                  src="{{ img.image.url }}"
+                                                  width="60" style="margin-left: 15px;" data-toggle="modal"
+                                                  data-target="#pictureModal" data-picture="{{ img.image.url }}"
+                                                  data-qs="{{ q.question_number }}" data-imgorder="{{ img.order }}">
+                                                <a href="{% url 'admin.de_entrance.pquestions.del' pk=img.id %}"
+                                                   class="img_del">
+                                                    <span class="glyphicon glyphicon-remove"></span>
+                                                </a>
+                                            </span>
+                        {% endfor %}
+                    </td>
+                </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% else %}
+        <div class="h4 text-center text-muted">
+            سوالات وارد نشده است!<br><br>
+            <a href="{% url 'admin.de_entrance.questions.generate' pk=booklet_detail.id %}">تولید سوالات</a>
+        </div>
+        {% endif %}
+    </div>
+    {% endif %}
+</div>
+<div class="modal fade" id="pictureModal" tabindex="-1" role="dialog" aria-labelledby="pictureModalLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                        aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="pictureModalLabel">&nbsp;</h4>
+            </div>
+            <div class="modal-body">
+                <img src="#" class="big-img img-thumbnail" width="800">
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">بستن</button>
+            </div>
+        </div>
+    </div>
+</div></div></div>
+{% endblock %}
+{% block js %}
+<script type="text/javascript" src="{% static 'concough/js/jquery.ui.widget.js' %}"></script>
+<script type="text/javascript" src="{% static 'concough/js/jquery.iframe-transport.js' %}"></script>
+<script type="text/javascript" src="{% static 'concough/js/jquery.fileupload.js' %}"></script>
+<script type="text/javascript" src="{% static 'concough/js/entrance-file-uploader.js' %}"></script>
+{% endblock %}

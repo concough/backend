@@ -1,0 +1,273 @@
+@font-face{font-family:IranSans;src:url('../fonts/IRANSansWeb_UltraLight.woff') format("woff");font-weight:100;font-style:normal}
+@font-face{font-family:IranSans;src:url('../fonts/IRANSansWeb_Light.woff') format("woff");font-weight:200;font-style:normal}
+@font-face{font-family:IranSans;src:url('../fonts/IRANSansWeb.woff') format("woff");font-weight:400;font-style:normal}
+@font-face{font-family:IranSans;src:url('../fonts/IRANSansWeb_Medium.woff') format("woff");font-weight:500;font-style:normal}
+@font-face{font-family:IranSans;src:url('../fonts/IRANSansWeb_Bold.woff') format("woff");font-weight:600;font-style:normal}
+
+* {
+	font-family: IranSans, tahoma, verdana, sans-serif;
+}
+
+body {
+    background: #f8f8f8;
+}
+
+.main-frame1 {
+    background: #FFF;
+    border: 1px solid #EEE;
+    box-shadow: 0px 0px 3px #CCC;
+}
+
+h3 {  font-size: 1.3em;  }
+h4 { font-size: 1.2em;}
+
+thead {
+    background: #F6F6F6;
+}
+th {
+    color: #666;
+    font-size: 1.1em;
+}
+
+tr.nob td {
+    border-top: none !important;
+}
+
+.table>tbody>tr>td {
+    vertical-align: middle;
+}
+
+.btn-default.text-warning {
+    color: #8a6d3b;
+}
+.btn-default.text-danger {
+    color: #a94442;
+}
+.btn-default.text-success {
+    color: #3c763d;
+}
+
+.select1 {
+    display: inline-block;
+    width: 200px;
+}
+
+.help-box {
+    color: #000;
+    background: #fffac1;
+    border: 1px dashed #ffe02d;
+}
+
+.help-box div {
+    padding: 20px;
+}
+
+a.list-group-item {
+    border: none; background: inherit; color: #428bca; border-bottom: 1px dashed #ddd;
+}
+a.list-group-item.active, a.list-group-item.active:hover {
+    background: none;
+    color: #000;
+    border-bottom: 1px dashed #ddd;
+    font-weight: bold;
+}
+
+        @media (min-width: 768px) {
+    .cnav {
+        display: inline-block !important;
+        float: none !important;
+        vertical-align: top !important;
+    }
+
+    .cnav-collapse {
+        text-align: center !important;
+    }
+}
+        a.menuup {
+            color: #428bca !important;
+        }
+        a.menuup.active {
+    color: #000 !important;
+    font-weight: bold;
+            background: inherit !important;
+            border-bottom: 2px solid #000;
+}
+
+                a.menuupinner.active {
+    color: #333 !important;
+    font-weight: bold;
+            background: inherit !important;
+}
+
+
+
+.search-box .pull-left {
+    margin-left: 10px;
+}
+.search-box .center {
+    margin: 0px auto;
+}
+
+/* enable absolute positioning */
+.inner-addon {
+    position: relative;
+}
+
+/* style icon */
+.inner-addon .fa {
+  position: absolute;
+  padding: 10px;
+  pointer-events: none;
+}
+
+/* align icon */
+.left-addon .fa  { left:  0px;}
+.right-addon .fa { right: 0px;}
+
+/* add padding  */
+.left-addon input  { padding-left:  30px; }
+.right-addon input { padding-right: 30px; }
+
+.dashboard-block-stat {
+    color: #FFF;
+    box-shadow: 0px 0px 5px #999;
+    margin-bottom: 25px;
+}
+
+.stat-heading {
+     display: block; padding: 0 20px;
+    /*position: relative;*/
+}
+
+.stat-icon {
+    font-size: 1.5em;
+    margin: 0 auto;
+}
+
+.stat-title {
+    font-size: 4em;
+    /*background: rgba(0, 0, 0, .4); padding: 15px;*/
+}
+.stat-content {
+    font-size: 1.2em;
+    background: rgba(0, 0, 0, .3); padding: 15px;
+}
+/*.stat-content a {*/
+    /*color: #CCC;*/
+/*}*/
+/*.stat-content a:hover {*/
+    /*color: #FFF;*/
+    /*text-decoration: none;*/
+/*}*/
+
+.dashboard-block-stat.gray {
+    color: #000;
+}
+
+.dashboard-block-stat.gray .stat-heading {
+    background: #f6f6f6;
+    border-bottom: 1px solid #eee;
+}
+
+
+.dashboard-block-stat.gray .stat-content {
+    background: #FFF;
+}
+
+.dashboard-block-stat.blue1 {
+    background: #00aad4;
+}
+
+.dashboard-block-stat.blue2 {
+    background: #0085aa;
+}
+
+.dashboard-block-stat.blue3 {
+    background: #00698a;
+}
+
+.dashboard-block-stat.blue4 {
+    background: #0094d4;
+}
+
+.dashboard-block-stat.green1 {
+    background: #189600;
+}
+
+.dashboard-block-stat.green2 {
+    background: #135f00;
+}
+
+.dashboard-block-stat.green3 {
+    background: #134100;
+}
+
+.dashboard-block-stat.purple1 {
+    background: #d457d4;
+}
+
+.dashboard-block-stat.purple2 {
+    background: #9f489f;
+}
+
+.dashboard-block-stat.yellow1 {
+    background: #d4b643;
+}
+
+.dashboard-block-stat.red1 {
+    background: #d44649;
+}
+
+.panel-heading .accordion-toggle:after {
+    /* symbol for "opening" panels */
+    font-family: 'Glyphicons Halflings';  /* essential for enabling glyphicon */
+    content: "\e113";    /* adjust as needed, taken from bootstrap.css */
+    float: left;        /* adjust as needed */
+    color: #006fd4;         /* adjust as needed */
+}
+.panel-heading .accordion-toggle.collapsed:after {
+    /* symbol for "collapsed" panels */
+    content: "\e114";    /* adjust as needed, taken from bootstrap.css */
+}
+
+.img_container {
+    position: relative;
+}
+
+.img_del {
+    position: relative;
+    right: -25px;
+    top: -10px;
+}
+
+.img_del span {
+    font-size: .8em;
+    background: #b1240c;
+    color: #FFF;
+    padding: 4px;
+    border-radius: 10px;
+}
+
+.img_order {
+    position: relative;
+    right: 10px;
+    bottom: -10px;
+}
+
+.img_order span {
+    font-size: .8em;
+    padding: 4px;
+    border-radius: 10px;
+}
+
+.user-info {  color: #FFF;  }
+.user-info:hover, .user-info:focus {text-decoration: none}
+
+.cpanel {
+    border: none !important;
+    box-shadow: 0 0 7px 2px #e6e6e6;
+}
+
+.cpanel .panel-heading {
+    background: inherit !important;
+}

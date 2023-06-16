@@ -1,0 +1,36 @@
+{% extends 'admin/main_layout.html' %}
+{% block content %}
+{% load cache %}
+<nav class="navbar navbar-default" style="background: inherit; border: none;">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-2" aria-expanded="false">
+        <span class="sr-only">نمایش منو</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+    </div>
+
+    <!-- Collect the nav links, forms, and other content for toggling -->
+    <div class="collapse navbar-collapse cnav-collapse" id="bs-example-navbar-collapse-2">
+      <ul class="nav navbar-nav cnav">
+            {% for x in menuinner %}
+                {% if x.3 in perms %}
+                {% ifequal x.0 minnersel %}
+                    {% with "active" as cls2 %}
+                        <li class="active"><a href="{% url x.2 %}" class="menuupinner {{ cls2 }}"><span
+                                class="{{ x.3 }}"></span>{{ x.1 }}</a></li>
+                    {% endwith %}
+                {% else %}
+                    <li><a href="{% url x.2 %}" class="menuupinner">{{ x.1 }}
+                    </a></li>
+                {% endifequal %}
+                {% endif %}
+            {% endfor %}
+
+      </ul>
+    </div><!-- /.navbar-collapse -->
+  </div><!-- /.container-fluid -->
+</nav>
+{% endblock content %}

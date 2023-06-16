@@ -1,0 +1,37 @@
+[
+    {
+    "fields": {
+      "title": "دولتی"
+    },
+    "model": "main.organization",
+    "pk": 1
+  },
+  {
+    "fields": {
+      "title": "آزاد"
+    },
+    "model": "main.organization",
+    "pk": 2
+  },
+  {
+    "fields": {
+      "title": "سراسری"
+    },
+    "model": "main.entrancetype",
+    "pk": 1
+  },
+  {
+    "fields": {
+      "title": "کارشناسی ارشد"
+    },
+    "model": "main.entrancetype",
+    "pk": 2
+  },
+  {
+    "fields": {
+      "title": "دکتری تخصصی"
+    },
+    "model": "main.entrancetype",
+    "pk": 3
+  }
+]

@@ -1,0 +1,42 @@
+{% extends 'main/main_layout.html' %}
+{% load staticfiles %}
+{% block description %}
+{% endblock %}
+
+{% block keywords %}
+{% endblock %}
+
+{% block title %}
+Concough - Admin Page
+{% endblock %}
+{% block content %}
+<div class="container mt-4 pt-4">
+<div class="row">
+    <div class="col col-12 col-md-6 offset-md-3">
+        {% if result == "Success" %}
+            <div class="alert alert-success text-center">
+                پرداخت با موفقیت انجام شد
+            </div>
+                <br>
+                {% if ref_id %}
+                    <strong>شماره ارجاع:</strong>&nbsp;<span>{{ref_id}}</span>
+                    <br><br>
+                {% endif %}
+                <a href="concough://concough.zhycan.com/pay/success/" class="btn btn-success">بازگشت به برنامه</a>
+        {% elif result == "Error" %}
+            <div class="alert alert-danger text-center">
+                            پرداخت با خطا مواجه شد
+                <br><br>
+                <a href="concough://concough.zhycan.com/pay/error/" class="btn btn-outline-danger">بازگشت به برنامه</a>
+            </div>
+        {% else %}
+            <div class="alert alert-danger text-center">
+                سرور با خطا مواجه شد
+                <br><br>
+                <a href="concough://concough.zhycan.com/pay/error/" class="btn btn-outline-danger">بازگشت به برنامه</a>
+            </div>
+        {% endif %}
+    </div>
+</div>
+</div>
+{% endblock %}

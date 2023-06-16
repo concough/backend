@@ -1,0 +1,10 @@
+.sass-cache
+/node_modules
+digikunkor.db*
+media/*
+.idea
+api/migrations/
+main/migrations/
+admin/migrations/
+dataentry/migrations/
+./.venv/

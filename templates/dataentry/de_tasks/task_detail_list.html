@@ -1,0 +1,87 @@
+{% extends 'dataentry/main_layout.html' %}
+{% block title %}
+    {% if err %}
+        کارها - بروز خطا
+    {% else %}
+        کارها - {{ task.entrance.organization.title }}&nbsp;{{ task.entrance.year }}/{{ task.entrance.month }}
+        ({{ task.entrance.entrance_type.title }} - {{ task.entrance.entrance_set.title }})
+    {% endif %}
+{% endblock %}
+{% block content %}
+    <h3><span class="fa fa-desktop"></span>&nbsp;&nbsp;
+        <a href="{% url 'dataentry.home' %}">پنل مدیریت سامانه</a>&nbsp;&nbsp;
+        <span class="fa fa-angle-left small"></span>&nbsp;&nbsp;
+        <a href="{% url 'dataentry.tasks' %}">کارها</a>&nbsp;&nbsp;
+        <span class="fa fa-angle-left small"></span>&nbsp;&nbsp;
+        {% if err %}
+            خطا
+        {% else %}
+            {{ task.entrance.organization.title }}&nbsp;{{ task.entrance.year }}/{{ task.entrance.month }}
+        ({{ task.entrance.entrance_type.title }} - {{ task.entrance.entrance_set.title }})
+        {% endif %}
+    </h3>
+    <hr>
+    <div class="container-fluid">
+    {% if err %}
+        {% ifequal error_no 1 %}
+            <div class="alert alert-danger">
+                چنین کاری موجود نیست!
+            <br>
+            <a href="{% url 'dataentry.tasks' %}" class="btn btn-danger">بازگشت</a>
+            </div>
+        {% endifequal %}
+    {% else %}
+    <h4>
+        <span class="fa fa-list text-success"></span>&nbsp;&nbsp;<span class="">لیست</span>
+    </h4>
+    <br>
+    <div class="row">
+    <div class="col-sm-12">
+        {% if data_records %}
+        <table class="table table-hover">
+            <thead>
+                <tr>
+                    <th>درس</th>
+                    <th>فایل</th>
+                    <th>آخرین زمان بارگذاری</th>
+                    <th>عملیات</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% load static %}
+                {% load filters %}
+                {% for rec in data_records %}
+                    <tr>
+                        <td class="col-md-6 col-sm-6">
+                            {{ rec.entrance_booklet_detail.lesson.full_title }}
+                        </td>
+                        <td class="col-md-2 col-sm-2">
+                            {% if rec.file %}
+                            <a href="{{ rec.file.url }}" class="">دریافت فایل</a>
+                            {% else %}
+                                <span class="text-muted">فایلی بارگذاری نشده است!</span>
+                            {% endif %}
+                        </td>
+                        <td class="col-md-2 col-sm-2">
+                            {% if rec.file %}
+                                {{ rec.upload_time|jalali }}
+                            {% else %}
+                                -
+                            {% endif %}
+                        </td>
+                        <td class="col-sm-1 col-sm-1">
+                            <a href="{% url 'dataentry.tasks.details.uploadfile' pk=rec.id %}" class="btn btn-sm btn-default text-info fa fa-upload"
+                                    data-toggle="tooltip" data-placement="top" data-original-title="بارگذاری فایل"></a>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        {% else %}
+            <div class="text-muted text-center">رکوردی ثبت نشده است!</div>
+        {% endif %}
+    </div>
+    </div>
+    {% endif %}
+    </div>
+{%  endblock %}

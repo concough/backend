@@ -1,0 +1,61 @@
+{% extends 'main/main_layout.html' %}
+{% load staticfiles %}
+{% block description %}
+{% endblock %}
+
+{% block keywords %}
+{% endblock %}
+
+{% block title %}
+Concough - Admin Page
+{% endblock %}
+
+{% block content %}
+<div class="container-fluid" style="background: #f3f5f8; border: 1px solid #eee;">
+    <div class="container p-3 d-block" style="overflow: hidden">
+                <form class="form-inline justify-content-center text-center  mx-auto" method="post" action="{% url 'main.auth.login' %}">
+
+                    {% csrf_token %}
+                    {% if form.errors %}
+                    <div class="alert alert-danger text-right alert-dismissable">
+                        Wrong username and password
+                    </div>
+                    {% endif %}
+                    <div class="form-group mb-2 mr-sm-2 mb-sm-0">
+                        <label class="control-label sr-only" for="{{ form.username.id_for_label }}">Username:</label>
+                            {{ form.username }}
+                    </div>
+                    <div class="form-group mb-2 mr-sm-2 mb-sm-0">
+                        <label class="control-label sr-only" for="{{ form.password.id_for_label }}">Password</label>
+                            {{ form.password }}
+                    </div>
+                    <div class="form-group mb-2 mr-sm-2 mb-sm-0">
+                            <button type="submit" class="btn btn-CC-fill btn-primary btn-block">Sign In</button>
+                    </div>
+                    <div class="form-group mb-2 mr-sm-2 mb-sm-0">
+                                <a href="{% url 'main.auth.passreset' %}">Forgot Password?</a>
+                        <br>
+                    </div>
+                </form>
+
+    </div>
+
+</div>
+
+<div class="container">
+<div class="row text-center">
+    <img class="img-fluid  mx-auto d-block" src="{% static 'concough/images/admin.gif' %}">
+</div>
+<div class="row">
+    <div class="col-12">
+        <div class="card" style="border: none">
+              <div class="card-block text-center">
+            <h1 style="font-weight: 200;"><strong>Concough</strong> is about Progress and Sucsess</h1>
+                  <br>
+            <h2 class="text-muted" style="font-weight: 200;">All your exams on your pocket.</h2>
+                  </div>
+        </div>
+    </div>
+</div>
+    </div>
+{% endblock %}

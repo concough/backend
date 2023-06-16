@@ -1,0 +1,179 @@
+{% extends 'admin/contest_layout.html' %}
+{% load staticfiles %}
+{% block title %}گزارش ها | کلیات{% endblock %}
+{% block meta %}
+<meta http-equiv="refresh" content="600">
+{% endblock %}
+{% block content %}
+{{ block.super }}
+<div class="panel panel-default cpanel">
+    <div class="panel-heading">
+    <h5><span class="fa fa-desktop"></span>&nbsp;&nbsp;
+        <a href="{% url 'admin.home' %}">پنل مدیریت سامانه</a>&nbsp;&nbsp;
+        <span class="fa fa-angle-left small"></span>&nbsp;&nbsp;
+        گزارش ها | کلیات
+    </h5>
+
+    </div>
+    <div class="panel-body">
+<br>
+    <div class="container-fluid"><br>
+    <br>
+    <div class="row">
+    <div class="col-sm-12 col-md-2">
+        <div class="dashboard-block-stat green1">
+            <div class="stat-heading text-center">
+                <span class="stat-title">
+                    {{users_count}}
+                </span>
+                <br>
+                پیش کاربر: {{preauth_signup_count}}
+            </div>
+            <div class="stat-content">
+                <span class="stat-icon">
+                    <span class="fa fa-users"></span>
+                </span>&nbsp;&nbsp;
+                تعداد کاربران
+            </div>
+        </div>
+        <div class="dashboard-block-stat green2">
+            <div class="stat-heading text-center">
+                <span class="stat-title">
+    {{profile_female_count|add:profile_male_count|add:profile_other_count}}
+                </span>
+                <br>
+                مرد: {{profile_male_count}} &nbsp;&nbsp;&nbsp; زن: {{profile_female_count}}&nbsp;&nbsp;&nbsp;سایر: {{profile_other_count}}&nbsp;&nbsp;&nbsp;عوامل: {{staff_users_count}}
+            </div>
+            <div class="stat-content">
+                <span class="stat-icon">
+                    <span class="fa fa-user-circle-o"></span>
+                </span>&nbsp;&nbsp;
+                تعداد پروفایل
+            </div>
+        </div>
+        <div class="dashboard-block-stat green3">
+            <div class="stat-heading text-center">
+                <span class="stat-title">
+    {{devices_count}}
+                </span>
+            </div>
+            <div class="stat-content">
+                <span class="stat-icon">
+                    <span class="fa fa-mobile"></span>
+                </span>&nbsp;&nbsp;
+                دستگاه های ثبت شده
+            </div>
+        </div>
+    </div>
+    <div class="col-sm-12 col-md-2">
+        <div class="dashboard-block-stat blue1">
+            <div class="stat-heading text-center">
+                <span class="stat-title">
+    {{purchased_count}}
+                </span>
+                <br>
+                حداقل ۱ دانلود: {{purchased_count_downloaded}}
+            </div>
+            <div class="stat-content">
+                <span class="stat-icon">
+                    <span class="fa fa-cart-arrow-down"></span>
+                </span>&nbsp;&nbsp;
+                تعداد کل خرید ها
+            </div>
+        </div>
+        <div class="dashboard-block-stat blue2">
+            <div class="stat-heading text-center">
+                <span class="stat-title">
+    {{all_downloaded_count}}
+                </span>
+                <br>
+            </div>
+            <div class="stat-content">
+                <span class="stat-icon">
+                    <span class="fa fa-download"></span>
+                </span>&nbsp;&nbsp;
+                تعداد کل دانلود ها
+            </div>
+        </div>
+        <div class="dashboard-block-stat blue3">
+            <div class="stat-heading text-center">
+                <span class="stat-title">
+    {{distinct_purchased_user_count}}
+                </span>
+                <br>
+            </div>
+            <div class="stat-content">
+                <span class="stat-icon">
+                    <span class="fa fa-user-plus"></span>
+                </span>&nbsp;&nbsp;
+                کاربران با حداقل ۱ خرید
+            </div>
+        </div>
+    </div>
+    <div class="col-sm-12 col-md-2">
+        <div class="dashboard-block-stat purple1">
+            <div class="stat-heading text-center">
+                <span class="stat-title">
+    {{purchased_per_user|floatformat:4}}
+                </span>
+                <br>
+            </div>
+            <div class="stat-content">
+                <span class="stat-icon">
+                    <span class="fa fa-percent"></span>
+                </span>&nbsp;&nbsp;
+                درصد خرید به کاربر
+            </div>
+        </div>
+        <div class="dashboard-block-stat purple2">
+            <div class="stat-heading text-center">
+                <span class="stat-title">
+    {{downloaded_per_purchased|floatformat:4}}
+                </span>
+                <br>
+            </div>
+            <div class="stat-content">
+                <span class="stat-icon">
+                    <span class="fa fa-percent"></span>
+                </span>&nbsp;&nbsp;
+                درصد دانلود به خرید
+            </div>
+        </div>
+    </div>
+    <div class="col-sm-12 col-md-2">
+        <div class="dashboard-block-stat yellow1">
+            <div class="stat-heading text-center">
+                <span class="stat-title">
+    {{activity_count}}
+                </span>
+                <br>
+            </div>
+            <div class="stat-content">
+                <span class="stat-icon">
+                    <span class="fa fa-book"></span>
+                </span>&nbsp;&nbsp;
+                تعداد محصولات
+            </div>
+        </div>
+    </div>
+    <div class="col-sm-12 col-md-2">
+        <div class="dashboard-block-stat red1">
+            <div class="stat-heading text-center">
+                <span class="stat-title">
+    {{sms_count}}
+                </span>
+                <br>
+                ثبت نام: {{sms_count_signup}}
+            </div>
+            <div class="stat-content">
+                <span class="stat-icon">
+                    <span class="fa fa-comment"></span>
+                </span>&nbsp;&nbsp;
+                تعداد sms
+            </div>
+        </div>
+    </div>
+    </div>
+    </div>
+    </div></div>
+{%  endblock %}

@@ -1,0 +1,85 @@
+{% extends 'admin/contest_layout.html' %}
+{% load staticfiles %}
+{% block title %}اپلیکیشن | گزارش های خطا{% endblock %}
+{% block content %}
+{{ block.super }}
+<div class="panel panel-default cpanel">
+    <div class="panel-heading">
+    <h5><span class="fa fa-desktop"></span>&nbsp;&nbsp;
+        <a href="{% url 'admin.home' %}">پنل مدیریت سامانه</a>&nbsp;&nbsp;
+        <span class="fa fa-angle-left small"></span>&nbsp;&nbsp;
+        <a href="{% url 'admin.app_manage' %}">اپلیکیشن</a>&nbsp;&nbsp;
+        <span class="fa fa-angle-left small"></span>&nbsp;&nbsp;
+        گزارش های خطا
+    </h5>
+
+    </div>
+    <div class="panel-body">
+<br>
+    <div class="container-fluid"><br>
+    <div class="row">
+    <div class="col-sm-12">
+        {% if bugs %}
+            <nav class="">
+            <ul class="pager pager-lg">
+                    <li><a href="?page=1"><span>&rarr;</span>&nbsp;ابتدا</a></li>
+                    {% if bugs.has_previous %}
+                        <li><a href="?page={{ bugs.previous_page_number }}">قبلی</a></li>
+                    {% else %}
+                        <li class="disabled"><a href="#">قبلی</a></li>
+                    {% endif %}
+
+                    &nbsp;&nbsp;&nbsp;&nbsp;صفحه {{ bugs.number }} از {{ bugs.paginator.num_pages }}&nbsp;&nbsp;&nbsp;&nbsp;
+
+                    {% if bugs.has_next %}
+                        <li><a href="?page={{ bugs.next_page_number }}">بعدی</a></li>
+                    {% else %}
+                        <li class="disabled"><a href="#">بعدی</a></li>
+                    {% endif %}
+                    <li><a href="?page={{ bugs.paginator.num_pages }}">انتها&nbsp;<span>&larr;</span></a></li>
+            </ul>
+            </nav>
+
+        <table class="table table-hover">
+            <thead>
+                <tr>
+                    <th>کاربر</th>
+                    <th>توضیحات</th>
+                    <th>ورژن اپ</th>
+                    <th>ورژن api</th>
+                    <th>مدل دستگاه</th>
+                    <th>تاریخ</th>
+                    <th>عملیات</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% load static %}
+                {% load filters %}
+                {% for bug in bugs %}
+                    <tr>
+                        <td>{{bug.user.get_full_name}} - {{bug.user.username}}</td>
+                        <td><b>{{bug.description}}</b></td>
+                        <td>{{bug.app_version}}</td>
+                        <td>{{bug.api_version}}</td>
+                        <td>{{bug.device_model}} - {{bug.os_version}}</td>
+                        <td>{{bug.created|jalali}}</td>
+                        <td>
+                            <a href="{% url 'admin.app_manage.bugs_report.del' pk=bug.id %}" class="btn btn-sm btn-default text-danger fa fa-power-off"
+                                    data-toggle="tooltip" data-placement="top" data-original-title="حذف"></a>
+                            {% if bug.replyed == False %}
+                            <a href="{% url 'admin.app_manage.bugs_report.reply' pk=bug.id %}" class="btn btn-sm btn-default text-success fa fa-thumbs-up"
+                                    data-toggle="tooltip" data-placement="top" data-original-title="تشکر"></a>
+                            {% endif %}
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        {% else %}
+            <div class="text-muted text-center">رکوردی ثبت نشده است!</div>
+        {% endif %}
+    </div>
+    </div>
+    </div>
+    </div></div>
+{%  endblock %}

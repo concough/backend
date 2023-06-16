@@ -1,0 +1,87 @@
+{% extends 'admin/contest_layout.html' %}
+{% block title %}پنل وظایف | تنظیمات - تنظیمات هزینه بررسی کنندگان{% endblock %}
+{% load filters %}
+{% block content %}
+{{ block.super }}
+<div class="panel panel-default cpanel">
+    <div class="panel-heading">
+    <h5><span class="fa fa-desktop"></span>&nbsp;&nbsp;
+        <a href="{% url 'admin.home' %}">پنل مدیریت سامانه</a>&nbsp;&nbsp;
+        <span class="fa fa-angle-left small"></span>&nbsp;&nbsp;
+        <a href="{% url 'admin.de_jobs.settings' %}">پنل وظایف | تنظیمات</a>&nbsp;&nbsp;
+        <span class="fa fa-angle-left small"></span>&nbsp;&nbsp;
+تنظیمات هزینه بررسی کنندگان
+    </h5>
+        </div><br>
+    <div class="panel-body"><br>
+    <div class="container-fluid">
+    <div role="tabpanel">
+      <ul class="nav nav-tabs" role="tablist">
+        <li role="presentation" class="active"><a href="{% url 'admin.de_jobs.settings.checker_cost' %}"  role="tab">تنظیمات هزینه بررسی کنندگان</a></li>
+      </ul>
+    </div>
+    <br>
+    <div class="container-fluid">
+    <br><br>
+    <div class="row">
+    <div class="col-sm-6 col-sm-push-6">
+                        <div class="panel panel-success">
+                <div class="panel-heading">قیمت جدید</div>
+                <div class="panel-body">
+
+        <form class="form-inline" method="post" action="{% url 'admin.de_jobs.settings.checker_cost' %}">
+            {% csrf_token %}
+            {% if has_form_message %}
+                {% ifequal form_message 1 %}
+                    <div class="alert alert-danger text-center">
+                        مشخصات تکراری وارد شده است!
+                    </div>
+                {% endifequal %}
+            {% endif %}
+            <div class="form-group">
+                <label class="sr-only" for="{{ form.title.id_for_label }}">نوع سوال</label>
+                {{ form.title }}
+            </div>
+            <div class="form-group">
+                <label class="sr-only" for="{{ form.cost.id_for_label }}">قیمت</label>
+                {{ form.cost }}
+            </div>
+            <div class="form-group">
+                <label class="sr-only" for="{{ form.rate.id_for_label }}">نرخ</label>
+                {{ form.rate }}
+            </div>
+            <button type="submit" class="btn btn-success">تایید</button>&nbsp;&nbsp;&nbsp;
+            <span class="text-danger">{{ form.title.errors.0 }}</span>
+        </form></div></div>
+    </div>
+    <div class="col-sm-6 col-sm-pull-6">
+        {% if costs %}
+        {% load afilters %}
+        <table class="table table-hover">
+            <thead>
+                <tr>
+                    <th>نوع سوال</th>
+                    <th>نرخ</th>
+                    <th>هزینه</th>
+                    <th>آخرین بروزرسانی</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for s in costs %}
+                    <tr>
+                        <td class="col-md-3 col-sm-4 text-success">{{ s.title|ftype_res }}</td>
+                        <td class="col-md-3 col-sm-4">{{ s.rate }}</td>
+                        <td class="col-md-3 col-sm-4"><b>{{ s.cost }}&nbsp;تومان</b></td>
+                        <td class="col-md-3 col-sm-4">{{ s.updated|jalali }}</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        {% else %}
+            <div class="text-muted text-center">رکوردی ثبت نشده است!</div>
+        {% endif %}
+    </div>
+    </div>
+    </div>
+    </div></div></div>
+{%  endblock %}

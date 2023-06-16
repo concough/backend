@@ -1,0 +1,81 @@
+{% extends 'admin/contest_layout.html' %}
+{% block title %}پرداخت{% endblock %}
+{% block content %}
+{{ block.super }}
+<div class="panel panel-default cpanel">
+    <div class="panel-heading">
+    <h5><span class="fa fa-desktop"></span>&nbsp;&nbsp;
+        <a href="{% url 'admin.home' %}">پنل مدیریت سامانه</a>&nbsp;&nbsp;
+        <span class="fa fa-angle-left small"></span>&nbsp;&nbsp;
+        <a href="{% url 'admin.de_settings' %}">تنظیمات</a>&nbsp;&nbsp;
+        <span class="fa fa-angle-left small"></span>&nbsp;&nbsp;
+تامین کننده پرداخت ها
+    </h5>
+        </div><br>
+    <div class="panel-body"><br>
+    <div class="container-fluid">
+    <h4>
+            <span class="search-box">
+                <a href="{% url 'admin.payment_manage.providers.add' %}" class="btn btn-success pull-left">تامین کننده جدید</a>
+            </span>
+        <br>
+    </h4>
+    <br>
+    <div class="row">
+    <div class="col-sm-12">
+        {% if pps %}
+        <table class="table table-hover">
+            <thead>
+                <tr>
+                    <th>نام</th>
+                    <th>کد</th>
+                    <th>پست الکترونیکی</th>
+                    <th>همراه</th>
+                    <th>آدرس بازگشت</th>
+                    <th>آدرس وب سرویس</th>
+                    <th>آدرس پرداخت</th>
+                    <th>زمان ایجاد</th>
+                    <th>عملیات</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% load static %}
+                {% load filters %}
+                {% for pp in pps %}
+                    <tr>
+                        <td class="col-md-4 col-sm-4">
+                            {% if pp.logo %}
+                            <img class="img-circle" src="{{ pp.logo.url }}"
+                                                           alt="" width="40" height="40">
+                            {% else %}
+                                <img class="img-circle" src="{% static 'image/noimage.jpg' %}"
+                                                           alt="no image" width="40" height="40">
+                            {% endif %}
+                            &nbsp;&nbsp;&nbsp;
+                            {{ pp.name }}
+                        </td>
+                        <td class="col-md-3 col-sm-3"> {{ pp.mmerchant_id }} </td>
+                        <td class="col-md-3 col-sm-3"> {{ pp.email }} </td>
+                        <td class="col-md-3 col-sm-3"> {{ pp.phone }} </td>
+                        <td class="col-md-3 col-sm-3"> {{ pp.callback_url }} </td>
+                        <td class="col-md-3 col-sm-3"> {{ pp.webservice_url }} </td>
+                        <td class="col-md-3 col-sm-3"> {{ pp.pay_url }} </td>
+                        <td class="col-md-2 col-sm-2">
+                                {{ pp.created|jalali }}
+                        </td>
+                        <td class="col-sm-1 col-sm-1">
+
+                            <a href="{% url 'admin.payment_manage.providers.del' pk=pp.id %}" class="btn btn-sm btn-default text-danger fa fa-power-off"
+                                    data-toggle="tooltip" data-placement="top" data-original-title="حذف"></a>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        {% else %}
+            <div class="text-muted text-center">رکوردی ثبت نشده است!</div>
+        {% endif %}
+    </div>
+    </div>
+    </div></div></div>
+{%  endblock %}

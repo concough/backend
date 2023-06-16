@@ -1,0 +1,105 @@
+{% extends 'admin/contest_layout.html' %}
+{% block title %}اطلاعات اولیه - مواد درسی کنکور{% endblock %}
+{% block content %}
+{{ block.super }}
+<div class="panel panel-default cpanel">
+    <div class="panel-heading">
+    <h5><span class="fa fa-desktop"></span>&nbsp;&nbsp;
+        <a href="{% url 'admin.home' %}">پنل مدیریت سامانه</a>&nbsp;&nbsp;
+        <span class="fa fa-angle-left small"></span>&nbsp;&nbsp;
+        اطلاعات اولیه
+    </h5>
+        </div><br>
+    <div class="panel-body"><br>
+    <div class="container-fluid">
+    <div role="tabpanel">
+      <ul class="nav nav-tabs" role="tablist">
+        <li role="presentation"><a href="{% url 'admin.de_basic_info.organization' %}"  role="tab">سازمان ها</a></li>
+        <li role="presentation"><a href="{% url 'admin.de_basic_info.entrance_type' %}"  role="tab">انواع کنکور</a></li>
+        <li role="presentation"><a href="{% url 'admin.de_basic_info.examination_group' %}"  role="tab">گروه های آزمایشی</a></li>
+        <li role="presentation"><a href="{% url 'admin.de_basic_info.entrance_set' %}"  role="tab">مجموعه های کنکور</a></li>
+        <li role="presentation"><a href="{% url 'admin.de_basic_info.entrance_lesson' %}"  role="tab">مواد درسی کنکور</a></li>
+        <li role="presentation" class="active"><a href="{% url 'admin.de_basic_info.entrance_subset' %}"  role="tab">رشته ها</a></li>
+        <li role="presentation"><a href="{% url 'admin.de_basic_info.task_message_type' %}"  role="tab">انواع پیغام</a></li>
+      </ul>
+    </div>
+    <br>
+    <div class="container-fluid">
+    <br>    <br>
+
+    <div class="row">
+    <div class="col-sm-6 col-sm-push-6">
+                        <div class="panel panel-success">
+                <div class="panel-heading">رشته جدید</div>
+                <div class="panel-body">
+
+        <form class="form-inline" method="post" action="{% url 'admin.de_basic_info.entrance_subset' %}">
+            {% csrf_token %}
+            {% if has_form_message %}
+                {% ifequal form_message 1 %}
+                    <div class="alert alert-danger text-center">
+                        مشخصات تکراری وارد شده است!
+                    </div>
+                {% endifequal %}
+            {% endif %}
+            <div class="form-group">
+                <label class="sr-only" for="{{ form.title.id_for_label }}">عنوان</label>
+                {{ form.title }}
+            </div>
+            <div class="form-group">
+                <label class="sr-only" for="{{ form.e_set.id_for_label }}">گروه آزمایشی</label>
+                {{ form.e_set }}
+            </div>
+            <button type="submit" class="btn btn-success">اضافه</button>&nbsp;&nbsp;&nbsp;
+            <span class="text-danger">{{ form.title.errors.0 }}</span>
+        </form></div></div>
+
+    </div>
+    <div class="col-sm-6 col-sm-pull-6">
+        {% if subsets %}
+            <nav class="">
+            <ul class="pager pager-lg">
+                    <li><a href="?q={{ q }}&page=1"><span>&rarr;</span>&nbsp;ابتدا</a></li>
+                    {% if subsets.has_previous %}
+                        <li><a href="?q={{ q }}&page={{ subsets.previous_page_number }}">قبلی</a></li>
+                    {% else %}
+                        <li class="disabled"><a href="#">قبلی</a></li>
+                    {% endif %}
+
+                    &nbsp;&nbsp;&nbsp;&nbsp;صفحه {{ subsets.number }} از {{ subsets.paginator.num_pages }}&nbsp;&nbsp;&nbsp;&nbsp;
+
+                    {% if subsets.has_next %}
+                        <li><a href="?q={{ q }}&page={{ subsets.next_page_number }}">بعدی</a></li>
+                    {% else %}
+                        <li class="disabled"><a href="#">بعدی</a></li>
+                    {% endif %}
+                    <li><a href="?q={{ q }}&page={{ subsets.paginator.num_pages }}">انتها&nbsp;<span>&larr;</span></a></li>
+            </ul>
+            </nav>
+
+        <table class="table table-hover">
+            <thead>
+                <tr>
+                    <th>عنوان</th>
+                    <th>مجموعه آزمایشی</th>
+                    <th>&nbsp;</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for sub in subsets %}
+                    <tr>
+                        <td class="col-md-3 col-sm-3">{{ sub.title }}</td>
+                        <td class="col-md-8 col-sm-8">{{ sub.e_set }}</td>
+                        <td><a href="{% url 'admin.de_basic_info.entrance_subset.del' pk=sub.id %}" class="btn btn-xs text-danger glyphicon glyphicon-off"></a></td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        {% else %}
+            <div class="text-muted text-center">رکوردی ثبت نشده است!</div>
+        {% endif %}
+    </div>
+    </div>
+    </div>
+    </div></div></div>
+{%  endblock %}

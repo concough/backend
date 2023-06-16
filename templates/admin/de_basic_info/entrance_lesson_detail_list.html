@@ -1,0 +1,107 @@
+{% extends 'admin/contest_layout.html' %}
+{% block title %}اطلاعات اولیه - مواد درسی کنکور{% endblock %}
+{% block content %}
+{{ block.super }}
+<div class="panel panel-default cpanel">
+    <div class="panel-heading">
+    <h5><span class="fa fa-desktop"></span>&nbsp;&nbsp;
+        <a href="{% url 'admin.home' %}">پنل مدیریت سامانه</a>&nbsp;&nbsp;
+        <span class="fa fa-angle-left small"></span>&nbsp;&nbsp;
+        اطلاعات اولیه
+    </h5>
+            </div><br>
+    <div class="panel-body"><br>
+    <div class="container-fluid">
+    <div role="tabpanel">
+      <ul class="nav nav-tabs" role="tablist">
+        <li role="presentation"><a href="{% url 'admin.de_basic_info.organization' %}"  role="tab">سازمان ها</a></li>
+        <li role="presentation"><a href="{% url 'admin.de_basic_info.entrance_type' %}"  role="tab">انواع کنکور</a></li>
+        <li role="presentation"><a href="{% url 'admin.de_basic_info.examination_group' %}"  role="tab">گروه های آزمایشی</a></li>
+        <li role="presentation"><a href="{% url 'admin.de_basic_info.entrance_set' %}"  role="tab">مجموعه های کنکور</a></li>
+        <li role="presentation" class="active"><a href="{% url 'admin.de_basic_info.entrance_lesson' %}"  role="tab">مواد درسی کنکور</a></li>
+        <li role="presentation"><a href="{% url 'admin.de_basic_info.entrance_subset' %}"  role="tab">رشته ها</a></li>
+        <li role="presentation"><a href="{% url 'admin.de_basic_info.task_message_type' %}"  role="tab">انواع پیغام</a></li>
+      </ul>
+    </div>
+    <br><br>
+    <div class="container-fluid">
+    {% if has_error %}
+        {% ifequal error_no 1 %}
+        <div class="alert alert-danger" role="alert">
+            چنین رکوردی موجود نیست
+            <a href="{% url 'admin.de_basic_info.entrance_lesson' %}" class="btn btn-danger pull-left">بازگشت</a>
+        </div>
+        {% endifequal %}
+    {% else %}
+    <h4>
+            <span class="search-box">
+                <form method="get" class="form-horizontal" action="{% url 'admin.de_basic_info.entrance_lesson.details' pk=etype.id %}">
+                    <div class="input-group col-sm-3 pull-left">
+                        <input placeholder="جستجو" type="text" class="form-control" name="q" value="{{ q }}" autofocus="autofocus">
+                        <div class="input-group-addon"><span class=" fa fa-search"></span></div>
+                    </div>
+                </form>
+                <a href="{% url 'admin.de_basic_info.entrance_lesson.add' pk=etype.id %}" class="btn btn-success pull-left">ماده درسی جدید</a>
+            </span>
+
+    <span class="fa fa-list text-success"></span>&nbsp;&nbsp;<span class="">لیست</span>&nbsp;<span class="small">({{ etype.title }})</span>
+            {% ifnotequal q|length 0 %}
+            <br>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class=" small text-muted">فیلتر: {{ q }}</span>
+            {% endifnotequal %}
+    </h4>
+    <br>
+    <div class="row">
+    <div class="col-sm-12">
+        {% if edetails %}
+            <nav class="">
+            <ul class="pager pager-lg">
+                    <li><a href="?q={{ q }}&page=1"><span>&rarr;</span>&nbsp;ابتدا</a></li>
+                    {% if edetails.has_previous %}
+                        <li><a href="?q={{ q }}&page={{ edetails.previous_page_number }}">قبلی</a></li>
+                    {% else %}
+                        <li class="disabled"><a href="#">قبلی</a></li>
+                    {% endif %}
+
+                    &nbsp;&nbsp;&nbsp;&nbsp;صفحه {{ edetails.number }} از {{ edetails.paginator.num_pages }}&nbsp;&nbsp;&nbsp;&nbsp;
+
+                    {% if edetails.has_next %}
+                        <li><a href="?q={{ q }}&page={{ edetails.next_page_number }}">بعدی</a></li>
+                    {% else %}
+                        <li class="disabled"><a href="#">بعدی</a></li>
+                    {% endif %}
+                    <li><a href="?q={{ q }}&page={{ edetails.paginator.num_pages }}">انتها&nbsp;<span>&larr;</span></a></li>
+            </ul>
+            </nav>
+
+        <table class="table table-hover">
+            <thead>
+                <tr>
+                    <th>عنوان</th>
+                    <th>عنوان کامل</th>
+                    <th>&nbsp;</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for ty in edetails %}
+                    <tr>
+                        <td class="col-md-3 col-sm-3">{{ ty.title }}</td>
+                        <td class="col-md-8 col-sm-8">{{ ty.full_title }}</td>
+                        <td><a href="{% url 'admin.de_basic_info.entrance_lesson.del' pk=ty.id %}" class="btn btn-xs text-danger glyphicon glyphicon-off"></a></td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        {% else %}
+              {% ifnotequal q|length 0 %}
+                <div class="alert alert-danger text-center">نتیجه ای برای عبارت "{{ q }}" یافت نشد.</div>
+                {% else %}
+                <div class="text-muted text-center">رکوردی ثبت نشده است!</div>
+                {% endifnotequal %}
+        {% endif %}
+    </div>
+    </div>
+    {% endif %}
+    </div>
+    </div></div></div>
+{%  endblock %}

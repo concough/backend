@@ -1,0 +1,123 @@
+{% extends 'admin/contest_layout.html' %}
+{% load staticfiles %}
+{% block title %}مدیریت راهنما - بخش ها{% endblock %}
+{% block content %}
+{{ block.super }}
+<div class="panel panel-default cpanel">
+    <div class="panel-heading">
+    <h5><span class="fa fa-desktop"></span>&nbsp;&nbsp;
+        <a href="{% url 'admin.home' %}">پنل مدیریت سامانه</a>&nbsp;&nbsp;
+        <span class="fa fa-angle-left small"></span>&nbsp;&nbsp;
+        <a href="{% url 'admin.help_manage.sections' %}">مدیریت راهنما</a>&nbsp;&nbsp;
+        <span class="fa fa-angle-left small"></span>&nbsp;&nbsp;
+        بخش ها
+    </h5>
+        </div><br>
+    <div class="panel-body"><br>
+    <div class="container-fluid">
+    <div role="tabpanel">
+      <ul class="nav nav-tabs" role="tablist">
+        <li role="presentation" class="active"><a href="{% url 'admin.help_manage.sections' %}"  role="tab">بخش ها</a></li>
+      </ul>
+    </div>
+    <br>
+    <div class="container-fluid">
+    <br><br>
+    <div class="row">
+    <div class="col-sm-6 col-sm-push-6">
+                        <div class="panel panel-success">
+                <div class="panel-heading bg-success">بخش جدید</div>
+                <div class="panel-body">
+
+        <form class="form-inline" method="post" action="{% url 'admin.help_manage.sections' %}" enctype="multipart/form-data">
+            {% csrf_token %}
+            {% if has_form_message %}
+                {% ifequal form_message 1 %}
+                    <div class="alert alert-danger text-center">
+                        مشخصات تکراری وارد شده است!
+                    </div>
+                {% endifequal %}
+            {% endif %}
+            <div class="form-group">
+                <label class="sr-only" for="{{ form.title.id_for_label }}">عنوان</label>
+                {{ form.title }}
+            </div>
+            <div class="form-group">
+                <label class="sr-only" for="{{ form.color.id_for_label }}">رنگ</label>
+                {{ form.color }}
+            </div>
+            <div class="form-group">
+                <label class="sr-only" for="{{ form.image.id_for_label }}">عکس</label>
+                {{ form.image }}
+            </div>
+            <button type="submit" class="btn btn-success">اضافه</button>&nbsp;&nbsp;&nbsp;
+            <span class="text-danger">{{ form.title.errors.0 }}</span>
+        </form></div></div>
+    </div>
+    <div class="col-sm-6 col-sm-pull-6">
+        {% load filters %}
+        {% load afilters %}
+        {% if help_sections.count > 0 %}
+        <table class="table table-hover">
+            <thead>
+                <tr>
+                    <th>عکس</th>
+                    <th>عنوان</th>
+                    <th>رنگ</th>
+                    <th>آخرین بروزرسانی</th>
+                    <th>&nbsp;</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for h in help_sections %}
+                    <tr>
+                        <td class="col-md-2 col-sm-4">
+                            {% if h.image %}
+                            <img class="img-sel img-thumbnail"
+                                                  src="data:image/png;base64,{{ h.image|gfs_base64 }}"
+                                                  width="60"  data-toggle="modal"
+                                                  data-target="#pictureModal" data-picture="data:image/png;base64,{{ h.image|gfs_base64 }}">
+                            {% endif %}
+
+                        </td>
+                        <td class="col-md-3 col-sm-4">
+                            <a href="{% url 'admin.help_manage.sections.langs.list' unique_id=h.unique_id.hex %}">{{ h.title }}</a>
+                        </td>
+                        <td class="col-md-3 col-sm-4">
+                            {{ h.color }}
+                        </td>
+                        <td class="col-md-3 col-sm-4">
+                            {{ h.updated }}
+                        </td>
+                        <td>
+                            <a class="btn btn-xs text-warning glyphicon glyphicon-pencil" href="{% url 'admin.help_manage.sections.edit' unique_id=h.unique_id.hex %}"></a>&nbsp;
+                            <a class="btn btn-xs text-danger glyphicon glyphicon-off" href="{% url 'admin.help_manage.sections.del' unique_id=h.unique_id.hex %}"></a>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        {% else %}
+            <div class="text-muted text-center">رکوردی ثبت نشده است!</div>
+        {% endif %}
+<div class="modal fade" id="pictureModal" tabindex="-1" role="dialog" aria-labelledby="pictureModalLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                        aria-hidden="true">&times;</span></button>
+            </div>
+            <div class="modal-body">
+                <img src="#" class="big-img img-thumbnail" width="800">
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">بستن</button>
+            </div>
+        </div>
+    </div>
+</div>
+    </div>
+    </div>
+    </div>
+    </div></div></div>
+{%  endblock %}

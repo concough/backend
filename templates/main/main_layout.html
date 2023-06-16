@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+{% load staticfiles %}
+<html lang="fa" class="no-js">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, minimum-scale=1.0, initial-scale=1.0, user-scalable=no">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <title>{% block title %}Concough Admin | Zhycan{% endblock %}</title>
+
+    <meta name="auther" content="zhycan Co.">
+
+    {% block meta %}
+        <meta name="description" content="{% block description %}{% endblock %}">
+        <meta name="keywords" content="{% block keywords %}{% endblock %}">
+        <meta name="robots" content="{% block robots %}index, follow, noarchive{% endblock %}">
+
+        <!--<meta name="twitter:card" content="summary_large_image"/>-->
+        <!--<meta name="twitter:site" content="@zhycan_co"/>-->
+        <!--<meta name="twitter:image" content="http://zhycan.com/static/zhycan/images/s_image.png"/>-->
+        <!--<meta name="twitter:title" content="zhycan"/>-->
+        <!--<meta name="twitter:description" content="zhycan is about technology, art and humanities. Technology alone is not enough. Technology must intersect with the liberal arts and the humanities, to create new ideas and experiences that push society forward."/>-->
+        <!--<meta name="twitter:domain" content="http://zhycan.com"/>-->
+
+        <!--<meta property="og:title" content="zhycan"/>-->
+        <!--<meta property="og:type" content="website">-->
+        <!--<meta property="og:url" content="http://zhycan.com"/>-->
+        <!--<meta property="og:description" content="zhycan is about technology, art and humanities. Technology alone is not enough. Technology must intersect with the liberal arts and the humanities, to create new ideas and experiences that push society forward."/>-->
+        <!--<meta property="og:image" content="http://zhycan.com/static/zhycan/images/s_image.png"/>-->
+
+    {% endblock %}
+    {% ifequal denv 'local' %}
+        <link rel="apple-touch-icon" sizes="57x57" href="{% static 'concough/images/favicon/apple-icon-57x57.png' %} ">
+        <link rel="apple-touch-icon" sizes="60x60" href="{% static 'concough/images/favicon/apple-icon-60x60.png' %}">
+        <link rel="apple-touch-icon" sizes="72x72" href="{% static 'concough/images/favicon/apple-icon-72x72.png' %}">
+        <link rel="apple-touch-icon" sizes="76x76" href="{% static 'concough/images/favicon/apple-icon-76x76.png' %}">
+        <link rel="apple-touch-icon" sizes="114x114" href="{% static 'concough/images/favicon/apple-icon-114x114.png' %}">
+        <link rel="apple-touch-icon" sizes="120x120" href="{% static 'concough/images/favicon/apple-icon-120x120.png' %}">
+        <link rel="apple-touch-icon" sizes="144x144" href="{% static 'concough/images/favicon/apple-icon-144x144.png' %}">
+        <link rel="apple-touch-icon" sizes="152x152" href="{% static 'concough/images/favicon/apple-icon-152x152.png' %}">
+        <link rel="apple-touch-icon" sizes="180x180" href="{% static 'concough/images/favicon/apple-icon-180x180.png' %}">
+        <link rel="icon" type="image/png" sizes="192x192"  href="{% static 'concough/images/favicon/android-icon-192x192.png' %}">
+        <link rel="icon" type="image/png" sizes="32x32" href="{% static 'concough/images/favicon/favicon-32x32.png' %}">
+        <link rel="icon" type="image/png" sizes="96x96" href="{% static 'concough/images/favicon/favicon-96x96.png' %}">
+        <link rel="icon" type="image/png" sizes="16x16" href="{% static 'concough/images/favicon/favicon-16x16.png' %}">
+        <link rel="manifest" href="{% static 'concough/images/favicon/manifest.json' %}">
+        <meta name="msapplication-TileColor" content="#ffffff">
+        <meta name="msapplication-TileImage" content="{% static 'concough/images/favicon/ms-icon-144x144.png' %}">
+        <meta name="theme-color" content="#ffffff">
+    {% else %}
+        <link rel="apple-touch-icon" sizes="57x57" href="{{ cdn_prefix }}images/favicon/apple-icon-57x57.png">
+        <link rel="apple-touch-icon" sizes="60x60" href="{{ cdn_prefix }}images/favicon/apple-icon-60x60.png">
+        <link rel="apple-touch-icon" sizes="72x72" href="{{ cdn_prefix }}images/favicon/apple-icon-72x72.png">
+        <link rel="apple-touch-icon" sizes="76x76" href="{{ cdn_prefix }}images/favicon/apple-icon-76x76.png">
+        <link rel="apple-touch-icon" sizes="114x114" href="{{ cdn_prefix }}images/favicon/apple-icon-114x114.png">
+        <link rel="apple-touch-icon" sizes="120x120" href="{{ cdn_prefix }}images/favicon/apple-icon-120x120.png">
+        <link rel="apple-touch-icon" sizes="144x144" href="{{ cdn_prefix }}images/favicon/apple-icon-144x144.png">
+        <link rel="apple-touch-icon" sizes="152x152" href="{{ cdn_prefix }}images/favicon/apple-icon-152x152.png">
+        <link rel="apple-touch-icon" sizes="180x180" href="{{ cdn_prefix }}images/favicon/apple-icon-180x180.png">
+        <link rel="icon" type="image/png" sizes="192x192"  href="{{ cdn_prefix }}images/favicon/android-icon-192x192.png">
+        <link rel="icon" type="image/png" sizes="32x32" href="{{ cdn_prefix }}images/favicon/favicon-32x32.png">
+        <link rel="icon" type="image/png" sizes="96x96" href="{{ cdn_prefix }}images/favicon/favicon-96x96.png">
+        <link rel="icon" type="image/png" sizes="16x16" href="{{ cdn_prefix }}images/favicon/favicon-16x16.png">
+        <link rel="manifest" href="{{ cdn_prefix }}images/favicon/manifest.json">
+        <meta name="msapplication-TileColor" content="#ffffff">
+        <meta name="msapplication-TileImage" content="{{ cdn_prefix }}images/favicon/ms-icon-144x144.png">
+        <meta name="theme-color" content="#ffffff">
+    {% endifequal %}
+    <link rel="stylesheet" type="text/css" href="https://cdn.zhycan.com/css/bootstrap-4.min.css">
+    <!--<link href="{% static 'css/js/bootstrap-rtl-3.min.css' %}" rel="stylesheet">-->
+    {% ifequal denv 'local' %}
+        <link href="{% static 'concough/css/style.css' %}" rel="stylesheet">
+    {% else %}
+        <link rel="stylesheet" type="text/css" href="{{ cdn_prefix }}css/style.css">
+    {% endifequal %}
+</head>
+<body>
+<div class="page">
+    <header>
+
+<nav class="navbar navbar-toggleable-md navbar-light navbar-white">
+    <div class="container text-center">
+        <a class=" navbar-brand mr-auto "  href="/">
+    <!--        <img src="https://www.google.com/images/branding/product/ico/googleg_lodp.ico" width="30" height="30" class="d-inline-block align-middle mr-2" alt="">-->
+            <span class="navbar-text h2 text-400 text-center"  >
+                <span class="text-primary">z</span><span class="text-success">h</span><span class="text-warning">y</span><span class="text-danger">c</span><span class="text-muted">a</span><span class="text-black">n</span>
+            </span>
+        </a>
+                <ul class="nav navbar-nav ml-auto ">
+                    <li class="nav-item h4" style="font-weight: 400; letter-spacing: -1.5px;">Concough</li>
+                    </ul>
+
+
+        </div>
+</nav>
+    </header>
+    <section id="content" >
+        {% block content %}{% endblock %}
+    </section>
+    <br><br>
+        <footer class="container text-center pb-4" >
+        <hr>
+<div>Copyright ©  {% now "Y" %} &nbsp;<b>Zhycan Co.</b>&nbsp; All rights reserved.</div>
+
+        </footer>
+
+</div>
+
+<script type="text/javascript" rel="script" src="https://cdn.zhycan.com/js/jquery-3.2.1.min.js"></script>
+<script type="text/javascript" rel="script" src="https://cdn.zhycan.com/js/tether.min.js"></script>
+<script type="text/javascript" rel="script" src="https://cdn.zhycan.com/js/modernizr.min.js"></script>
+<script type="text/javascript" rel="script" src="https://cdn.zhycan.com/js/bootstrap-4.min.js"></script>
+
+{% ifequal denv 'local' %}
+    <script type="text/javascript" rel="script" src="{% static 'concough/js/general_noauth.js' %}"></script>
+{% else %}
+    <script type="text/javascript" rel="script" src="{{ cdn_prefix }}js/general_noauth.js"></script>
+{% endifequal %}
+</body>
+</html>

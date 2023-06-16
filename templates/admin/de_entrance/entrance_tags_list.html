@@ -1,0 +1,176 @@
+{% extends 'admin/contest_layout.html' %}
+{% load staticfiles %}
+{% block title %}
+{% if has_error %}
+کنکور - بروز خطا
+{% else %}
+سوالات کنکور -
+{{ booklet_detail.booklet.entrance.entrance_set.title}}: {{ booklet_detail.booklet.entrance.entrance_type.title }} ({{ booklet_detail.booklet.entrance.year}}/{{ booklet_detail.booklet.entrance.month}})
+{% endif %}
+{% endblock %}
+{% block content %}
+{{ block.super }}
+<div class="panel panel-default cpanel">
+    <div class="panel-heading">
+<h5><span class="fa fa-desktop"></span>&nbsp;&nbsp;
+    <a href="{% url 'admin.home' %}">پنل مدیریت سامانه</a>&nbsp;&nbsp;
+    <span class="fa fa-angle-left small"></span>&nbsp;&nbsp;
+    <a href="{% url 'admin.de_entrance' %}">کنکورها</a>&nbsp;&nbsp;
+    <span class="fa fa-angle-left small"></span>&nbsp;&nbsp;
+    {% if has_error %}
+    خطا
+    {% else %}
+    <a href="{% url 'admin.de_entrance.booklets' pk=booklet_detail.booklet.entrance.id %}">
+        {{booklet_detail.booklet.entrance.entrance_set.title}}: <span class="text-muted">
+            {{ booklet_detail.booklet.entrance.entrance_type.title }}-{{ booklet_detail.booklet.entrance.organization.title }} ({{ booklet_detail.booklet.entrance.year }}/{{ booklet_detail.booklet.entrance.month }})</span></a>&nbsp;&nbsp;
+    <span class="fa fa-angle-left small"></span>&nbsp;&nbsp;
+    <a href="{% url 'admin.de_entrance.booklets.list' pk=booklet_detail.booklet.entrance.id %}">{{booklet_detail.booklet.title}}</a>&nbsp;&nbsp;
+    <span class="fa fa-angle-left small"></span>&nbsp;&nbsp;
+    <a href="{% url 'admin.de_entrance.booklets.list' pk=booklet_detail.booklet.entrance.id %}">{{booklet_detail.lesson.title }}</a>&nbsp;&nbsp;
+    <span class="fa fa-angle-left small"></span>&nbsp;&nbsp;
+    کلیدواژه ها
+    {% endif %}
+</h5>
+</div>
+    <br>
+    <div class="panel-body"><br>
+<div class="container-fluid">
+    {% if has_error %}
+    {% ifequal error_no 1 %}
+    <div class="alert alert-danger" role="alert">
+        چنین رکوردی موجود نیست
+        <br>
+        <a href="{% url 'admin.de_entrance' %}" class="btn btn-danger">بازگشت</a>
+    </div>
+    {% endifequal %}
+    {% else %}
+    {% load static %}
+    {% load filters %}
+    <div class="row">
+        {% if booklet_detail.booklet.entrance.entrance_set.image %}
+        <img class="img-thumbnail img-circle pull-right"
+             src="{{ booklet_detail.booklet.entrance.entrance_set.image.url }}" alt="" width="80" height="80"
+             style="margin-left: 15px;">
+        {% else %}
+        <img class="img-thumbnail img-circle pull-right" src="{% static 'image/noimage.jpg' %}" alt="no image"
+             style="margin-left: 15px;" width="80" height="80">
+        {% endif %}
+        <div class="container-fluid" style="overflow: hidden">
+            <div class="pull-left text-center">
+                <h3 style="position: relative; margin-bottom: 20px"><span class="label label-success">سال {{ booklet_detail.booklet.entrance.year }}&nbsp;ماه {{ booklet_detail.booklet.entrance.month}}</span></h3>
+                <h4 class="">{{ booklet_detail.booklet.title }}</h4>
+            </div>
+            <h3><a href="{% url 'admin.de_entrance.booklets' pk=booklet_detail.booklet.entrance.id %}">
+                {{ booklet_detail.booklet.entrance.entrance_set.title }}&nbsp;({{booklet_detail.booklet.entrance.entrance_set.group.title }})</a></h3>
+            <h5>{{ booklet_detail.booklet.entrance.entrance_type.title }} - {{booklet_detail.booklet.entrance.organization.title }}</h5>
+            <h5 class="">
+                {% for key, value in edata.items %}
+                        <span class="label label-warning">
+                        <span>{{ key }}:</span>&nbsp;
+                        <span>{{ value }}</span></span>
+                {% endfor %}
+            </h5>
+
+        </div>
+    </div>
+    <hr>
+    <div class="row">
+        <h2 class="text-center text-success">
+            {{ booklet_detail.lesson.full_title }}
+        </h2>
+    </div>
+    <hr>
+    <div class="row">
+        <div class="container-fluid">
+            <ul class="nav nav-pills" role="tablist">
+                <li role="presentation"><a href="{% url 'admin.de_entrance.questions.list' pk=booklet_detail.id %}">سوالات</a></li>
+                <li role="presentation"><a
+                        href="{% url 'admin.de_entrance.pquestions.list' pk=booklet_detail.id %}">عکس سوالات</a></li>
+                <li role="presentation" class="active"><a href="{% url 'admin.de_entrance.tags.list' pk=booklet_detail.id %}">کلیدواژه ها</a></li>
+            </ul>
+        </div>
+        <br>
+        {% if questions %}
+        <div class="col-sm-6 col-sm-push-6">
+            <div >
+            <div class="panel panel-success">
+                <div class="panel-heading">بارگذاری کلیدواژه</div>
+                <div class="panel-body">
+
+                    <form class="form-inline" method="post" id="form1"
+                          action="{% url 'admin.de_entrance.tags.add' pk=booklet_detail.id %}" >
+                        {% csrf_token %}
+                        <div class="form-group">
+                            <label class="sr-only" for="{{ form.question.id_for_label }}">شماره سوال:</label>
+                            {{ form.question }}
+                        </div>
+                        <div class="form-group">
+                            <label class="sr-only" for="{{ form.order.id_for_label }}">ترتیب:</label>
+                            {{ form.title }}
+                        </div>
+                                                <div class="form-group">
+                        <button type="submit" class="btn btn-success">اضافه</button>
+</div>
+                        <span class="text-danger">{{ form.title.errors.0 }}</span>
+
+                        <br><br>
+                        <div id="tags-list" class="btn-group" data-toggle="buttons"></div>&nbsp;&nbsp;&nbsp;
+                    </form>
+                </div>
+            </div>
+            <div class="panel panel-success">
+                <div class="panel-heading">بارگذاری کلیدواژه توسط فایل</div>
+                <div class="panel-body">
+        <form id="form2" class="form-inline" method="post" action="{% url 'admin.de_entrance.tags.file' pk=booklet_detail.id %}" enctype="multipart/form-data">
+            {% csrf_token %}
+            <div class="form-group">
+                <label class="sr-only" for="{{ form2.file.id_for_label }}">فایل کلید ها</label>
+                {{ form2.file }}
+            </div>
+            <button type="submit" class="btn btn-info">بار گذاری</button>&nbsp;&nbsp;&nbsp;
+        </form>
+
+                    </div>
+                </div>
+</div>
+        </div>
+        <div class="col-sm-6 col-sm-pull-6">
+            <table class="table table-hover">
+                <thead>
+                <tr>
+                    <th>سوال</th>
+                    <th>کلیدواژه ها</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for q in questions %}
+                <tr data-qid="{{ q.id }}">
+                    <td>{{ q.question_number }}</td>
+                    <td>
+                        {% for tag in q.tags.all %}
+<a  href="{% url 'admin.de_entrance.tags.del' tid=tag.id qid=q.id  pk=booklet_detail.id %}" data-deleting-text="حذف ..." class="btn btn-default">
+    <span class="button-text">{{tag.title}}</span>&nbsp;&nbsp;
+    <span class="glyphicon glyphicon-trash text-danger"></span>
+</a>
+
+                        {% endfor %}
+                    </td>
+                </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% else %}
+        <div class="h4 text-center text-muted">
+            سوالات وارد نشده است!<br><br>
+            <a href="{% url 'admin.de_entrance.questions.generate' pk=booklet_detail.id %}">تولید سوالات</a>
+        </div>
+        {% endif %}
+    </div>
+    {% endif %}
+</div>
+</div></div>
+{% endblock %}
+{% block js %}
+<script type="text/javascript" src="{% static 'concough/js/jquery.ui.widget.js' %}"></script>
+{% endblock %}

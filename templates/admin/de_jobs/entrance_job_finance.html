@@ -1,0 +1,211 @@
+{% extends 'admin/contest_layout.html' %}
+{% block title %}پنل وظایف | پرداخت ها | آزمون ها{% endblock %}
+{% block content %}
+{{ block.super }}
+<div class="panel panel-default cpanel">
+    <div class="panel-heading">
+    <h3><span class="fa fa-desktop"></span>&nbsp;&nbsp;
+        <a href="{% url 'admin.home' %}">پنل مدیریت سامانه</a>&nbsp;&nbsp;
+        <span class="fa fa-angle-left small"></span>&nbsp;&nbsp;
+        <a href="{% url 'admin.de_jobs.entrance.list' %}">پنل وظایف | پرداخت ها</a>&nbsp;&nbsp;
+        <span class="fa fa-angle-left small"></span>&nbsp;&nbsp;
+        آزمون ها
+    </h3>
+        </div>
+    <div class="panel-body"><br>
+    <div class="container-fluid">
+    <div role="tabpanel">
+      <ul class="nav nav-tabs" role="tablist">
+        <li role="presentation" class="active"><a href="{% url 'admin.de_jobs.finance.entrances' %}"  role="tab">آزمون ها</a></li>
+      </ul>
+    </div>
+    <br>
+
+    <div class="container-fluid">
+
+    <h4>
+            <span class="search-box">
+                <a href="{% url 'admin.de_jobs.finance.list.entrances' %}" target="_blank" class="btn btn-primary pull-left">لیست حسابداری</a>
+            </span>
+    </h4>
+        <br><br>
+    <br>
+    <div class="row">
+    <div class="col-sm-12">
+        {% if result %}
+        <table class="table table-hover">
+            <thead>
+                <tr>
+                    <th>عنوان</th>
+                    <th>جمع مبلغ</th>
+                    <th>تاریخ</th>
+                    <th>وضعیت</th>
+                    <th>عملیات</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% load static %}
+                {% load filters %}
+                {% load afilters %}
+                {% for record in result %}
+                    {% if record.task_detail|length > 0 %}
+                        <tr>
+                            <td colspan="4">
+                                <b>
+                                <span class="text-muted">
+                                {{record.user_username}}
+                                </span>&nbsp;&nbsp;-&nbsp;&nbsp;
+                                <span class="text-primary">{{record.user_fullname}}</span>
+                                     </b>
+                            </td>
+                            <td>
+                            {% if 'user_type' in record %}
+                                {% if record|dict_value:'user_type' == 'CHECK_IN' %}
+                                <button type="button" class="btn btn-success"  data-toggle="modal" data-target="#payoffform2"
+                                    data-user_id="{{record.user_id}}"
+                                    data-title="تسویه {{record.user_fullname}}"
+                                >
+تسویه شود
+                                </button>
+                                <a class="btn btn-danger"
+                                   href="{% url 'admin.de_jobs.finance.entrance.accounting_all' user_id=record.user_id %}"
+                                   style="background-color: #FFF !important; color: #d9534f !important;">
+                                    حسابداری همه
+                                </a>
+
+                                {% elif record|dict_value:'user_type' == 'EDITOR' %}
+                                <button type="button" class="btn btn-success"  data-toggle="modal" data-target="#payoffform"
+                                    data-user_id="{{record.user_id}}"
+                                    data-title="تسویه {{record.user_fullname}}"
+                                >
+تسویه شود
+                                </button>
+                                {% endif %}
+                            {% else %}
+                                <button type="button" class="btn btn-success"  data-toggle="modal" data-target="#payoffform"
+                                    data-user_id="{{record.user_id}}"
+                                    data-title="تسویه {{record.user_fullname}}"
+                                >
+تسویه شود
+                                </button>
+                            {% endif %}
+
+                            </td>
+                        </tr>
+                        {% for f in record.task_detail %}
+                        {% if f.job_type == "ENTRANCE" %}
+                        <tr>
+                            <td>
+                                {% if 'user_type' in record %}
+                                    {% if record|dict_value:'user_type' == 'CHECK_IN' %}
+                                    پرداخت بابت بررسی آزمون
+                                {% elif record|dict_value:'user_type' == 'EDITOR' %}
+                                    {{f.job_detail.organization}}: {{f.job_detail.type}} - {{f.job_detail.group}} - {{f.job_detail.set}} ({{f.job_detail.year}}/{{f.job_detail.month}})
+                                    >> {{f.job_detail.lesson_title}}
+                                    {% endif %}
+                                {% else %}
+                                    {{f.job_detail.organization}}: {{f.job_detail.type}} - {{f.job_detail.group}} - {{f.job_detail.set}} ({{f.job_detail.year}}/{{f.job_detail.month}})
+                                    >> {{f.job_detail.lesson_title}}
+                                {% endif %}
+                            </td>
+                            <td>
+                                {{f.total_cost}} تومان
+                            </td>
+                            <td>
+                                {{f.created|jalali}}
+                            </td>
+                            <td>
+                                    {% if f.status == 'ACCOUNTING' %}
+                                    حسابداری شده
+                                {% else %}
+                                -
+                                    {% endif %}
+                            </td>
+                            <td>
+                                {% if not f.status %}
+<a class="btn btn-danger" href="{% url 'admin.de_jobs.finance.entrance.accounting' user_id=record.user_id unique_id=f.job_unique_id.hex detail_id=f.task_unique_id.hex %}">حسابداری شود</a>
+                                {% endif %}
+                            </td>
+                        </tr>
+                        {% endif %}
+                        {% endfor %}
+                    {% endif %}
+                {% endfor %}
+            </tbody>
+        </table>
+        {% else %}
+            <div class="text-muted text-center">رکوردی ثبت نشده است!</div>
+        {% endif %}
+        <div class="modal fade" id="payoffform" tabindex="-1" role="dialog" aria-labelledby="payoffformlabel">
+              <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    {% if form %}
+                    <form id="form1" name="payoffform" class="form-horizontal" method="post" action="{% url 'admin.de_jobs.finance.entrance.pay_off' %}">
+                        {% csrf_token %}
+                  <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="exampleModalLabel"></h4>
+                  </div>
+                  <div class="modal-body">
+                        {{form.user_id}}
+                        <div class="form-group">
+                            <label class="control-label col-sm-3" for="{{ form.deposit_id.id_for_label }}">شماره رسید:</label>
+                            <div class="col-sm-6">
+                            {{ form.deposit_id }}
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-sm-3" for="{{ form.issue_tracking.id_for_label }}">شماره پیگیری:</label>
+                            <div class="col-sm-6">
+                            {{ form.issue_tracking }}
+                            </div>
+                        </div>
+                  </div>
+                  <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">بیخیال</button>
+                    <button type="submit" class="btn btn-primary" value="save_type_done">ذخیره</button>
+                  </div>
+                    </form>
+                    {% endif %}
+                </div>
+              </div>
+            </div>
+        <div class="modal fade" id="payoffform2" tabindex="-1" role="dialog" aria-labelledby="payoffformlabel">
+              <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    {% if form %}
+                    <form id="form2" name="payoffform2" class="form-horizontal" method="post" action="{% url 'admin.de_jobs.finance.entrance.checker_pay_off' %}">
+                        {% csrf_token %}
+                  <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="exampleModalLabel2"></h4>
+                  </div>
+                  <div class="modal-body">
+                        {{form.user_id}}
+                        <div class="form-group">
+                            <label class="control-label col-sm-3" for="{{ form.deposit_id.id_for_label }}">شماره رسید:</label>
+                            <div class="col-sm-6">
+                            {{ form.deposit_id }}
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-sm-3" for="{{ form.issue_tracking.id_for_label }}">شماره پیگیری:</label>
+                            <div class="col-sm-6">
+                            {{ form.issue_tracking }}
+                            </div>
+                        </div>
+                  </div>
+                  <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">بیخیال</button>
+                    <button type="submit" class="btn btn-primary" value="save_type_done">ذخیره</button>
+                  </div>
+                    </form>
+                    {% endif %}
+                </div>
+              </div>
+            </div>
+
+    </div>
+    </div>
+    </div></div></div></div>
+{%  endblock %}

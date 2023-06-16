@@ -1,0 +1,10 @@
+# Tags 2019-05-31
+1 - manage.py collectstatics
+2 - manage.py makemigrations
+3 - manage.py migrate
+4 - manage.py shell:
+    - logtype_add.py
+
+# Costs 2019-06-08
+
+1 - permission script must run

@@ -1,0 +1,38 @@
+[
+  {
+    "fields": {
+      "title": "change_question_answer"
+    },
+    "model": "main.entrancelogtype",
+    "pk": 1
+  },
+  {
+    "fields": {
+      "title": "new_question_image"
+    },
+    "model": "main.entrancelogtype",
+    "pk": 2
+  },
+  {
+    "fields": {
+      "title": "del_question_image"
+    },
+    "model": "main.entrancelogtype",
+    "pk": 3
+  },
+  {
+    "fields": {
+      "title": "create_extra_data"
+    },
+    "model": "main.entrancelogtype",
+    "pk": 4
+  },
+  {
+    "fields": {
+      "title": "clear_extra_data"
+    },
+    "model": "main.entrancelogtype",
+    "pk": 5
+  }
+
+]

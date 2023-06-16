@@ -1,0 +1,68 @@
+{% extends 'admin/contest_layout.html' %}
+{% block title %}اطلاعات اولیه - مجموعه های کنکور{% endblock %}
+{% block content %}
+{{ block.super }}
+<div class="panel panel-default cpanel">
+    <div class="panel-heading">
+    <h5><span class="fa fa-desktop"></span>&nbsp;&nbsp;
+        <a href="{% url 'admin.home' %}">پنل مدیریت سامانه</a>&nbsp;&nbsp;
+        <span class="fa fa-angle-left small"></span>&nbsp;&nbsp;
+        اطلاعات اولیه
+    </h5>
+        </div><br>
+    <div class="panel-body"><br>
+    <div class="container-fluid">
+    <div role="tabpanel">
+      <ul class="nav nav-tabs" role="tablist">
+        <li role="presentation"><a href="{% url 'admin.de_basic_info.organization' %}"  role="tab">سازمان ها</a></li>
+        <li role="presentation"><a href="{% url 'admin.de_basic_info.entrance_type' %}"  role="tab">انواع کنکور</a></li>
+        <li role="presentation"><a href="{% url 'admin.de_basic_info.examination_group' %}"  role="tab">گروه های آزمایشی</a></li>
+        <li role="presentation" class="active"><a href="{% url 'admin.de_basic_info.entrance_set' %}"  role="tab">مجموعه های کنکور</a></li>
+        <li role="presentation"><a href="{% url 'admin.de_basic_info.entrance_lesson' %}"  role="tab">مواد درسی کنکور</a></li>
+        <li role="presentation"><a href="{% url 'admin.de_basic_info.entrance_subset' %}"  role="tab">رشته ها</a></li>
+        <li role="presentation"><a href="{% url 'admin.de_basic_info.task_message_type' %}"  role="tab">انواع پیغام</a></li>
+      </ul>
+    </div>
+    <br><br>
+    <div class="container-fluid">
+    <h4>
+            <span class="search-box">
+                <a href="{% url 'admin.de_basic_info.entrance_set.add' %}" class="btn btn-success pull-left">مجموعه کنکور جدید</a>
+            </span>
+        <br>
+    </h4>
+    <br>
+    <div class="row">
+    <div class="col-sm-12">
+        {% if esets %}
+        <table class="table table-hover">
+            <thead>
+                <tr>
+                    <th>عنوان</th>
+                    <th>گروه آزمایشی</th>
+                    <th>کد</th>
+                    <th>&nbsp;</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for eset in esets %}
+                    <tr>
+                        <td class="col-md-2 col-sm-2">{{ eset.title }}</td>
+                        <td class="col-md-4 col-sm-4">{{ eset.group.title }} ({{ eset.group.etype.title }})</td>
+                        <td class="col-md-4 col-sm-4">{{ eset.code }}</td>
+                        <td>
+                            <a class="btn btn-xs text-warning glyphicon glyphicon-pencil" href="{% url 'admin.de_basic_info.entrance_set.edit' pk=eset.id %}"></a>
+                            <a class="btn btn-xs text-danger glyphicon glyphicon-off" href="{% url 'admin.de_basic_info.entrance_set.del' pk=eset.id %}"></a>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        {% else %}
+            <div class="text-muted text-center">رکوردی ثبت نشده است!</div>
+        {% endif %}
+    </div>
+    </div>
+    </div>
+    </div></div></div>
+{%  endblock %}

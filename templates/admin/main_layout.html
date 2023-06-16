@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+{% load staticfiles %}
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title>{% block title %}کنکوق{% endblock %}</title>
+    <meta name="viewport" content="width=device-width, minimum-scale=1.0, initial-scale=1.0, user-scalable=yes">
+
+    <link rel="stylesheet" type="text/css" href="https://cdn.zhycan.com/css/bootstrap-3.min.css">
+    <link rel="stylesheet" type="text/css" href="https://cdn.zhycan.com/css/bootstrap-rtl-3.min.css">
+    <link rel="stylesheet" type="text/css" href="https://cdn.zhycan.com/css/font-awesome.min.css">
+
+    <!--<link rel="stylesheet" type="text/css" href="{% static 'concough/css/general.css' %}">-->
+    <link rel="stylesheet" type="text/css" href="https://cdn.zhycan.com/concough/css/general.css">
+    {% block meta %}{% endblock %}
+</head>
+<body>
+    <header class="">
+        <nav class="navbar navbar-default" style=" background: #2b669a">
+            <div class="container-fluid">
+                <div class="navbar-header">
+                    <a class="navbar-brand" href="{% url 'main.admin.home' %}"
+                           style="font-size: 2em;  color: #FFF; text-shadow: 1px 0px #000">کنکوق</a>
+
+                </div>
+
+                <p class="navbar-text navbar-left" style="color: #CCC">سلام ...&nbsp;
+                    <a class="user-info" tabindex="0" role="button" data-toggle="popover" data-trigger="focus"
+                       data-placement="bottom" data-html="true" href="#" style="color: #FFF">{{ user.get_full_name }}</a>
+                    <div class="user-info-popover hide">
+                            <a class="" href="{% url 'main.auth.passchange' %}">تغییر گذرواژه</a>
+                            <hr>
+                            <a class="btn btn-danger text-center" href="{% url 'main.auth.logout' %}"><span class="fa fa-power-off"></span>&nbsp;&nbsp;&nbsp;<span>خروج</span></a>
+                            </div>
+                {% comment %}
+                    &nbsp;&nbsp;&nbsp;<a class="btn btn-danger fa fa-power-off" href="{% url 'main.auth.logout' %}" data-toggle="tooltip"
+                               data-placement="bottom" data-original-title="خروج"></a>
+                {% endcomment %}
+                </p>
+</div>
+        </nav>
+    </header>
+<div class="container-fluid">
+    {% load cache %}
+   <nav class="navbar navbar-default" style="background: inherit; border: none; border-bottom: 1px solid #e5e5e5;">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+        <span class="sr-only">نمایش منو</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+    </div>
+
+    <!-- Collect the nav links, forms, and other content for toggling -->
+    <div class="collapse navbar-collapse cnav-collapse" id="bs-example-navbar-collapse-1">
+      <ul class="nav navbar-nav cnav">
+            {% for x in menul %}
+                {% if x.4 in perms %}
+                {% ifequal x.0 msel %}
+                    {% with "active" as cls %}
+                        <li class="active"><a href="{% url x.2 %}" class="text-primary menuup {{ cls }}"><span
+                                class="{{ x.3 }}"></span>&nbsp;&nbsp;&nbsp;&nbsp;{{ x.1 }}</a></li>
+                    {% endwith %}
+                {% else %}
+                    <li><a href="{% url x.2 %}" class="text-primary menuup"><span class="{{ x.3 }}"></span>&nbsp;&nbsp;&nbsp;&nbsp;{{ x.1 }}
+                    </a></li>
+                {% endifequal %}
+                {% endif %}
+            {% endfor %}
+
+      </ul>
+    </div><!-- /.navbar-collapse -->
+  </div><!-- /.container-fluid -->
+</nav>
+
+    <div class="row">
+        <div style="margin-right: 50px;">
+        </div>
+    </div>
+
+    <div class="row">
+        <div style="margin-left: 50px; margin-right: 50px;">
+            <div class="col-md-12 col-sm-12 main-frame" style="min-height: 400px">
+                {% block content %}{%  endblock %}
+                <br>
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript" rel="script" src="https://cdn.zhycan.com/js/jquery-3.2.1.min.js"></script>
+<script type="text/javascript" rel="script" src="https://cdn.zhycan.com/js/tether.min.js"></script>
+<script type="text/javascript" rel="script" src="https://cdn.zhycan.com/js/modernizr.min.js"></script>
+<script type="text/javascript" rel="script" src="https://cdn.zhycan.com/js/bootstrap-3.min.js"></script>
+
+
+<script type="text/javascript" rel="script" src="{% static 'concough/js/general.js' %}"></script>
+<!--<script type="text/javascript" rel="script" src="https://cdn.zhycan.com/concough/js/general.js"></script>-->
+{% block js %}{% endblock %}
+</body>
+</html>

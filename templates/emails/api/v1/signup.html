@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html>
+{% load staticfiles %}
+{% load filters %}
+<head lang="en">
+    <meta charset="UTF-8">
+    <title>کنکوق - حساب کاربری با موفقیت ایجاد شد</title>
+</head>
+<body>
+    <div class="text-center" style="text-align: center; border: 1px solid #EEE; direction: rtl">
+        <h1><a href="{{ protocol }}://{{ domain }}" style="text-decoration: none; color:#009afd">کنکوق</a></h1>
+        <h2 style="color: #666;">حساب کاربری شما با موفقیت ایجاد گردید.</h2>
+        <br>
+        <p  style="text-align: center; line-height: 2.5; padding: 10px;">
+            <span style="color:#009afd ">زمان فعالسازی:</span>{{date|jalali}}<br>
+        </p>
+    </div>
+</body>
+</html>

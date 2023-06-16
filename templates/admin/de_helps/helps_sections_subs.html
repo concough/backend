@@ -1,0 +1,131 @@
+{% extends 'admin/contest_layout.html' %}
+{% load staticfiles %}
+{% block title %}مدیریت راهنما - بخش ها | زیربخش ها{% endblock %}
+{% block content %}
+{{ block.super }}
+{% load filters %}
+{% load afilters %}
+<div class="panel panel-default cpanel">
+    <div class="panel-heading">
+    <h5><span class="fa fa-desktop"></span>&nbsp;&nbsp;
+        <a href="{% url 'admin.home' %}">پنل مدیریت سامانه</a>&nbsp;&nbsp;
+        <span class="fa fa-angle-left small"></span>&nbsp;&nbsp;
+        <a href="{% url 'admin.help_manage.sections' %}">مدیریت راهنما</a>&nbsp;&nbsp;
+        <span class="fa fa-angle-left small"></span>&nbsp;&nbsp;
+        <a href="{% url 'admin.help_manage.sections.langs.list' unique_id=section.unique_id.hex %}">{{section.title}}</a>&nbsp;&nbsp;
+        <span class="fa fa-angle-left small"></span>&nbsp;&nbsp;
+        <a href="{% url 'admin.help_manage.sections.langs.subs' unique_id=section.unique_id.hex lang=lang %}">{{section.data|dict_value:lang|dict_value:'title'}}</a>&nbsp;&nbsp;
+        <span class="fa fa-angle-left small"></span>&nbsp;&nbsp;
+زیربخش ها
+    </h5>
+        </div><br>
+    <div class="panel-body"><br>
+    <div class="container-fluid">
+    <div role="tabpanel">
+      <ul class="nav nav-tabs" role="tablist">
+        <li role="presentation" class="active"><a href="{% url 'admin.help_manage.sections' %}"  role="tab">بخش ها</a></li>
+      </ul>
+    </div>
+    <br>
+    <div class="container-fluid">
+    <br>
+            <h4>
+            <span class="search-box">
+                <a href="{% url 'admin.help_manage.sections.langs.subs.add' unique_id=section.unique_id.hex lang=lang %}" class="btn btn-success pull-left">زیربخش جدید</a>
+            </span>
+    </h4>
+    <br>
+<br>
+    <div class="row">
+    <div class="col-sm-6 col-sm-push-6">
+        {% if selected_sub %}
+            <div class="panel panel-warning">
+                <div class="panel-heading">
+                    <span class="panel-title">{{slug}}</span>
+                </div>
+                <div class="panel-body">
+                    {{selected_sub.description|safe}}
+                    <br><br>
+                    {% if selected_sub.devices|length > 0 %}
+                        <ul class="nav nav-tabs" role="tablist">
+                            {% for d in selected_sub.devices.keys %}
+                                <li role="presentation"><a href="#device-{{d}}" aria-controls="{{d}}" role="tab" data-toggle="tab">{{d}}</a></li>
+                            {% endfor %}
+                        </ul>
+                    <br>
+                        <div class="tab-content">
+                            {% for d, val in selected_sub.devices.items %}
+                                <div role="tabpanel" class="tab-pane" id="device-{{d}}">
+                                    {{val.description|safe}}
+                                </div>
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+                </div>
+                <div class="panel-footer">
+                    {% if selected_sub.devices|length > 0 %}
+                        {% for d in selected_sub.devices.keys %}
+                            <a class="btn btn-primary" href="{% url 'admin.help_manage.sections.langs.subs.devices.edit' unique_id=section.unique_id.hex lang=lang sub_unique_id=selected_sub.unique_id.hex device=d %}">{{d}}</a>
+                        {% endfor %}
+                    {% endif %}
+                    <a href="{% url 'admin.help_manage.sections.langs.subs.devices.add' unique_id=section.unique_id.hex lang=lang sub_unique_id=selected_sub.unique_id.hex %}" class="btn btn-link">+ دستگاه جدید</a>
+                </div>
+            </div>
+        {% endif %}
+    </div>
+    <div class="col-sm-6 col-sm-pull-6">
+        {% if subs %}
+        <table class="table table-hover">
+            <thead>
+                <tr>
+                    <th>ردیف</th>
+                    <th>عنوان</th>
+                    <th>در دسترس</th>
+                    <th>بروز رسانی</th>
+                    <th>&nbsp;</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for sub in subs.subs %}
+                    <tr>
+                        <td class="col-md-1 col-sm-1">
+                            {{sub.order}}
+                        </td>
+                        <td class="col-md-3 col-sm-4">
+                            <a href="{% url 'admin.help_manage.sections.langs.subs' unique_id=section.unique_id.hex lang=lang %}?q={{sub.slug}}">{{ sub.title }}</a>
+                        </td>
+                        <td class="col-md-3 col-sm-4">
+                            {% if sub.available %}
+                                 <span class="text-success fa fa-check-square-o"></span>
+                            {% else %}
+                                <span class="text-danger fa fa-square-o"></span>
+                           {% endif %}
+                        </td>
+                        <td class="col-md-3 col-sm-4">
+                            {{ sub.updated|jalali }}
+                        </td>
+                        <td>
+                            {% if sub.available %}
+                                <a href="{% url 'admin.help_manage.sections.langs.subs.unavail' unique_id=section.unique_id.hex lang=lang sub_unique_id=sub.unique_id.hex %}" class="btn btn-sm btn-default text-muted fa fa-thumbs-down"
+                                    data-toggle="tooltip" data-placement="top" data-original-title="از دسترس خارج شو"></a>
+                            {% else %}
+                                <a href="{% url 'admin.help_manage.sections.langs.subs.avail' unique_id=section.unique_id.hex lang=lang sub_unique_id=sub.unique_id.hex %}" class="btn btn-sm btn-default text-success fa fa-thumbs-up"
+                                    data-toggle="tooltip" data-placement="top" data-original-title="در دسترس قرار بگیر"></a>
+                            {% endif %}
+                                <a href="{% url 'admin.help_manage.sections.langs.subs.edit' unique_id=section.unique_id.hex lang=lang sub_unique_id=sub.unique_id.hex %}" class="btn btn-sm btn-default text-warning fa fa-pencil"
+                                    data-toggle="tooltip" data-placement="top" data-original-title="ویرایش"></a>
+                                <a href="{% url 'admin.help_manage.sections.langs.subs.del' unique_id=section.unique_id.hex lang=lang sub_unique_id=sub.unique_id.hex %}" class="btn btn-sm btn-default text-danger fa fa-power-off"
+                                    data-toggle="tooltip" data-placement="top" data-original-title="حذف"></a>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        {% else %}
+            <div class="text-muted text-center">رکوردی ثبت نشده است!</div>
+        {% endif %}
+    </div>
+    </div>
+    </div>
+    </div></div></div>
+{%  endblock %}

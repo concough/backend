@@ -1,0 +1,177 @@
+{% extends 'admin/main_layout.html' %}
+{% block title %}پیغام ها -
+    {% if filtered %}
+    {{ task.entrance }}
+    {% endif %}
+{% endblock %}
+{% block content %}
+    <h3><span class="fa fa-desktop"></span>&nbsp;&nbsp;
+        <a href="{% url 'admin.home' %}">پنل مدیریت سامانه</a>&nbsp;&nbsp;
+        <span class="fa fa-angle-left small"></span>&nbsp;&nbsp;
+        پیغام ها&nbsp;
+        {% if filtered %}
+        <span class="text-muted">{{ task.entrance }}</span>
+        {% endif %}
+    </h3>
+    <hr>
+    <div class="container-fluid">
+    <h4>
+        {% ifequal ugn 'master_operator' %}
+            {% if filtered %}
+            <span class="search-box">
+                <a href="{% url 'admin.messages.new' pk=tid %}?next={{ next_url|urlencode }}" class="btn btn-success pull-left">پیغام جدید</a>
+            </span>
+            {% endif %}
+        {% endifequal %}
+        <span class="fa fa-list text-success"></span>&nbsp;&nbsp;<span class="">لیست</span>
+    </h4>
+    <br>
+    <div class="row">
+    <ul class="nav nav-tabs" role="tablist">
+        <li role="presentation" class="active"><a href="#msg_received" aria-controls="msg_received" role="tab" data-toggle="tab">پیغام های دریافتی</a></li>
+        <li role="presentation"><a href="#msg_sent" aria-controls="msg_sent" role="tab" data-toggle="tab">پیغام های فرستاده شده</a></li>
+    </ul>
+    <br>
+    <div class="tab-content">
+    <div role="tabpanel" class="tab-pane" id="msg_sent">
+        {% if messages_sent %}
+            <nav class="">
+            <ul class="pager pager-lg">
+                    <li><a href="?page=1&tid={{ tid }}"><span>&rarr;</span>&nbsp;ابتدا</a></li>
+                    {% if messages_sent.has_previous %}
+                        <li><a href="?page={{ messages_sent.previous_page_number }}&tid={{ tid }}">قبلی</a></li>
+                    {% else %}
+                        <li class="disabled"><a href="#">قبلی</a></li>
+                    {% endif %}
+
+                    &nbsp;&nbsp;&nbsp;&nbsp;صفحه {{ messages_sent.number }} از {{ messages_sent.paginator.num_pages }}&nbsp;&nbsp;&nbsp;&nbsp;
+
+                    {% if messages_sent.has_next %}
+                        <li><a href="?page={{ messages_sent.next_page_number }}&tid={{ tid }}">بعدی</a></li>
+                    {% else %}
+                        <li class="disabled"><a href="#">بعدی</a></li>
+                    {% endif %}
+                    <li><a href="?page={{ messages_sent.paginator.num_pages }}&tid={{ tid }}">انتها&nbsp;<span>&larr;</span></a></li>
+            </ul>
+            </nav>
+
+        <table class="table table-hover">
+            <thead>
+                <tr>
+                    <th>گیرنده پیغام</th>
+                    <th>متن پیغام</th>
+                    <th>زمان ارسال</th>
+                    <th>زمان مشاهده</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% load static %}
+                {% load filters %}
+                {% for msg in messages_sent %}
+                    <tr>
+                        <td class="col-md-2 col-sm-2">
+                            {{ msg.to_user.username }}
+                        </td>
+                        <td class="col-md-6 col-sm-5">
+                            {{ msg.message_content }}
+                            <br>
+                            {% if msg.attached_file %}
+                                <a href="{{ msg.attached_file.url }}">دانلود فایل پیوست</a>
+                            {% endif %}
+                        </td>
+                        <td class="col-md-1 col-sm-1">
+                            {{ msg.message_time|jalali }}
+                        </td>
+                        <td class="col-md-1 col-sm-1">
+                            {% if msg.seen %}
+                                {{ msg.seen_time|jalali }}
+                            {% else %}
+                                <span class="text-muted">هنوز مشاهده نشده است</span>
+                            {% endif %}
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        {% else %}
+            <div class="text-muted text-center">رکوردی ثبت نشده است!</div>
+        {% endif %}
+    </div>
+    <div role="tabpanel" class="tab-pane active" id="msg_received">
+        {% if messages_received %}
+            <nav class="">
+            <ul class="pager pager-lg">
+                    <li><a href="?page=1&tid={{ tid }}"><span>&rarr;</span>&nbsp;ابتدا</a></li>
+                    {% if messages_received.has_previous %}
+                        <li><a href="?page={{ messages_received.previous_page_number }}&tid={{ tid }}">قبلی</a></li>
+                    {% else %}
+                        <li class="disabled"><a href="#">قبلی</a></li>
+                    {% endif %}
+
+                    &nbsp;&nbsp;&nbsp;&nbsp;صفحه {{ messages_received.number }} از {{ messages_received.paginator.num_pages }}&nbsp;&nbsp;&nbsp;&nbsp;
+
+                    {% if messages_received.has_next %}
+                        <li><a href="?page={{ messages_received.next_page_number }}&tid={{ tid }}">بعدی</a></li>
+                    {% else %}
+                        <li class="disabled"><a href="#">بعدی</a></li>
+                    {% endif %}
+                    <li><a href="?page={{ messages_received.paginator.num_pages }}&tid={{ tid }}">انتها&nbsp;<span>&larr;</span></a></li>
+            </ul>
+            </nav>
+
+        <table class="table table-hover">
+            <thead>
+                <tr>
+                    <th>فرستنده پیغام</th>
+                    <th>متن پیغام</th>
+                    <th>زمان ارسال</th>
+                    <th>عملیات</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% load static %}
+                {% load filters %}
+                {% for msg in messages_received %}
+                    {% if msg.seen %}
+                    <tr>
+                    {% else %}
+                    <tr style="background: #f9f9f9; font-weight: bold">
+                    {% endif %}
+                        <td class="col-md-2 col-sm-2">
+                            {{ msg.form_user.username }}
+                        </td>
+                        <td class="col-md-6 col-sm-5">
+                            {% if msg.seen %}
+                                {{ msg.message_content }}
+                            {% else %}
+                                <strong>{{ msg.message_content }}</strong>
+                            {% endif %}
+                            <br>
+                            {% if msg.attached_file %}
+                                <a href="{{ msg.attached_file.url }}">دانلود فایل پیوست</a>
+                            {% endif %}
+                        </td>
+                        <td class="col-md-1 col-sm-1">
+                            {{ msg.message_time|jalali }}
+                        </td>
+                        <td class="col-sm-1 col-sm-1">
+                            <a href="{% url 'admin.messages.reply' pk=msg.id %}?next={{ next_url }}" class="btn btn-sm btn-default text-info fa fa-mail-reply"
+                                    data-toggle="tooltip" data-placement="top" data-original-title="پاسخ"></a>
+                            {% if msg.seen %}
+                            {% else %}
+                            <a href="{% url 'admin.messages.seen' pk=msg.id %}" class="btn btn-sm btn-default text-success fa fa-check-square-o"
+                                    data-toggle="tooltip" data-placement="top" data-original-title="دیده شد"></a>
+                            {% endif %}
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        {% else %}
+            <div class="text-muted text-center">رکوردی ثبت نشده است!</div>
+        {% endif %}
+    </div>
+    </div>
+    </div>
+    </div>
+{%  endblock %}

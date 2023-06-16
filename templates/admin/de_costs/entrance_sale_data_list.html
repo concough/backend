@@ -1,0 +1,91 @@
+{% extends 'admin/contest_layout.html' %}
+{% block title %}قیمت گذاری - آزمون ها{% endblock %}
+{% load filters %}
+{% block content %}
+{{ block.super }}
+<div class="panel panel-default cpanel">
+    <div class="panel-heading">
+    <h5><span class="fa fa-desktop"></span>&nbsp;&nbsp;
+        <a href="{% url 'admin.home' %}">پنل مدیریت سامانه</a>&nbsp;&nbsp;
+        <span class="fa fa-angle-left small"></span>&nbsp;&nbsp;
+        <a href="{% url 'admin.costs' %}">قیمت گذاری</a>&nbsp;&nbsp;
+        <span class="fa fa-angle-left small"></span>&nbsp;&nbsp;
+آزمون ها
+    </h5>
+        </div><br>
+    <div class="panel-body"><br>
+    <div class="container-fluid">
+    <br>
+    <div class="container-fluid">
+    <br><br>
+    <div class="row">
+    <div class="col-sm-6 col-sm-push-6">
+                        <div class="panel panel-success">
+                <div class="panel-heading">قیمت جدید</div>
+                <div class="panel-body">
+
+        <form class="form-inline" method="post" action="{% url 'admin.costs.entrance_sale_data' %}">
+            {% csrf_token %}
+            {% if has_form_message %}
+                {% ifequal form_message 1 %}
+                    <div class="alert alert-danger text-center">
+                        مشخصات تکراری وارد شده است!
+                    </div>
+                {% endifequal %}
+            {% endif %}
+            <div class="form-group">
+                <label class="sr-only" for="{{ form.entrance_type.id_for_label }}">نوع کنکور</label>
+                {{ form.entrance_type }}
+            </div>
+            <div class="form-group">
+                <label class="sr-only" for="{{ form.year.id_for_label }}">سال</label>
+                {{ form.year }}
+            </div>
+            <div class="form-group">
+                <label class="sr-only" for="{{ form.month.id_for_label }}">ماه</label>
+                {{ form.month }}
+            </div>
+            <div class="form-group">
+                <label class="sr-only" for="{{ form.cost.id_for_label }}">هزینه</label>
+                {{ form.cost }}
+            </div>
+            <div class="form-group">
+                <label class="sr-only" for="{{ form.cost_bon.id_for_label }}">بن</label>
+                {{ form.cost_bon }}
+            </div>
+            <button type="submit" class="btn btn-success">تایید</button>&nbsp;&nbsp;&nbsp;
+            <span class="text-danger">{{ form.entrance_type.errors.0 }}</span>
+        </form></div></div>
+    </div>
+    <div class="col-sm-6 col-sm-pull-6">
+        {% if sales %}
+        <table class="table table-hover">
+            <thead>
+                <tr>
+                    <th>نوع کنکور</th>
+                    <th>سال</th>
+                    <th>هزینه</th>
+                    <th>بن</th>
+                    <th>آخرین بروزرسانی</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for s in sales %}
+                    <tr>
+                        <td class="">{{ s.entrance_type }}</td>
+                        <td class="">{{s.month|jalalimonth}}&nbsp;{{ s.year }}</td>
+                        <td class="">{{ s.cost }}&nbsp;تومان</td>
+                        <td class="">{{ s.cost_bon }}</td>
+                        <td class="">{{ s.updated|jalali }}</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        {% else %}
+            <div class="text-muted text-center">رکوردی ثبت نشده است!</div>
+        {% endif %}
+    </div>
+    </div>
+    </div>
+    </div></div></div>
+{%  endblock %}

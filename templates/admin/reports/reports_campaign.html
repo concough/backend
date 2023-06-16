@@ -1,0 +1,232 @@
+{% extends 'admin/contest_layout.html' %}
+{% load staticfiles %}
+{% block title %}گزارش ها | کمپین{% endblock %}
+{% block meta %}
+<meta http-equiv="refresh" content="600">
+{% endblock %}
+{% block content %}
+{{ block.super }}
+{% load filters %}
+{% load afilters %}
+<div class="panel panel-default cpanel">
+    <div class="panel-heading">
+    <h5><span class="fa fa-desktop"></span>&nbsp;&nbsp;
+        <a href="{% url 'admin.home' %}">پنل مدیریت سامانه</a>&nbsp;&nbsp;
+        <span class="fa fa-angle-left small"></span>&nbsp;&nbsp;
+        گزارش ها | کمپین
+    </h5>
+
+    </div>
+    <div class="panel-body">
+<br>
+    <div class="container-fluid"><br>
+    <h4>
+        <span class="search-box">
+                <form method="post" action="{% url 'admin.reports.campaign.add' %}">
+                    {% csrf_token %}
+                <button type="submit" class="btn btn-success pull-left">+ کمپین</button>
+            <div class="input-group col-sm-3 pull-left">
+                {{form.title}}
+            </div>
+                <a href="{% url 'admin.reports.campaign.sync' %}" class="btn btn-danger pull-left">همگام سازی</a>
+                </form>
+        </span>
+        <div class="btn-group" role="group" aria-label="ttt">
+              <a data-toggle="tab" href="#list" aria-label="ttt" class="btn btn-default">
+                  <span class="fa fa-list"></span>
+              </a>
+              <a data-toggle="tab" href="#grid" aria-label="ttt" class="btn btn-default">
+                  <span class="fa fa-th"></span>
+              </a>
+        </div>
+        <br>
+    </h4>
+        <br><br>
+        <div class="tab-content">
+            <div id="grid" class="tab-pane fade in active">
+    <div class="row" >
+        {% for camp in campaigns %}
+        <div class="col-sm-12 col-md-3">
+            <div class="dashboard-block-stat gray" style="position: relative">
+                <a class="pull-left label label-danger" href="{% url 'admin.reports.campaign.del' unique_id=camp.unique_id.hex %}" style="position: relative; border-radius: 50%; padding: 10px 10px; top: -10px; left: -10px">
+                    <span class="fa fa-times fa-lg"></span>
+                </a>
+                <div class="stat-heading text-center">
+                    <span class="stat-title text-primary">
+                        {{ camp.count }}
+                    </span>
+                </div>
+                <div class="stat-content">
+                    <a href="{% url 'admin.reports.campaign.chart' unique_id=camp.unique_id.hex %}" class="btn  btn-warning pull-left">
+                        <span class="fa fa-lg fa-bar-chart "></span>
+                    </a>
+                    <span class="stat-icon text-success">
+                        <span class="fa fa-pie-chart"></span>
+                    </span>&nbsp;&nbsp;
+                    <b class="text-success">{{camp.title}}</b><br>
+                    <br>
+                    <span class="small">
+                    <span class="text-muted ">ایجاد کمپین:</span>&nbsp;<span class="">{{camp.created|jalali}}</span>
+                        </span>
+                    <hr>
+                    <span class="small">
+                        <span class="text-muted">آخرین بروزرسانی:</span>&nbsp;<span><b>{{camp.last_updated|jalali}}</b></span><br>
+                        <span class="text-muted">لینک:</span>&nbsp;<a class="btn-link text-primary" href="{{camp.last_redirect}}">{{camp.last_redirect}}</a>
+                    </span>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+        <br><br><hr><br>
+        <h4><span class="fa fa-list text-success"></span>&nbsp;&nbsp;
+            کمپین های پیشین:</h4>
+        <br>
+        {% if hide_campaigns|length > 0 %}
+        {% for camp in hide_campaigns %}
+        <div class="col-sm-12 col-md-3">
+            <div class="dashboard-block-stat gray" style="position: relative">
+                <a class="pull-left label label-primary" href="{% url 'admin.reports.campaign.show' unique_id=camp.unique_id.hex %}" style="position: relative; border-radius: 50%; padding: 10px 10px; top: -10px; left: -10px">
+                    <span class="fa fa-check fa-lg"></span>
+                </a>
+                <div class="stat-heading text-center">
+                    <span class="stat-title text-muted">
+                        {{ camp.count }}
+                    </span>
+                </div>
+                <div class="stat-content">
+                    <a href="{% url 'admin.reports.campaign.chart' unique_id=camp.unique_id.hex %}" class="btn  btn-default pull-left">
+                        <span class="fa fa-lg fa-bar-chart "></span>
+                    </a>
+                    <span class="stat-icon text-muted">
+                        <span class="fa fa-pie-chart"></span>
+                    </span>&nbsp;&nbsp;
+                    <b class="">{{camp.title}}</b><br>
+                    <br>
+                    <span class="small">
+                    <span class="text-muted ">ایجاد کمپین:</span>&nbsp;<span class="">{{camp.created|jalali}}</span>
+                        </span>
+                    <hr>
+                    <span class="small">
+                        <span class="text-muted">آخرین بروزرسانی:</span>&nbsp;<span><b>{{camp.last_updated|jalali}}</b></span><br>
+                        <span class="text-muted">لینک:</span>&nbsp;<a class="btn-link text-primary" href="{{camp.last_redirect}}">{{camp.last_redirect}}</a>
+                    </span>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+        {% else %}
+        <h6 class="text-muted text-center">
+                    کمپینی مخفی نشده است
+        </h6>
+        {% endif %}
+                </div>
+            <div id="list" class="tab-pane fade">
+    <div class="row" >
+        <table class="table table-hover">
+            <thead>
+                <tr>
+                    <th>نام کمپین</th>
+                    <th>تعداد</th>
+                    <th>ایجاد کمپین</th>
+                    <th>آخرین بروزرسانی</th>
+                    <th>لینک</th>
+                    <th>عملیات</th>
+                </tr>
+            </thead>
+            <tbody>
+        {% for camp in campaigns %}
+        <tr>
+        <td class="col-sm-2">
+                <span class="stat-icon text-success">
+                    <span class="fa fa-pie-chart"></span>
+                </span>&nbsp;&nbsp;
+            <b class="text-success">{{camp.title}}</b>
+        </td>
+        <td class="col-sm-1">
+            <span class="text-primary">
+                <strong>{{ camp.count }}</strong>
+            </span>
+        </td>
+        <td class="col-sm-2">
+            {{camp.created|jalali}}
+        </td>
+        <td class="col-sm-2">
+            <b>{{camp.last_updated|jalali}}</b>
+        </td>
+        <td class="col-sm-4">
+            <a class="btn-link text-primary" href="{{camp.last_redirect}}">{{camp.last_redirect}}</a>
+        </td>
+        <td class="col-sm-1">
+                    <a href="{% url 'admin.reports.campaign.chart' unique_id=camp.unique_id.hex %}" class="btn btn-sm btn-default">
+                        <span class="fa fa-lg fa-bar-chart  text-warning"></span>
+                    </a>
+                <a class="btn btn-sm btn-default" href="{% url 'admin.reports.campaign.del' unique_id=camp.unique_id.hex %}">
+                    <span class="fa fa-times fa-lg text-danger"></span>
+                </a>
+        </td></tr>
+        {% endfor %}
+            </tbody>
+            </table>
+    </div>
+        <br><br><br>
+        <h4><span class="fa fa-list text-success"></span>&nbsp;&nbsp;
+            کمپین های پیشین:</h4>
+        <br>
+        {% if hide_campaigns|length > 0 %}
+        <table class="table table-hover">
+            <thead>
+                <tr>
+                    <th>نام کمپین</th>
+                    <th>تعداد</th>
+                    <th>ایجاد کمپین</th>
+                    <th>آخرین بروزرسانی</th>
+                    <th>لینک</th>
+                    <th>عملیات</th>
+                </tr>
+            </thead>
+            <tbody>
+
+        {% for camp in hide_campaigns %}
+        <tr>
+        <td class="col-sm-2">
+                <span class="stat-icon text-muted">
+                    <span class="fa fa-pie-chart"></span>
+                </span>&nbsp;&nbsp;
+            <b class="">{{camp.title}}</b>
+        </td>
+        <td class="col-sm-1">
+            <span class="text-muted">
+                <strong>{{ camp.count }}</strong>
+            </span>
+        </td>
+        <td class="col-sm-2">
+            {{camp.created|jalali}}
+        </td>
+        <td class="col-sm-2">
+            <b>{{camp.last_updated|jalali}}</b>
+        </td>
+        <td class="col-sm-4">
+            <a class="btn-link text-primary" href="{{camp.last_redirect}}">{{camp.last_redirect}}</a>
+        </td>
+        <td class="col-sm-1">
+                    <a href="{% url 'admin.reports.campaign.chart' unique_id=camp.unique_id.hex %}" class="btn btn-sm btn-default">
+                        <span class="fa fa-lg fa-bar-chart  text-warning"></span>
+                    </a>
+                <a class="btn btn-sm btn-default" href="{% url 'admin.reports.campaign.show' unique_id=camp.unique_id.hex %}">
+                    <span class="fa fa-check fa-lg text-primary"></span>
+                </a>
+        </td></tr>
+        {% endfor %}
+            </tbody>
+            </table>
+        {% else %}
+        <h6 class="text-muted text-center">
+                    کمپینی مخفی نشده است
+        </h6>
+        {% endif %}
+                </div>
+
+            </div>
+    </div></div></div>
+{%  endblock %}

@@ -1,0 +1,73 @@
+{% extends 'admin/main_layout.html' %}
+{% block title %}
+    کارها - بارگذاری فایل
+{% endblock %}
+{% block content %}
+    <h3><span class="fa fa-desktop"></span>&nbsp;&nbsp;
+        <a href="{% url 'dataentry.home' %}">پنل مدیریت سامانه</a>&nbsp;&nbsp;
+        <span class="fa fa-angle-left small"></span>&nbsp;&nbsp;
+        <a href="{% url 'dataentry.tasks' %}">کارها</a>&nbsp;&nbsp;
+        <span class="fa fa-angle-left small"></span>&nbsp;&nbsp;
+        {% if err %}
+            خطا
+        {% else %}
+            <a href="{% url 'dataentry.tasks.details' rdr.task.id %}">
+            {{ rdr.task.entrance.organization.title }}&nbsp;{{ rdr.task.entrance.year }}/{{ rdr.task.entrance.month }}
+            ({{ rdr.task.entrance.entrance_type.title }} - {{ rdr.task.entrance.entrance_set.title }})</a>
+            &nbsp;&nbsp;
+            <span class="fa fa-angle-left small"></span>&nbsp;&nbsp;
+            بارگذاری فایل
+        {% endif %}
+    </h3>
+    <hr>
+    <div class="container-fluid">
+    {% if err %}
+        {% ifequal error_no 1 %}
+            <div class="alert alert-danger">
+                چنین کاری موجود نیست!
+            <br>
+            <a href="{% url 'dataentry.tasks' %}" class="btn btn-danger">بازگشت</a>
+            </div>
+        {% endifequal %}
+    {% else %}
+    <h4>
+        <span class="fa fa-pencil text-success"></span>&nbsp;&nbsp;<span class="">بارگذاری فایل درس
+        <span class="text-primary">{{ rdr.entrance_booklet_detail.lesson.full_title }}</span>
+    </span>
+    </h4>
+    <br>
+    <div class="row">
+    <div class="col-sm-12">
+        <form class="form-horizontal" method="post" action="{% url 'dataentry.tasks.details.uploadfile' pk=rdr.id %}" enctype="multipart/form-data">
+            {% csrf_token %}
+            {% if has_form_message %}
+                {% ifequal form_message 1 %}
+                    <div class="alert alert-danger text-center">
+                        مشخصات تکراری وارد شده است!
+                    </div>
+                {% endifequal %}
+            {% endif %}
+            <div class="form-group">
+                <label class="control-label col-sm-2" for="{{ form.file.id_for_label }}">فایل مربوطه:</label>
+                <div class="col-sm-3">
+                {{ form.file }}
+                </div>
+                <div class="col-sm-6">
+                    <span class="text-danger">{{ form.file.errors.0 }}</span>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-sm-2">&nbsp;</div>
+                <div class="col-sm-2">
+                    <button type="submit" class="btn btn-primary btn-block">اضافه</button>
+                </div>
+                <div class="col-sm-1">
+                    <a href="{% url 'dataentry.tasks.details' pk=rdr.task.id %}" class="btn btn-link">بازگشت</a>
+                </div>
+            </div>
+        </form>
+    </div>
+    </div>
+    {% endif %}
+    </div>
+{%  endblock %}

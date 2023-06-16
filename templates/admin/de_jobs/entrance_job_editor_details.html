@@ -1,0 +1,68 @@
+{% extends 'admin/contest_layout.html' %}
+{% block title %}پنل وظایف | آزمون ها | وضعیت تایپیست ها{% endblock %}
+{% block content %}
+{{ block.super }}
+<div class="panel panel-default cpanel">
+    <div class="panel-heading">
+    <h3><span class="fa fa-desktop"></span>&nbsp;&nbsp;
+        <a href="{% url 'admin.home' %}">پنل مدیریت سامانه</a>&nbsp;&nbsp;
+        <span class="fa fa-angle-left small"></span>&nbsp;&nbsp;
+        <a href="{% url 'admin.de_jobs.entrance.list' %}">پنل وظایف | آزمون ها</a>&nbsp;&nbsp;
+        <span class="fa fa-angle-left small"></span>&nbsp;&nbsp;
+        وضعیت تایپیست ها
+    </h3>
+        </div>
+    <div class="panel-body"><br>
+    <div class="container-fluid">
+    <div role="tabpanel">
+      <ul class="nav nav-tabs" role="tablist">
+        <li role="presentation"><a href="{% url 'admin.de_jobs.entrance.list' %}"  role="tab">همه آزمون ها</a></li>
+        <li role="presentation" ><a href="{% url 'admin.de_jobs.entrance.news.list' %}"  role="tab">جدیدترین تغییرات</a></li>
+        <li role="presentation" class="active"><a href="{% url 'admin.de_jobs.entrance.typists' %}"  role="tab">تایپیست ها</a></li>
+      </ul>
+    </div>
+    <br><br>
+
+    <div class="container-fluid">
+    <br>
+    <div class="row">
+    <div class="col-sm-12">
+        {% if result %}
+        <table class="table table-hover">
+            <thead>
+                <tr>
+                    <th>نام کامل</th>
+                    <th>نام کاربری</th>
+                    <th>عضویت</th>
+                    <th>شروع نشده</th>
+                    <th>شروع شده</th>
+                    <th>تمام شده</th>
+                    <th>در حال چک</th>
+                    <th>رد شده</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% load static %}
+                {% load filters %}
+                {% load afilters %}
+                {% for key, record in result.items %}
+                        <tr>
+                            <td class="col-sm-2">{{record.fullname}}</td>
+                            <td class="col-sm-2">{{key}}</td>
+                            <td class="col-sm-2">{{record.joined | jalali }}</td>
+                            <td class="col-sm-1 text-warning"><b>{{record.not_started}}</b></td>
+                            <td class="col-sm-1"><b>{{record.type_started}}</b></td>
+                            <td class="col-sm-1 text-success"><b>{{record.type_done}}</b></td>
+                            <td class="col-sm-1 text-primary"><b>{{record.type_in_check}}</b></td>
+                            <td class="col-sm-1 text-danger"><b>{{record.type_rejected}}</b></td>
+                        </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        {% else %}
+            <div class="text-muted text-center">رکوردی ثبت نشده است!</div>
+        {% endif %}
+    </div>
+    </div>
+    </div></div></div></div>
+{%  endblock %}

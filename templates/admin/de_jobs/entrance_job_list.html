@@ -1,0 +1,613 @@
+{% extends 'admin/contest_layout.html' %}
+{% block title %}پنل وظایف | آزمون ها{% endblock %}
+{% block content %}
+{{ block.super }}
+<div class="panel panel-default cpanel">
+    <div class="panel-heading">
+    <h3><span class="fa fa-desktop"></span>&nbsp;&nbsp;
+        <a href="{% url 'admin.home' %}">پنل مدیریت سامانه</a>&nbsp;&nbsp;
+        <span class="fa fa-angle-left small"></span>&nbsp;&nbsp;
+        <a href="{% url 'admin.de_jobs.entrance.list' %}">پنل وظایف | آزمون ها</a>&nbsp;&nbsp;
+        <span class="fa fa-angle-left small"></span>&nbsp;&nbsp;
+        کارها
+    </h3>
+        </div>
+    <div class="panel-body"><br>
+    <div class="container-fluid">
+    <div role="tabpanel">
+        {% ifequal ugn 'master_operator' %}
+
+      <ul class="nav nav-tabs" role="tablist">
+        <li role="presentation" class="active"><a href="{% url 'admin.de_jobs.entrance.list' %}"  role="tab">همه آزمون ها</a></li>
+        <li role="presentation"><a href="{% url 'admin.de_jobs.entrance.news.list' %}"  role="tab">جدیدترین تغییرات</a></li>
+        <li role="presentation"><a href="{% url 'admin.de_jobs.entrance.typists' %}"  role="tab">تایپیست ها</a></li>
+      </ul>
+        {% endifequal %}
+        {% ifequal ugn 'editor' %}
+
+      <ul class="nav nav-tabs" role="tablist">
+        <li role="presentation" class="active"><a href="{% url 'admin.de_jobs.entrance.list' %}"  role="tab">کارها</a></li>
+        <li role="presentation"><a href="{% url 'admin.de_jobs.finance.entrances.editors' %}"  role="tab">پرداخت ها
+        {% if seen_count > 0 %}
+            <span class="badge">{{seen_count}}</span>
+            {% endif %}
+        </a></li>
+      </ul>
+        {% endifequal %}
+        {% ifequal ugn 'check_in' %}
+
+      <ul class="nav nav-tabs" role="tablist">
+        <li role="presentation" class="active"><a href="{% url 'admin.de_jobs.entrance.list' %}"  role="tab">کارها</a></li>
+        <li role="presentation"><a href="{% url 'admin.de_jobs.finance.entrances.checkers' %}"  role="tab">پرداخت ها
+        {% if seen_count > 0 %}
+            <span class="badge">{{seen_count}}</span>
+            {% endif %}
+        </a></li>
+      </ul>
+        {% endifequal %}
+    </div>
+    <br><br>
+
+    <div class="container-fluid">
+    <br>
+    <div class="row">
+    <div class="col-sm-12">
+        {% if jobs %}
+            {% if ugn == 'master_operator' or ugn == 'job_supervisor' %}
+            <nav class="">
+            <ul class="pager pager-lg">
+                    <li><a href="?page=1"><span>&rarr;</span>&nbsp;ابتدا</a></li>
+                    <li><a href="?page={{ page }}">صفحه {{page}}&nbsp;<span>&larr;</span></a></li>
+            </ul>
+            </nav>
+            {% endif %}
+        <table class="table table-hover">
+            {% if ugn == 'master_operator' %}
+            <thead>
+                <tr>
+                    <th>آزمون</th>
+                    <th>مدیر پنل</th>
+                    <th>زمان ایجاد</th>
+                    <th>آخرین تغییرات</th>
+                    <th>وضعیت</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% load static %}
+                {% load filters %}
+                {% for job in jobs %}
+                    <tr>
+                        <td class="col-md-6 col-sm-6">
+                            <a href="{% url 'admin.de_jobs.entrance.detail' unique_id=job.job_relate_uniqueid.hex %}">
+                                {{job.data.set}} ({{job.data.group}}) ~~ {{ job.data.organization }} - {{job.data.type}} ({{job.data.year}}/{{job.data.month}})
+                            </a>
+                        </td>
+                        <td class="col-md-2 col-sm-2">
+                            {% if job.job_owner %}
+                                <strong>{{job.job_owner.fullname}}</strong>&nbsp;-&nbsp;<span class="text-muted">{{job.job_owner.username}}</span>
+                            {% else %}
+                                -
+                            {% endif %}
+                        </td>
+                        <td class="col-md-2 col-sm-1">
+                            {{ job.created |jalali }}
+                        </td>
+                        <td class="col-md-2 col-sm-1">
+                            {{ job.updated |jalali }}
+                        </td>
+                        <td class="col-md-2 col-sm-1">
+                            {% ifequal job.status 'CREATED' %}
+                                <span class="text-muted">ایجاد شده</span>
+                            {% endifequal %}
+                            {% ifequal job.status 'STARTED' %}
+                                <span class="text-success">شروع شده</span>
+                            {% endifequal %}
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        {% elif ugn == 'job_supervisor' %}
+            <thead>
+                <tr>
+                    <th>آزمون</th>
+                    <th>زمان ایجاد</th>
+                    <th>آخرین تغییرات</th>
+                    <th>وضعیت</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% load static %}
+                {% load filters %}
+                {% for job in jobs %}
+                    <tr>
+                        <td class="col-md-6 col-sm-6">
+                            <a href="{% url 'admin.de_jobs.entrance.detail' unique_id=job.job_relate_uniqueid.hex %}">
+                                {{job.data.set}} ({{job.data.group}}) ~~ {{ job.data.organization }} - {{job.data.type}} ({{job.data.year}}/{{job.data.month}})
+                            </a>
+                        </td>
+                        <td class="col-md-2 col-sm-2">
+                            {{ job.created |jalali }}
+                        </td>
+                        <td class="col-md-2 col-sm-2">
+                            {{ job.updated |jalali }}
+                        </td>
+                        <td class="col-md-2 col-sm-2">
+                            {% ifequal job.status 'CREATED' %}
+                                <span class="text-muted">ایجاد شده</span>
+                            {% endifequal %}
+                            {% ifequal job.status 'STARTED' %}
+                                <span class="text-success">شروع شده</span>
+                            {% endifequal %}
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        {% endif %}
+        {% ifequal ugn 'editor' %}
+            <thead>
+                <tr>
+                    <th>فایل محوله</th>
+                    <th>آخرین تغییرات</th>
+                    <th>وضعیت</th>
+                    <th>تعداد سوالات</th>
+                    <th>قیمت هر سوال</th>
+                    <th>فایل تایپ شده</th>
+                    <th>عملیات</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% load static %}
+                {% load filters %}
+                {% load afilters %}
+                {% with jobs_1=jobs.clone jobs_2=jobs.clone %}
+                {% for job in jobs %}
+                    {% for task in job.data.tasks %}
+                        {% if task.main_editor.user_id == user.id %}
+                        {% if task.state == "REJECTED" or task.state == "TYPE_STARTED" or task.state == "WAIT_FOR_TYPE" %}
+                        {% if task.state == "REJECTED" %}
+                        <tr class="danger">
+                        {% else %}
+                        <tr>
+                            {% endif %}
+                            <td class="col-md-3 col-sm-3">
+                                {% if task.state == 'TYPE_STARTED' %}
+                                 <a href="{% url 'admin.de_jobs.entrance.task.download_orig' unique_id=job.job_relate_uniqueid.hex detail_id=task.task_unique_id.hex %}" target="_blank">{{task.task_unique_id.hex}}</a>
+                                {% else %}
+                                <span>{{task.task_unique_id.hex}}</span>
+                                {% endif %}
+                            </td>
+                            <td class="col-md-2 col-sm-2">
+                                {{ task.updated |jalali }}
+                            </td>
+                            <td class="col-md-2 col-sm-2">
+                                {% if task.state == 'WAIT_FOR_TYPE' %}
+                                <span><b>در انتظار تایپ</b></span>
+                                {% elif task.state == 'TYPE_STARTED' %}
+                                <span><b>تایپ شروع شده است</b></span>
+                                {% elif task.state == 'REJECTED' %}
+                                <span><b>فایل ارسالی مردود است</b></span>
+                                {% endif %}
+                            </td>
+                            <td class="col-md-1 col-sm-1">
+                                <span>{{task.q_count}}</span>
+                            </td>
+                            <td class="col-md-1 col-sm-1">
+                                {% if task.state != "SEND_FOR_FINANCE" %}
+                                <span>{{task.price_per_q}}&nbsp;تومان</span>
+                                {% endif %}
+                            </td>
+                            <td class="col-md-1 col-sm-1">
+                                {% if task.term_file %}
+                                    <a href="{% url 'admin.de_jobs.entrance.task.download_main_term' unique_id=job.job_relate_uniqueid.hex detail_id=task.task_unique_id.hex %}" target="_blank">دانلود</a>
+                                {% else %}
+                                    <span class="text-muted">
+                                        فایلی آبلود نشده است
+                                    </span>
+                                {% endif %}
+                            </td>
+                            <td class="col-md-2 col-sm-2">
+                                {% if task.state == 'WAIT_FOR_TYPE' %}
+                                <a class="btn btn-success" href="{% url 'admin.de_jobs.entrance.task.start_type' unique_id=job.job_relate_uniqueid.hex detail_id=task.task_unique_id.hex %}">
+                                    شروع به تایپ
+                                </a>
+                                {% endif %}
+                                {% if task.state == 'REJECTED' %}
+                                {% for d in task.reject_reason %}
+                                    <b class="text-danger">{{d|ereject_res}}</b>&nbsp;&nbsp;
+                                {% endfor %}
+                                &nbsp;&nbsp;
+
+                                <a class="btn btn-danger" href="{% url 'admin.de_jobs.entrance.task.start_type' unique_id=job.job_relate_uniqueid.hex detail_id=task.task_unique_id.hex %}">
+                                    شروع به اصلاح فایل
+                                </a>
+                                {% endif %}
+                                {% if task.state == 'TYPE_STARTED' %}
+                                <button type="button" class="btn btn-warning"  data-toggle="modal" data-target="#typedoneform"
+                            data-task_title="{{task.task_unique_id.hex}}"
+                            data-entranceid="{{job.job_relate_uniqueid.hex}}"
+                            data-taskid="{{task.task_unique_id.hex}}">
+                                    آپلود فایل تایپ شده
+                                </button>
+                                <a class="btn btn-primary" href="{% url 'admin.de_jobs.entrance.task.done_type' unique_id=job.job_relate_uniqueid.hex detail_id=task.task_unique_id.hex %}">
+اتمام تایپ
+                                </a>
+                                {% endif %}
+                            </td>
+                        </tr>
+                        {% endif %}
+                        {% endif %}
+                    {% endfor %}
+                {% endfor %}
+                <tr>
+                    <td colspan="7">&nbsp;<br>&nbsp;</td>
+                </tr>
+                {% for job in jobs_1 %}
+                    {% for task in job.data.tasks %}
+                        {% if task.main_editor.user_id == user.id %}
+                        {% if task.state != "REJECTED" and task.state != "TYPE_STARTED" and task.state != "WAIT_FOR_TYPE" and task.state != "SEND_FOR_FINANCE" and task.state != "PAYED" %}
+                        <tr>
+                            <td class="col-md-3 col-sm-3">
+                                <span>{{task.task_unique_id.hex}}</span>
+                            </td>
+                            <td class="col-md-2 col-sm-2">
+                                {{ task.updated |jalali }}
+                            </td>
+                            <td class="col-md-2 col-sm-2">
+                                <span><b>در انتظار بررسی ...</b></span>
+                            </td>
+                            <td class="col-md-1 col-sm-1">
+                                <span>{{task.q_count}}</span>
+                            </td>
+                            <td class="col-md-1 col-sm-1">
+                                <span>{{task.price_per_q}}&nbsp;تومان</span>
+                            </td>
+                            <td class="col-md-1 col-sm-1">
+                                -
+                            </td>
+                            <td class="col-md-2 col-sm-2">
+                                -
+                            </td>
+                        </tr>
+                {% endif %}
+                        {% endif %}
+                    {% endfor %}
+                {% endfor %}
+                                <tr>
+                    <td colspan="7">&nbsp;<br>&nbsp;</td>
+                </tr>
+                {% for job in jobs_2 %}
+                    {% for task in job.data.tasks %}
+                    {% if task.state == "SEND_FOR_FINANCE" %}
+                        {% if task.main_editor.user_id == user.id %}
+                        <tr class="success">
+                            <td class="col-md-3 col-sm-3">
+                                <span>{{task.task_unique_id.hex}}</span>
+                            </td>
+                            <td class="col-md-2 col-sm-2">
+                                {{ task.updated |jalali }}
+                            </td>
+                            <td class="col-md-2 col-sm-2">
+                                {% if task.state == 'SEND_FOR_FINANCE' %}
+                                <span><b>به واحد مالی ارسال شده است</b></span>
+                                {% endif %}
+                            </td>
+                            <td class="col-md-1 col-sm-1">
+                                <span>{{task.q_count}}</span>
+                            </td>
+                            <td class="col-md-1 col-sm-1">
+                                -
+                            </td>
+                            <td class="col-md-1 col-sm-1">
+                                {% if task.state == "SEND_FOR_FINANCE" %}
+                                <span>{{task.price_per_q_final}}&nbsp;تومان</span>
+                                {% endif %}
+                            </td>
+                            <td class="col-md-2 col-sm-2">
+                                -
+                            </td>
+                        </tr>
+                {% endif %}
+                        {% endif %}
+                    {% endfor %}
+                {% endfor %}
+                {% endwith %}
+            </tbody>
+        {% endifequal %}
+        {% ifequal ugn 'check_in' %}
+            <thead>
+                <tr>
+                    <th>فایل اصلی</th>
+                    <th>فایل تایپ شده</th>
+                    <th>مبحث</th>
+                    <th>آخرین تغییرات</th>
+                    <th>وضعیت</th>
+                    <th>عملیات</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% load static %}
+                {% load filters %}
+                {% load afilters %}
+                {% for job in jobs %}
+                    {% for task in job.data.tasks %}
+                        {% if version == 2 %}
+                            {% if task.state == 'WAIT_FOR_CHECK' %}
+                            <tr>
+                                <td class="col-md-3 col-sm-3">
+                                     <span>{{task.task_unique_id.hex}}</span>
+                                </td>
+                                <td class="col-md-3 col-sm-3">
+                                     <span>{{task.task_unique_id.hex}}</span>
+                                </td>
+                                <td class="col-md-3 col-sm-3">
+                                     <span>-----</span>
+                                </td>
+                                <td class="col-md-2 col-sm-2">
+                                    {{ task.updated |jalali }}
+                                </td>
+                                <td class="col-md-2 col-sm-2">
+                                    <span><b>در انتظار بررسی</b></span>
+                                </td>
+                                <td class="col-md-2 col-sm-2">
+                                    {% if task.state == 'CHECK_DONE' %}
+                                    <a class="btn btn-success" href="{% url 'admin.de_jobs.entrance.task.start_check2' unique_id=job.job_relate_uniqueid.hex detail_id=task.task_unique_id.hex %}">
+                                        شروع بررسی
+                                    </a>
+                                    {% elif task.state == 'WAIT_FOR_CHECK' %}
+                                    <a class="btn btn-success" href="{% url 'admin.de_jobs.entrance.task.start_check' unique_id=job.job_relate_uniqueid.hex detail_id=task.task_unique_id.hex %}">
+                                        شروع بررسی
+                                    </a>
+                                    {% endif %}
+                                </td>
+                            </tr>
+                            {% elif task.state == 'CHECK_DONE' and task.holding_editor.user_id != user.id and checker_state == 'FULL' %}
+                            <tr>
+                                <td class="col-md-3 col-sm-3">
+                                     <span>{{task.task_unique_id.hex}}</span>
+                                </td>
+                                <td class="col-md-3 col-sm-3">
+                                     <span>{{task.task_unique_id.hex}}</span>
+                                </td>
+                                <td class="col-md-3 col-sm-3">
+                                     <span>-----</span>
+                                </td>
+                                <td class="col-md-2 col-sm-2">
+                                    {{ task.updated |jalali }}
+                                </td>
+                                <td class="col-md-2 col-sm-2">
+                                    <span><b>در انتظار بررسی</b></span>
+                                </td>
+                                <td class="col-md-2 col-sm-2">
+                                    {% if task.state == 'CHECK_DONE' %}
+                                    <a class="btn btn-success" href="{% url 'admin.de_jobs.entrance.task.start_check2' unique_id=job.job_relate_uniqueid.hex detail_id=task.task_unique_id.hex %}">
+                                        شروع بررسی
+                                    </a>
+                                    {% elif task.state == 'WAIT_FOR_CHECK' %}
+                                    <a class="btn btn-success" href="{% url 'admin.de_jobs.entrance.task.start_check' unique_id=job.job_relate_uniqueid.hex detail_id=task.task_unique_id.hex %}">
+                                        شروع بررسی
+                                    </a>
+                                    {% endif %}
+                                </td>
+                            </tr>
+                            {% endif %}
+                        {% elif version == 1 %}
+                            {% if task.state == 'CHECK_STARTED' or task.state == 'CHECK2_STARTED' %}
+                                {% if task.holding_editor.user_id == user.id %}
+                                {% if task.holding_editor.description %}
+                                    {% if task.holding_editor.description == "wrong_file" %}
+                                <tr class="danger">
+                                    {% else %}
+                                <tr>
+                                    {% endif %}
+                                {% else %}
+                                <tr>
+                                {% endif %}
+                                    <td class="col-md-3 col-sm-3">
+                                         <a href="{% url 'admin.de_jobs.entrance.task.download_orig' unique_id=job.job_relate_uniqueid.hex detail_id=task.task_unique_id.hex %}" target="_blank">{{task.task_unique_id.hex}}</a>
+                                    </td>
+                                    <td class="col-md-3 col-sm-3">
+                                         <a href="{% url 'admin.de_jobs.entrance.task.download_term' unique_id=job.job_relate_uniqueid.hex detail_id=task.task_unique_id.hex %}" target="_blank">{{task.task_unique_id.hex}}</a>
+                                    </td>
+                                    <td class="col-md-3 col-sm-3">
+                                         <span>{{task.lesson_title}} - <b>{{check_final_cost}}&nbsp;تومان</b></span>
+                                    </td>
+                                    <td class="col-md-2 col-sm-2">
+                                        {{ task.updated |jalali }}
+                                    </td>
+                                    <td class="col-md-2 col-sm-2">
+                                        {% if task.holding_editor.description %}
+                                            {% if task.holding_editor.description == "wrong_file" %}
+                                        <span><b>فایل اشتباه بارگذاری شده است</b></span>
+                                            {% else %}
+                                        <span><b>در حال بررسی</b></span>
+                                            {% endif %}
+                                        {% else %}
+                                        <span><b>در حال بررسی</b></span>
+                                        {% endif %}
+
+                                    </td>
+                                    <td class="col-md-2 col-sm-2">
+                                        {% if task.state == 'CHECK_STARTED' %}
+                                        <button type="button" class="btn btn-success"  data-toggle="modal" data-target="#checkdoneform"
+                                    data-task_title="{{task.task_unique_id.hex}}"
+                                    data-entranceid="{{job.job_relate_uniqueid.hex}}"
+                                    data-taskid="{{task.task_unique_id.hex}}">
+        تایید فایل
+                                        </button>
+                                        {% elif task.state == 'CHECK2_STARTED' %}
+                                        <button type="button" class="btn btn-success"  data-toggle="modal" data-target="#checkdoneform2"
+                                    data-task_title="{{task.task_unique_id.hex}}"
+                                    data-entranceid="{{job.job_relate_uniqueid.hex}}"
+                                    data-taskid="{{task.task_unique_id.hex}}">
+        تایید فایل
+                                        </button>
+                                        {% endif %}
+                                        <button type="button" class="btn btn-danger"  data-toggle="modal" data-target="#rejectform"
+                                    data-task_title="{{task.task_unique_id.hex}}"
+                                    data-entranceid="{{job.job_relate_uniqueid.hex}}"
+                                    data-taskid="{{task.task_unique_id.hex}}">
+        رد فایل تایپی
+                                        </button>
+                                    </td>
+                                </tr>
+                                {% endif %}
+                            {% endif %}
+                        {% endif %}
+                    {% endfor %}
+                {% endfor %}
+            </tbody>
+        {% endifequal %}
+        </table>
+        {% else %}
+            <div class="text-muted text-center">رکوردی ثبت نشده است!</div>
+        {% endif %}
+        <div class="modal fade" id="typedoneform" tabindex="-1" role="dialog" aria-labelledby="typedoneformlabel">
+              <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    {% if form %}
+                    <form id="form1" name="typedoneform" class="form-horizontal" method="post" action="{% url 'admin.de_jobs.entrance.task.upload_type' %}" enctype="multipart/form-data">
+                        {% csrf_token %}
+                  <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="exampleModalLabel"></h4>
+                  </div>
+                  <div class="modal-body">
+                      {{ form.job_unique_key }}
+                      {{ form.task_unique_key }}
+                        <div class="form-group">
+                            <label class="control-label col-sm-3" for="{{ form.term_file.id_for_label }}">فایل تایپ شده:</label>
+                            <div class="col-sm-6">
+                            {{ form.term_file }}
+                            </div>
+                        </div>
+                  </div>
+                  <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">بیخیال</button>
+                    <button type="submit" class="btn btn-primary" value="save_type_done">ذخیره</button>
+                  </div>
+                    </form>
+                    {% endif %}
+                </div>
+              </div>
+            </div>
+        <div class="modal fade" id="checkdoneform" tabindex="-1" role="dialog" aria-labelledby="checkdoneformlabel">
+              <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    {% if form2 %}
+                    <form name="checkdoneform" class="form-horizontal" method="post" action="{% url 'admin.de_jobs.entrance.task.check_done' %}" enctype="multipart/form-data">
+                        {% csrf_token %}
+                  <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="exampleModalLabel2"></h4>
+                  </div>
+                  <div class="modal-body">
+                      {{ form2.job_unique_key }}
+                      {{ form2.task_unique_key }}
+                        <div class="form-group">
+                            <label class="control-label col-sm-3" for="{{ form2.misspelling_count.id_for_label }}">تعداد غلط املایی ثبت شده:</label>
+                            <div class="col-sm-3">
+                            {{ form2.misspelling_count }}
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-sm-3" for="{{ form2.term_file.id_for_label }}">فایل تایید شده:</label>
+                            <div class="col-sm-6">
+                            {{ form2.term_file }}
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-sm-3" for="{{ form2.description.id_for_label }}">توضیحات:</label>
+                            <div class="col-sm-9">
+                            {{ form2.description }}
+                            </div>
+                        </div>
+                  </div>
+                  <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">بیخیال</button>
+                    <button type="submit" class="btn btn-primary" value="save_check_done">ذخیره</button>
+                  </div>
+                    </form>
+                    {% endif %}
+                </div>
+              </div>
+            </div>
+        <div class="modal fade" id="checkdoneform2" tabindex="-1" role="dialog" aria-labelledby="checkdoneform2label">
+              <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    {% if form2 %}
+                    <form name="checkdoneform2" class="form-horizontal" method="post" action="{% url 'admin.de_jobs.entrance.task.accepted' %}" enctype="multipart/form-data">
+                        {% csrf_token %}
+                  <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="exampleModalLabel3"></h4>
+                  </div>
+                  <div class="modal-body">
+                      {{ form2.job_unique_key }}
+                      {{ form2.task_unique_key }}
+                        <div class="form-group">
+                            <label class="control-label col-sm-3" for="{{ form2.misspelling_count.id_for_label }}">تعداد غلط املایی ثبت شده:</label>
+                            <div class="col-sm-3">
+                            {{ form2.misspelling_count }}
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-sm-3" for="{{ form2.term_file.id_for_label }}">فایل تایید شده:</label>
+                            <div class="col-sm-6">
+                            {{ form2.term_file }}
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-sm-3" for="{{ form2.description.id_for_label }}">توضیحات:</label>
+                            <div class="col-sm-9">
+                            {{ form2.description }}
+                            </div>
+                        </div>
+                  </div>
+                  <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">بیخیال</button>
+                    <button type="submit" class="btn btn-primary" value="save_check_done2">ذخیره</button>
+                  </div>
+                    </form>
+                    {% endif %}
+                </div>
+              </div>
+            </div>
+        <div class="modal fade" id="rejectform" tabindex="-1" role="dialog" aria-labelledby="rejectformlabel">
+              <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    {% if form3 %}
+                    <form name="rejectform2" class="form-horizontal" method="post" action="{% url 'admin.de_jobs.entrance.task.rejected' %}" enctype="multipart/form-data">
+                        {% csrf_token %}
+                  <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="exampleModalLabel4"></h4>
+                  </div>
+                  <div class="modal-body">
+                      {{ form3.job_unique_key }}
+                      {{ form3.task_unique_key }}
+                        <div class="form-group">
+                            <label class="control-label col-sm-3" for="{{ form3.reject_reason.id_for_label }}">دلیل رد شدن:</label>
+                            <div class="col-sm-9">
+                            {{ form3.reject_reason }}
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-sm-3" for="{{ form3.description.id_for_label }}">توضیحات:</label>
+                            <div class="col-sm-9">
+                            {{ form3.description }}
+                            </div>
+                        </div>
+                  </div>
+                  <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">بیخیال</button>
+                    <button type="submit" class="btn btn-primary" value="save_check_done2">ذخیره</button>
+                  </div>
+                    </form>
+                    {% endif %}
+                </div>
+              </div>
+            </div>
+    </div>
+    </div>
+    </div></div></div></div>
+{%  endblock %}

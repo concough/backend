@@ -1,0 +1,72 @@
+{% extends 'main/main_layout.html' %}
+{% load staticfiles %}
+{% block description %}
+{% endblock %}
+{% block keywords %}
+{% endblock %}
+{% block title %}Concough - Admin Sign In{% endblock %}
+{% block content %}
+<div class="container">
+<div class="row">
+
+
+<div class="col col-12 col-sm-8 offset-sm-2 col-md-6 offset-md-3">
+    <br><br>
+
+    <div class="card" style="border: none">
+        <div class="card-block">
+            <div class="card-title">
+                <h1 class="h3 text-center" style="font-weight: 200;">Sign In to Concough</h1>
+            </div>
+            <br>
+
+            <form class="form-horizontal" method="post" action="{% url 'main.auth.login' %}">
+                {% csrf_token %}
+                {% if next %}
+                    {% if user.is_authenticated %}
+                        <div class="alert alert-warning text-center alert-dismissable">
+                            Access Forbidden!
+                        </div>
+                    {% else %}
+                        <div class="alert alert-warning text-center alert-dismissable">
+                            Please login first to see this page.
+                        </div>
+                    {% endif %}
+                {% endif %}
+                {% if form.errors %}
+                <div class="alert alert-danger  alert-dismissable">
+                    Wrong Username or Password
+                </div>
+                {% endif %}
+                <div class="form-group">
+                        <label class="control-label sr-only" for="{{ form.username.id_for_label }}">َUsername</label>
+                        {{ form.username }}
+                </div>
+                <div class="form-group">
+                        <label class="control-label sr-only" for="{{ form.password.id_for_label }}">Password:</label>
+                        {{ form.password }}
+                </div>
+                <div class="form-group">
+                    <div class="row align-items-center">
+                    <div class="col col-12 col-md-6">
+                        <button type="submit" class="btn btn-primary  text-center btn-lg btn-block ">Sign In</button>
+                        <input type="hidden" name="next" value="{{ next }}">
+
+                    </div>
+                    <div class="col col-12 col-md-1 hidden-md-down">OR
+                        </div>
+                    <div class="col col-12 col-md-5">
+                        <br class="hidden-md-up">
+                    <a href="{% url 'main.auth.passreset' %}">Forgot Password?</a>
+                        </div>
+
+                    </div>
+                </div>
+                <div class="form-group">
+                </div>
+            </form>
+</div>
+        </div>
+    </div>
+</div></div>
+{% endblock %}

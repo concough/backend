@@ -1,0 +1,170 @@
+{% extends 'admin/contest_layout.html' %}
+{% load staticfiles %}
+{% block title %}لیست آزمون ها{% endblock %}
+{% block content %}
+{{ block.super }}
+<div class="panel panel-default cpanel">
+    <div class="panel-heading">
+    <h5><span class="fa fa-desktop"></span>&nbsp;&nbsp;
+        <a href="{% url 'admin.home' %}">پنل مدیریت سامانه</a>&nbsp;&nbsp;
+        <span class="fa fa-angle-left small"></span>&nbsp;&nbsp;
+        <a href="{% url 'admin.content_mgm.quotes' %}">مدیریت جملات انگیزشی</a>&nbsp;&nbsp;
+        <span class="fa fa-angle-left small"></span>&nbsp;&nbsp;
+جملات انگیزشی
+    </h5>
+
+    </div>
+    <div class="panel-body">
+<br>
+    <div class="container-fluid"><br>
+    <div role="tabpanel">
+      <ul class="nav nav-tabs" role="tablist">
+        <li role="presentation" class="active"><a href="{% url 'admin.content_mgm.quotes' %}"  role="tab">جملات</a></li>
+        <li role="presentation" ><a href="{% url 'admin.content_mgm.quotes.categories' %}"  role="tab">دسته ها</a></li>
+      </ul>
+    </div>
+
+    <h4>
+            <span class="search-box">
+                <a href="{% url 'admin.content_mgm.quotes.add' %}" class="btn btn-lg btn-success pull-left">جمله جدید</a>
+            </span>
+    </h4>
+    <br>
+    {% if categories %}
+
+    <div class="row">
+        <div class="col-sm-12">
+        <br>
+            <div class="panel panel-default">
+                <div class="panel-body">
+                        {% if selected_code == "all" %}
+                        <a class="btn btn-default active" href="?code=all">همه</a>
+                        {% else %}
+                        <a class="btn btn-danger" href="?code=all">همه</a>
+                        {% endif %}
+                    {% for cat in categories %}
+                        {% if selected_code == cat.code %}
+                        <a class="btn btn-default active" href="?code={{cat.code}}">{{cat.title}}</a>
+                        {% else %}
+                        <a class="btn btn-danger" href="?code={{cat.code}}">{{cat.title}}</a>
+                        {% endif %}
+                    {% endfor %}
+                </div>
+            </div>
+            </div>
+    </div>
+    <br>
+    {% endif %}
+    <div class="row">
+    <div class="col-sm-12">
+        {% if quotes %}
+            <nav class="">
+            <ul class="pager pager-lg">
+                    <li><a href="?page=1&code={{selected_code}}"><span>&rarr;</span>&nbsp;ابتدا</a></li>
+                    {% if quotes.has_previous %}
+                        <li><a href="?page={{ quotes.previous_page_number }}&code={{selected_code}}">قبلی</a></li>
+                    {% else %}
+                        <li class="disabled"><a href="#">قبلی</a></li>
+                    {% endif %}
+
+                    &nbsp;&nbsp;&nbsp;&nbsp;صفحه {{ quotes.number }} از {{ quotes.paginator.num_pages }}&nbsp;&nbsp;&nbsp;&nbsp;
+
+                    {% if quotes.has_next %}
+                        <li><a href="?page={{ quotes.next_page_number }}&code={{selected_code}}">بعدی</a></li>
+                    {% else %}
+                        <li class="disabled"><a href="#">بعدی</a></li>
+                    {% endif %}
+                    <li><a href="?page={{ quotes.paginator.num_pages }}&code={{selected_code}}">انتها&nbsp;<span>&larr;</span></a></li>
+            </ul>
+            </nav>
+
+        <table class="table table-hover">
+            <thead>
+                <tr>
+                    <th>عکس اصلی</th>
+                    <th>عکس بک</th>
+                    <th>عنوان</th>
+                    <th>توضیحات</th>
+                    <th>وبلاگ</th>
+                    <th>اپلیکیشن</th>
+                    <th>تاریخ بروزرسانی</th>
+                    <th>عملیات</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% load static %}
+                {% load filters %}
+                {% load afilters %}
+                {% for q in quotes %}
+                    <tr>
+                        <td class="">
+                            {% if q.main_image %}
+                            <img class="img-rounded" src="{{ q.main_image.url }}"
+                                 alt="" width="100" data-toggle="modal"
+                                 data-target="#picQuoteModal" data-picture="{{ q.main_image.url }}"
+                                 data-title="عکس اصلی"
+                            >
+                            {% endif %}
+                        </td>
+                        <td class="">
+                            {% if q.main_image_back %}
+                            <img class="img-rounded" src="{{ q.main_image_back.url }}"
+                                                           alt="" width="100" data-toggle="modal"
+                                 data-target="#picQuoteModal" data-picture="{{ q.main_image_back.url }}"
+                                 data-title="عکس بک">
+                            {% endif %}
+                        </td>
+                        <td class="">{{q.title_fa}}<br>{{q.title_en}}</td>
+                        <td>
+                            نویسنده:&nbsp;<b>{{q.author}}</b><br>
+                            منتشرکننده:&nbsp;<b>{{q.company_name}}</b><br>
+                            دسته:&nbsp;
+                            {% for cat in q.category.all %}
+                                <label class="label label-info">{{cat.title}}</label>&nbsp;
+                            {% endfor %}
+                            <br><br>
+                            تنظیمات:&nbsp;<label class="label" style="background: {{q.title_back_color}}" >&nbsp;&nbsp;&nbsp;&nbsp;</label>&nbsp;&nbsp;{{q.title_back_alpha}}
+                        </td>
+                        <td>{{q.blog_show_count}}</td>
+                        <td>{{q.app_show_count}}</td>
+                        <td>{{q.updated|jalali}}</td>
+                        <td class="">
+                            <a href="{% url 'admin.content_mgm.quotes.edit' pk=q.id %}" class="btn btn-sm btn-default text-warning fa fa-pencil"
+                                    data-toggle="tooltip" data-placement="top" data-original-title="ویرایش"></a>
+                            <a href="{% url 'admin.content_mgm.quotes.del' pk=q.id %}" class="btn btn-sm btn-default text-danger fa fa-power-off"
+                                    data-toggle="tooltip" data-placement="top" data-original-title="حذف"></a>
+                            <a href="{% url 'admin.content_mgm.quotes.publish.app' pk=q.id %}" class="btn btn-sm btn-primary fa fa-thumbs-up"
+                                    data-toggle="tooltip" data-placement="top" data-original-title="انتشار در اپلیکیشن">&nbsp;اپ</a>
+                            <a href="{% url 'admin.content_mgm.quotes.publish.blog' pk=q.id %}" class="btn btn-sm btn-info fa fa-thumbs-up"
+                                    data-toggle="tooltip" data-placement="top" data-original-title="انتشار در بلاگ">&nbsp;بلاگ</a>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        {% else %}
+            <div class="text-muted text-center">رکوردی ثبت نشده است!</div>
+        {% endif %}
+    </div>
+    </div>
+    </div>
+
+<div class="modal fade" id="picQuoteModal" tabindex="-1" role="dialog" aria-labelledby="picQuoteModalLabel">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                        aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="picQuoteModalLabel">عکس بک</h4>
+            </div>
+            <div class="modal-body text-center">
+                <img src="#" class="big-img img-responsive">
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">بستن</button>
+            </div>
+        </div>
+    </div>
+</div>
+    </div></div>
+{%  endblock %}

@@ -1,0 +1,70 @@
+{% extends 'admin/contest_layout.html' %}
+{% load staticfiles %}
+{% block title %}لیست جدیدترین وظایف آزمون تمام شده{% endblock %}
+{% block content %}
+{{ block.super }}
+<div class="panel panel-default cpanel">
+    <div class="panel-heading">
+    <h5><span class="fa fa-desktop"></span>&nbsp;&nbsp;
+        <a href="{% url 'admin.home' %}">پنل مدیریت سامانه</a>&nbsp;&nbsp;
+        <span class="fa fa-angle-left small"></span>&nbsp;&nbsp;
+        جدیدترین وظایف آزمون تمام شده
+    </h5>
+
+    </div>
+    <div class="panel-body">
+<br>
+    <div class="container-fluid"><br>
+    <div role="tabpanel">
+      <ul class="nav nav-tabs" role="tablist">
+        <li role="presentation" ><a href="{% url 'admin.de_entrance' %}"  role="tab">آزمون ها</a></li>
+        <li role="presentation" class="active"><a href="{% url 'admin.de_entrance.jobs_finished' %}"  role="tab">جدیدترین وظایف تمام شده</a></li>
+      </ul>
+    </div>
+    <br>
+    <div class="row">
+    <div class="col-sm-12">
+        {% if jobs %}
+            <nav class="">
+            <ul class="pager pager-lg">
+                    <li><a href="?page=1"><span>&rarr;</span>&nbsp;ابتدا</a></li>
+                    <li><a href="?page={{ page }}">صفحه {{page}}&nbsp;<span>&larr;</span></a></li>
+            </ul>
+            </nav>
+
+        <table class="table table-hover">
+            <thead>
+                <tr>
+                    <th>مجموعه آزمایشی</th>
+                    <th>آخرین بروزرسانی</th>
+                    <th>عملیات</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% load static %}
+                {% load filters %}
+                {% load afilters %}
+                {% for job in jobs %}
+                    <tr>
+                        <td class="col-md-6 col-sm-6">
+                            {{job.data.set}} ({{job.data.group}}) ~~ {{ job.data.organization }} - {{job.data.type}} ({{job.data.year}}/{{job.data.month}})
+                        </td>
+                        <td class="col-md-2 col-sm-2">
+                            {{ job.updated |jalali }}
+                        </td>
+                        <td>
+                            <a class="btn btn-primary" href="{% url 'admin.de_jobs.entrance.detail' unique_id=job.job_relate_uniqueid.hex %}">پنل وظایف</a>
+                            <a class="btn btn-success" href="{% url 'admin.de_entrance.booklets' pk=entrance_ids|dict_value:job.job_relate_uniqueid.hex %}">صفحه آزمون</a>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        {% else %}
+            <div class="text-muted text-center">رکوردی ثبت نشده است!</div>
+        {% endif %}
+    </div>
+    </div>
+    </div>
+    </div></div>
+{%  endblock %}

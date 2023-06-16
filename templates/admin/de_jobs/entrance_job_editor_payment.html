@@ -1,0 +1,101 @@
+{% extends 'admin/contest_layout.html' %}
+{% block title %}پنل وظایف | آزمون ها{% endblock %}
+{% block content %}
+{{ block.super }}
+<div class="panel panel-default cpanel">
+    <div class="panel-heading">
+    <h3><span class="fa fa-desktop"></span>&nbsp;&nbsp;
+        <a href="{% url 'admin.home' %}">پنل مدیریت سامانه</a>&nbsp;&nbsp;
+        <span class="fa fa-angle-left small"></span>&nbsp;&nbsp;
+        <a href="{% url 'admin.de_jobs.entrance.list' %}">پنل وظایف | آزمون ها</a>&nbsp;&nbsp;
+        <span class="fa fa-angle-left small"></span>&nbsp;&nbsp;
+        پرداخت ها
+    </h3>
+        </div>
+    <div class="panel-body"><br>
+    <div class="container-fluid">
+    <div role="tabpanel">
+      <ul class="nav nav-tabs" role="tablist">
+        <li role="presentation"><a href="{% url 'admin.de_jobs.entrance.list' %}"  role="tab">کارها</a></li>
+        <li role="presentation"  class="active"><a href="{% url 'admin.de_jobs.finance.entrances.editors' %}"  role="tab">پرداخت ها
+                {% if seen_count > 0 %}
+            <span class="badge">{{seen_count}}</span>
+            {% endif %}
+
+        </a></li>
+      </ul>
+    </div>
+    <br><br>
+
+    <div class="container-fluid">
+    <br>
+    <div class="row">
+    <div class="col-sm-12">
+        {% if payments %}
+            <nav class="">
+            <ul class="pager pager-lg">
+                    <li><a href="?page=1"><span>&rarr;</span>&nbsp;ابتدا</a></li>
+                    {% if payments.has_previous %}
+                        <li><a href="?page={{ payments.previous_page_number }}">قبلی</a></li>
+                    {% else %}
+                        <li class="disabled"><a href="#">قبلی</a></li>
+                    {% endif %}
+
+                    &nbsp;&nbsp;&nbsp;&nbsp;صفحه {{ payments.number }} از {{ payments.paginator.num_pages }}&nbsp;&nbsp;&nbsp;&nbsp;
+
+                    {% if payments.has_next %}
+                        <li><a href="?page={{ payments.next_page_number }}">بعدی</a></li>
+                    {% else %}
+                        <li class="disabled"><a href="#">بعدی</a></li>
+                    {% endif %}
+                    <li><a href="?page={{ payments.paginator.num_pages }}">انتها&nbsp;<span>&larr;</span></a></li>
+            </ul>
+            </nav>
+        <table class="table table-hover">
+            <thead>
+                <tr>
+                    <th>نوع کار</th>
+                    <th>مبلغ پرداختی</th>
+                    <th>تاریخ</th>
+                    <th>شماره رسید</th>
+                    <th>شماره پیگیری بانک</th>
+                    <th>توضیحات</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% load static %}
+                {% load filters %}
+                {% load afilters %}
+                {% for p in payments %}
+                    {% if p.id in not_seen %}
+                    <tr class="success">
+                    {% else %}
+                    <tr>
+                    {% endif %}
+                        <td>
+                            {% if p.job_type == "ENTRANCE" %}
+                            تایپ آزمون
+                            {% endif %}
+                        </td>
+                        <td>{{p.payed}}&nbsp;تومان</td>
+                        <td>{{p.created|jalali}}</td>
+                        <td>{{p.deposit_id}}</td>
+                        <td>
+                            {% if p.issue_tracking %}
+                                {{p.issue_tracking}}
+                            {% else %}
+                                -
+                            {% endif %}
+                        </td>
+                        <td>{{p.description}}</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        {% else %}
+            <div class="text-muted text-center">رکوردی ثبت نشده است!</div>
+        {% endif %}
+    </div>
+    </div>
+    </div></div></div></div>
+{%  endblock %}

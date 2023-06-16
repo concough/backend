@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html>
+{% load staticfiles %}
+<head lang="en">
+    <meta charset="UTF-8">
+    <title>کنکوق - وظیفه جدید</title>
+</head>
+<body>
+    <div class="text-center" style="text-align: center; border: 1px solid #EEE; direction: rtl">
+        <h1><a href="{{ protocol }}://{{ domain }}" style="text-decoration: none; color:#009afd">کنکوق</a></h1>
+        <h2 style="color: #666;">وظیفه جدید</h2>
+        <br>
+        <p  style="text-align: center; line-height: 2.5; padding: 10px;">
+            <span style="color:#009afd ">کنکور:</span>&nbsp;&nbsp;{{ entrance }}<br>
+            <span style="color:#009afd ">تاریخ:</span>&nbsp;&nbsp;{{ date }}<br>
+            <span style="color:#009afd ">لینک:</span>&nbsp;&nbsp;{{ link }}<br>
+            <br>
+            <span style="color:#009afd ">ویرایشگر اصلی:</span>&nbsp;&nbsp;{{ operator.get_full_name }}<br>
+    </div>
+</body>
+</html>

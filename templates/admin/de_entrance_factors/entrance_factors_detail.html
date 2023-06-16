@@ -1,0 +1,111 @@
+{% extends 'admin/contest_layout.html' %}
+{% block title %}
+    {% if has_error %}
+        ضرایب کنکور - بروز خطا
+    {% else %}
+        ضرایب کنکور - {{ entrance.entrance_set.title }}: {{ entrance.entrance_type.title }} ({{ entrance.year }}/{{ entrance.month)
+    {% endif %}
+{% endblock %}
+{% block content %}
+{{ block.super }}
+<div class="panel panel-default cpanel">
+    <div class="panel-heading">
+    <h5><span class="fa fa-desktop"></span>&nbsp;&nbsp;
+        <a href="{% url 'admin.home' %}">پنل مدیریت سامانه</a>&nbsp;&nbsp;
+        <span class="fa fa-angle-left small"></span>&nbsp;&nbsp;
+         <a href="{% url 'admin.de_entrance_factors' %}">ضرایب کنکور</a>&nbsp;&nbsp;
+        <span class="fa fa-angle-left small"></span>&nbsp;&nbsp;
+        {% if has_error %}
+            خطا
+        {% else %}
+            {{ entrance.entrance_set.title }}: <span class="text-muted">{{ entrance.entrance_type.title }} ({{ entrance.year }}/{{ entrance.month }})</span>
+        {% endif %}
+    </h5>
+            </div><br>
+    <div class="panel-body"><br>
+    <div class="container-fluid">
+    {% if has_error %}
+        {% ifequal error_no 1 %}
+        <div class="alert alert-danger" role="alert">
+             چنین رکوردی موجود نیست
+            <br>
+            <a href="{% url 'admin.de_entrance_factors' %}" class="btn btn-danger">بازگشت</a>
+        </div>
+        {% endifequal %}
+    {% else %}
+    <h4>
+        <span class="fa fa-list text-success"></span>&nbsp;&nbsp;<span class="">جزئیات</span>
+    </h4>
+    <br><br>
+    <div class="row">
+    <div class="col-sm-6 col-sm-push-6">
+                        <div class="panel panel-success">
+                <div class="panel-heading">ضریب جدید</div>
+                <div class="panel-body">
+
+        <form class="form-inline" method="post" action="{% url 'admin.de_entrance_factors.view' pk=entrance.id %}">
+            {% csrf_token %}
+            {% if has_form_message %}
+                {% ifequal form_message 1 %}
+                    <div class="alert alert-danger text-center">
+                        مشخصات تکراری وارد شده است!
+                    </div>
+                {% endifequal %}
+            {% endif %}
+            <div class="form-group">
+                <label class="sr-only" for="{{ form.subset.id_for_label }}">رشته</label>
+                {{ form.subset }}
+            </div>
+            <div class="form-group">
+                <label class="sr-only" for="{{ form.lesson.id_for_label }}">درس</label>
+                {{ form.lesson }}
+            </div>
+            <div class="form-group">
+                <label class="sr-only" for="{{ form.factor.id_for_label }}">ضریب</label>
+                {{ form.factor }}
+            </div>
+            <button type="submit" class="btn btn-success">اضافه</button>&nbsp;&nbsp;&nbsp;
+            <span class="text-danger">{{ form.factor.errors.0 }}</span>
+        </form></div></div>
+        </div>
+    <div class="col-sm-6 col-sm-pull-6">
+        {% if factors %}
+        <table class="table table-hover">
+            <thead>
+                <tr>
+                    <th>رشته</th>
+                    <th>ضرایب</th>
+                    <th>عملیات</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% load static %}
+                {% for key, value in factors.items %}
+                <tr>
+                    <td>{{ key }}</td>
+                    <td>
+                        {% for item in value %}
+                            <span>{{ item.lesson.title }}:{{ item.factor }}</span>&nbsp;
+                            {% if forloop.last %}
+                            {% else %}
+                             <span class="fa fa-ellipsis-v text-primary"></span>&nbsp;
+                            {% endif %}
+                        {% endfor %}
+                    </td>
+                    <td>
+                        <a href="{% url 'admin.de_entrance_factors.del' pk2=value.0.subset.id pk1=entrance.id %}"
+                           class="btn btn-xs text-danger glyphicon glyphicon-off"></a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        {% else %}
+            <div class="text-muted text-center">رکوردی ثبت نشده است!</div>
+        {% endif %}
+    </div>
+
+    </div>
+    {% endif %}
+    </div></div></div>
+{%  endblock %}

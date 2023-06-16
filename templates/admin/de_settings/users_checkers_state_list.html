@@ -1,0 +1,83 @@
+{% extends 'admin/contest_layout.html' %}
+{% block title %}تنظیمات | مدیریت وضعیت کاربران بررسی کننده{% endblock %}
+{% block content %}
+{{ block.super }}
+<div class="panel panel-default cpanel">
+    <div class="panel-heading">
+    <h5><span class="fa fa-desktop"></span>&nbsp;&nbsp;
+        <a href="{% url 'admin.home' %}">پنل مدیریت سامانه</a>&nbsp;&nbsp;
+        <span class="fa fa-angle-left small"></span>&nbsp;&nbsp;
+        <a href="{% url 'admin.de_settings' %}">تنظیمات</a>&nbsp;&nbsp;
+        <span class="fa fa-angle-left small"></span>&nbsp;&nbsp;
+        مدیریت وضعیت کاربران بررسی کننده
+    </h5>
+    </div><br>
+    <div class="panel-body"><br>
+    <div class="container-fluid">
+    <div role="tabpanel">
+      <ul class="nav nav-tabs" role="tablist">
+        <li role="presentation"><a href="{% url 'admin.de_settings.user_mgmt' %}"  role="tab">کاربران</a></li>
+        <li role="presentation"  class="active"><a href="{% url 'admin.de_settings.user_mgmt.checker_state' %}"  role="tab">مدیریت وضعیت کاربران بررسی کننده</a></li>
+        <li role="presentation"><a href="{% url 'admin.de_settings.user_mgmt.financial' %}"  role="tab">اطلاعات مالی کاربران</a></li>
+      </ul>
+    </div>
+    <br>
+    <div class="container-fluid">
+    <br><br>
+    <div class="row">
+    <div class="col-sm-6 col-sm-push-6">
+                        <div class="panel panel-success">
+                <div class="panel-heading">تغییر وضعیت کاربر بررسی کننده</div>
+                <div class="panel-body">
+
+        <form class="form-inline" method="post">
+            {% csrf_token %}
+            {% if has_form_message %}
+                {% ifequal form_message 1 %}
+                    <div class="alert alert-danger text-center">
+                        مشخصات تکراری وارد شده است!
+                    </div>
+                {% endifequal %}
+            {% endif %}
+            <div class="form-group">
+                <label class="sr-only" for="{{ form.user.id_for_label }}">کاربر</label>
+                {{ form.user }}
+            </div>
+            <div class="form-group">
+                <label class="sr-only" for="{{ form.state.id_for_label }}">وضعیت</label>
+                {{ form.state }}
+            </div>
+            <button type="submit" class="btn btn-success">اضافه</button>&nbsp;&nbsp;&nbsp;
+            <span class="text-danger">{{ form.user.errors.0 }}</span>
+        </form></div></div>
+    </div>
+    <div class="col-sm-6 col-sm-pull-6">
+        {% if checkers_list %}
+        {% load filters %}
+        {% load afilters %}
+        <table class="table table-hover">
+            <thead>
+                <tr>
+                    <th>کاربر</th>
+                    <th>آخرین تغییرات</th>
+                    <th>وضعیت</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for ty in checkers_list %}
+                    <tr>
+                        <td class="col-md-3 col-sm-4">{{ ty.user.get_full_name }} - {{ty.user.username}}</td>
+                        <td class="col-md-3 col-sm-4">{{ ty.updated|jalali }}</td>
+                        <td><strong>{{ty.state|chkstate_res}}</strong></td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        {% else %}
+            <div class="text-muted text-center">رکوردی ثبت نشده است!</div>
+        {% endif %}
+    </div>
+    </div>
+    </div>
+    </div></div></div>
+{%  endblock %}

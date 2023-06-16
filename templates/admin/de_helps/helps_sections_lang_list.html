@@ -1,0 +1,94 @@
+{% extends 'admin/contest_layout.html' %}
+{% load staticfiles %}
+{% block title %}مدیریت راهنما - بخش ها | زبان{% endblock %}
+{% block content %}
+{{ block.super }}
+<div class="panel panel-default cpanel">
+    <div class="panel-heading">
+    <h5><span class="fa fa-desktop"></span>&nbsp;&nbsp;
+        <a href="{% url 'admin.home' %}">پنل مدیریت سامانه</a>&nbsp;&nbsp;
+        <span class="fa fa-angle-left small"></span>&nbsp;&nbsp;
+        <a href="{% url 'admin.help_manage.sections' %}">مدیریت راهنما</a>&nbsp;&nbsp;
+        <span class="fa fa-angle-left small"></span>&nbsp;&nbsp;
+        <a href="{% url 'admin.help_manage.sections.langs.list' unique_id=section.unique_id.hex %}">{{section.title}}</a>&nbsp;&nbsp;
+        <span class="fa fa-angle-left small"></span>&nbsp;&nbsp;
+        زبان ها
+    </h5>
+        </div><br>
+    <div class="panel-body"><br>
+    <div class="container-fluid">
+    <div role="tabpanel">
+      <ul class="nav nav-tabs" role="tablist">
+        <li role="presentation" class="active"><a href="{% url 'admin.help_manage.sections' %}"  role="tab">بخش ها</a></li>
+      </ul>
+    </div>
+    <br>
+    <div class="container-fluid">
+    <br><br>
+    <div class="row">
+    <div class="col-sm-6 col-sm-push-6">
+                        <div class="panel panel-success">
+                <div class="panel-heading bg-success">زبان جدید</div>
+                <div class="panel-body">
+
+        <form class="form-inline" method="post" action="{% url 'admin.help_manage.sections.langs.list' unique_id=section.unique_id.hex %}" enctype="multipart/form-data">
+            {% csrf_token %}
+            {% if has_form_message %}
+                {% ifequal form_message 1 %}
+                    <div class="alert alert-danger text-center">
+                        مشخصات تکراری وارد شده است!
+                    </div>
+                {% endifequal %}
+            {% endif %}
+            <div class="form-group">
+                <label class="sr-only" for="{{ form.title.id_for_label }}">عنوان</label>
+                {{ form.title }}
+            </div>
+            <div class="form-group">
+                <label class="sr-only" for="{{ form.lang.id_for_label }}">زبان</label>
+                {{ form.lang }}
+            </div>
+            <button type="submit" class="btn btn-success">اضافه</button>&nbsp;&nbsp;&nbsp;
+            <span class="text-danger">{{ form.title.errors.0 }}</span>
+        </form></div></div>
+    </div>
+    <div class="col-sm-6 col-sm-pull-6">
+        {% load filters %}
+        {% load afilters %}
+        {% if section %}
+        <table class="table table-hover">
+            <thead>
+                <tr>
+                    <th>زبان</th>
+                    <th>عنوان</th>
+                    <th>لینک</th>
+                    <th>&nbsp;</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for h, val in section.data.items %}
+                    <tr>
+                        <td class="col-md-2 col-sm-4">
+                            {{h|help_lang_res}}
+                        </td>
+                        <td class="col-md-3 col-sm-4">
+                            <a href="{% url 'admin.help_manage.sections.langs.subs' unique_id=section.unique_id.hex lang=h %}">{{ val.title }}</a>
+                        </td>
+                        <td class="col-md-3 col-sm-4">
+                            {{ val.slug }}
+                        </td>
+                        <td>
+                            <a class="btn btn-xs text-danger glyphicon glyphicon-off" href="{% url 'admin.help_manage.sections.langs.del' unique_id=section.unique_id.hex lang=h %}"></a>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        {% else %}
+            <div class="text-muted text-center">رکوردی ثبت نشده است!</div>
+        {% endif %}
+    </div>
+    </div>
+    </div>
+    </div></div></div>
+{%  endblock %}

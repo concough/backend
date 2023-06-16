@@ -1,0 +1,131 @@
+{% extends 'admin/contest_layout.html' %}
+{% block title %}جملاا انگیزشی - جدید{% endblock %}
+{% block content %}
+{{ block.super }}
+<div class="panel panel-default cpanel">
+    <div class="panel-heading">
+    <h5><span class="fa fa-desktop"></span>&nbsp;&nbsp;
+        <a href="{% url 'admin.home' %}">پنل مدیریت سامانه</a>&nbsp;&nbsp;
+        <span class="fa fa-angle-left small"></span>&nbsp;&nbsp;
+        <a href="{% url 'admin.content_mgm.quotes' %}">مدیریت جملات انگیزشی</a>&nbsp;&nbsp;
+        <span class="fa fa-angle-left small"></span>&nbsp;&nbsp;
+        جدید
+    </h5>
+        </div>
+    <div class="panel-body">
+        <br>
+    <div role="tabpanel">
+      <ul class="nav nav-tabs" role="tablist">
+        <li role="presentation" class="active"><a href="{% url 'admin.content_mgm.quotes' %}"  role="tab">جملات</a></li>
+        <li role="presentation" ><a href="{% url 'admin.content_mgm.quotes.categories' %}"  role="tab">دسته ها</a></li>
+      </ul>
+    </div>
+<br><br>
+    <div class="container-fluid">
+        <br>
+    <div class="">
+    <div class="col-sm-12">
+        <form class="form-horizontal" method="post" action="{% url 'admin.content_mgm.quotes.add' %}" enctype="multipart/form-data">
+            {% csrf_token %}
+            {% if has_form_message %}
+                {% ifequal form_message 1 %}
+                    <div class="alert alert-danger text-center">
+اشکال در ذخیره سازی ... مجددا سعی نمایید.
+                    </div>
+                {% endifequal %}
+            {% endif %}
+            <div class="form-group">
+                <label class="control-label col-sm-2" for="{{ form.company_name.id_for_label }}">منتشر کننده:</label>
+                <div class="col-sm-2">
+                {{ form.company_name }}
+                </div>
+                <div class="col-sm-6">
+                    <span class="text-danger">{{ form.company_name.errors.0 }}</span>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="control-label col-sm-2" for="{{ form.title_fa.id_for_label }}">متن فارسی:</label>
+                <div class="col-sm-6">
+                {{ form.title_fa }}
+                </div>
+                <div class="col-sm-6">
+                    <span class="text-danger">{{ form.title_fa.errors.0 }}</span>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="control-label col-sm-2" for="{{ form.title_en.id_for_label }}">متن انگلیسی:</label>
+                <div class="col-sm-6">
+                {{ form.title_en }}
+                </div>
+                <div class="col-sm-6">
+                    <span class="text-danger">{{ form.title_en.errors.0 }}</span>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="control-label col-sm-2" for="{{ form.author.id_for_label }}">نویسنده:</label>
+                <div class="col-sm-3">
+                {{ form.author }}
+                </div>
+                <div class="col-sm-6">
+                    <span class="text-danger">{{ form.author.errors.0 }}</span>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="control-label col-sm-2" for="{{ form.title_back_color.id_for_label }}">رنگ پس زمینه:</label>
+                <div class="col-sm-1">
+                {{ form.title_back_color }}
+                </div>
+                <div class="col-sm-6">
+                    <span class="text-danger">{{ form.title_back_color.errors.0 }}</span>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="control-label col-sm-2" for="{{ form.title_back_alpha.id_for_label }}">شفافیت پس زمینه:</label>
+                <div class="col-sm-3">
+                {{ form.title_back_alpha }}
+                </div>
+                <div class="col-sm-6">
+                    <span class="text-danger">{{ form.title_back_alpha.errors.0 }}</span>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="control-label col-sm-2" for="{{ form.main_image.id_for_label }}">عکس اصلی:</label>
+                <div class="col-sm-3">
+                {{ form.main_image }}
+                </div>
+                <div class="col-sm-6">
+                    <span class="text-danger">{{ form.main_image.errors.0 }}</span>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="control-label col-sm-2" for="{{ form.main_image_back.id_for_label }}">عکس بدون نوشته:</label>
+                <div class="col-sm-3">
+                {{ form.main_image_back }}
+                </div>
+                <div class="col-sm-6">
+                    <span class="text-danger">{{ form.main_image_back.errors.0 }}</span>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="control-label col-sm-2" for="{{ form.temp_category.id_for_label }}">دسته ها:</label>
+                <div class="col-sm-3">
+                {{ form.temp_category }}
+                </div>
+                <div class="col-sm-6">
+                    <span class="text-danger">{{ form.temp_category.errors.0 }}</span>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-sm-2">&nbsp;</div>
+                <div class="col-sm-2">
+                    <button type="submit" class="btn btn-primary btn-block">اضافه</button>
+                </div>
+                <div class="col-sm-1">
+                    <a href="{% url 'admin.content_mgm.quotes' %}" class="btn btn-link">بازگشت</a>
+                </div>
+            </div>
+        </form>
+    </div>
+    </div>
+    </div></div></div>
+{%  endblock %}

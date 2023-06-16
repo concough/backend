@@ -1,0 +1,75 @@
+{% extends 'admin/contest_layout.html' %}
+{% block title %}ضرایب کنکور{% endblock %}
+{% block content %}
+{{ block.super }}
+<div class="panel panel-default cpanel">
+    <div class="panel-heading">
+    <h5><span class="fa fa-desktop"></span>&nbsp;&nbsp;
+        <a href="{% url 'admin.home' %}">پنل مدیریت سامانه</a>&nbsp;&nbsp;
+        <span class="fa fa-angle-left small"></span>&nbsp;&nbsp;
+        ضرایب کنکور
+    </h5>
+        </div><br>
+    <div class="panel-body"><br>
+    <div class="container-fluid">
+    <div class="row">
+    <div class="col-sm-12">
+        {% if entrances %}
+            <nav class="">
+            <ul class="pager pager-lg">
+                    <li><a href="?page=1"><span>&rarr;</span>&nbsp;ابتدا</a></li>
+                    {% if entrances.has_previous %}
+                        <li><a href="?page={{ entrances.previous_page_number }}">قبلی</a></li>
+                    {% else %}
+                        <li class="disabled"><a href="#">قبلی</a></li>
+                    {% endif %}
+
+                    &nbsp;&nbsp;&nbsp;&nbsp;صفحه {{ entrances.number }} از {{ entrances.paginator.num_pages }}&nbsp;&nbsp;&nbsp;&nbsp;
+
+                    {% if entrances.has_next %}
+                        <li><a href="?page={{ entrances.next_page_number }}">بعدی</a></li>
+                    {% else %}
+                        <li class="disabled"><a href="#">بعدی</a></li>
+                    {% endif %}
+                    <li><a href="?page={{ entrances.paginator.num_pages }}">انتها&nbsp;<span>&larr;</span></a></li>
+            </ul>
+            </nav>
+
+        <table class="table table-hover">
+            <thead>
+                <tr>
+                    <th>مجموعه آزمایشی</th>
+                    <th>نوع کنکور</th>
+                    <th>سال</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% load static %}
+                {% for ent in entrances %}
+                    <tr>
+                        <td class="col-md-4 col-sm-4">
+                            {% if ent.entrance_set.image %}
+                            <img class="img-circle" src="{{ ent.entrance_set.image.url }}"
+                                                           alt="" width="40" height="40">
+                            {% else %}
+                                <img class="img-circle" src="{% static 'image/noimage.jpg' %}"
+                                                           alt="no image" width="40" height="40">
+                            {% endif %}
+                            &nbsp;&nbsp;&nbsp;
+                            <a href="{% url 'admin.de_entrance_factors.view' pk=ent.id %}">{{ ent.entrance_set }}</a>
+                        </td>
+                        <td class="col-md-3 col-sm-3">
+                            {{ ent.entrance_type.title }} - {{ ent.organization.title }}
+                        </td>
+                        <td class="col-md-1 col-sm-1">{{ ent.year }}/{{ ent.month }}</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        {% else %}
+            <div class="text-muted text-center">رکوردی ثبت نشده است!</div>
+        {% endif %}
+    </div>
+    </div>
+    </div></div></div>
+{%  endblock %}

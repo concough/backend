@@ -1,0 +1,812 @@
+branch --> v_1.0.2
+
+1 - create "EntranceLogType" fixtures
+2 - question and picture of question manipulation create logs, so "EntranceLogType" table must have some values there.
+
+------------------------------------------------------------------
+branch --> v_1.1.0
+Adding some features to "admin" system.
+
+Features:
+	1 - Questions now can have 2 answers or no answer at all.
+	2 - Add "extra_data" field to "Entrance" table to customizing different entrance on some arguments. For example add "language=fa" to distinguish this entrance from others.
+	3 - Now operator can delete both entrance's booklets and booklet's lessons, each separately
+
+Errors:
+	1 - On "Entrance" instance delete, question images records will been deleted but image files not affected. This error fixed by adding "post_delete" signal
+
+------------------------------------------------------------------
+branch --> v_1.2.0
+Adding more functionality to Auth system
+
+Features:
+	1 - Add "Change Password" capability to each user. Since now on user will can change password of her profile.
+	2 - Add "Reset Password" capability. Since now on, forgotten password users can request reset their password.
+	3 - Add "Settings" tab to admin page --> Administrator now can add, activate, deactivate staff users as needed.
+
+Enhancement:
+	1 - Improvment of "Admin" panel --> adding popover for logout and change password.
+
+------------------------------------------------------------------
+branch --> v_1.2.1
+
+Enhancement:
+	1 - Change picture file names to be hex string
+
+Errors:
+	1 - Entrance "extra_data" max_length was not enough, Expand it to 1000 chars.
+
+------------------------------------------------------------------
+branch --> v_1.3.0
+Web Site Development
+
+Features:
+	1 - Site Intro Created.
+	2 - static files generator with gulp.js created and linked to project.
+
+Errors:
+	1 - Add "site.json" fixture to project to add "concough.com" domain on this table. Form now on links generated email will be true link.
+
+Enhancement:
+	1 - Since html email template does not accept css link, thus all css styles must be inline. All html email template reviewed and correct.
+
+------------------------------------------------------------------
+branch --> v_1.3.1
+
+Enhancement:
+	1 - Change index page title and subtitle
+
+------------------------------------------------------------------
+branch --> v_1.3.2
+
+Errors:
+	1 - upload_data method not work properly and 500 status code occured. It was from email method added recently. I Changed that and now work as desired. 
+
+------------------------------------------------------------------
+branch --> v_1.4.0
+Package and Publish System
+
+Features:
+	1 - Two new tables added for this purpose: EntrancePackageType & EntrancePackage
+	2 - Install lz4 and lz4tools for compress package and saving it
+	3 - packaging feature now added to system and list of updates are available from admin interface
+
+Enhancements:
+	1 - enhance entrance change log data to better scability
+
+------------------------------------------------------------------
+branch --> v_1.4.1
+First API Structure
+
+Procedure:
+	1 - Create ConcoughActivity Table --> each record is one activity about concough site, also reference to destination table trought ContentType table exist.
+	2 - api project created.
+	3 - Create necessary Serializers to satisfy rest api
+
+modifications:
+	1 - Add "updated" field to EntranceSet to track image change
+---------------------------------------------------------------------
+branch --> v_1.5.0
+Oauth 2 Structure
+
+Procedures:
+	1 - Add oauth2_provider project (This version supports scopes support on specific applications)
+	2 - Create "main" application on oauth2
+	3 - create 2 scopes --> activities & auth
+
+
+modifications:
+	1 - Delete pattern (bacause of discontinue support od django) from all "urls.py"
+	2 - Delete '' from all "urls.py"
+	3 - Add OAUTH2_PROVIDER (expire times) to settings
+	4 - change /api/o/ to /api/oauth
+
+---------------------------------------------------------------------
+v_1.6.0
+api v1 authentication
+
+procedures:
+	1 - Add two Tables to api app: PreAuth & Profile --> PreAuth to hold signup process and forgot password process. Profile to hold additional user informations
+	2 - create views and associated serializers to handle signup, forgot password and profile functions
+	3 - coordianate returned error messages.
+	4 - Create email templates.
+
+---------------------------------------------------------------------
+v_1.6.1
+Adding jwt support
+
+procedures:
+    1 - install "rest_framework_jwt" project
+    2 - Add configurations to settings
+    3 - Create different urls for jwt functions (Some Refactorings)
+    4 - Create New Views for jwt functions
+    5 - Separate auth views and profile views
+    6 - Create different views for jwt and oauth by refactoring
+
+---------------------------------------------------------------------
+v_1.6.2
+Enhance entrance package generation
+
+Procedures:
+    1 - return eset id instead of eset url
+    2 - create minified version of content in EntrancePackage table
+    3 - content and minified field of EntrancePackage now updated Successfully.
+    4 - create 2 entrance log types: create_extra_data and clear_extra_data
+    5 - Form now on extra_data of entrance inserted in both content and minified of EntrancePackage
+
+Fixes:
+    1 - delete package now delete concough activity record from db.
+    2 - reset package now check if packages associated to entrance be zero.
+
+---------------------------------------------------------------------
+v_1.6.3
+Archive API's Creation
+
+Procedures:
+    1 - create EntranceTypes list views api
+    2 - create ExaminationGroup list views api based on selected entrance type.
+    3 - create EntranceSet list views api based on selected examination group.
+    4 - create Entrace list views for archive forms api based on entrance set.
+
+Features:
+    1 - Entrance keys can entered with one file as whole.
+Fixes:
+    1 - modify ExaminationGroup Table and relate it to EntranceType Table as 1-to-many --> also modify associated view and form and template in admin
+    2 - delete unique index on title of ExaminationGroup Table and add unique_together meta for (title, etype)
+    3 - Some Admin App -> DEBasicInfoForms & admin App -> Views -> de_basic_info & Template -> admin -> de_basic_info -> * modifications.
+    4 - Add "code" field to EntranceSet Table and edit appropriate Forms and templates
+
+---------------------------------------------------------------------
+v_1.6.4
+Complete Archive Phase and Start Sale Phase
+
+Procedures:
+    1 - add exception handler for rest framework to see what error happened
+    2 - Create Three Tables:
+        - EntranceSaleData --> to store cost of each entrance based on entrance_type
+        - ConcoughUserPurchased --> to store user purchased data
+        - ConcoughProductStatistic --> to store stats of product
+    3 - Create GenericRelation fields on Entrance Table to support reverse lookup on GenericForeignKey
+    4 - Create EntranceViewSet to return entrance data with sale and stats and sale_data
+    5 - Create sample data for testing
+    6 - Create ProductDataViewSet and its serializers to return product sale and stat information
+    7 - Create UserPurchaseViewSet and its serializers to return purchase data record for specific user
+    8 - Create 2 another tables:
+        - ConcoughUserBasket --> to store user basket
+        - ConcoughUserSale --> to store user sales related to specific basket
+    9 - Create BasketViewSet and its serializers to handle basket functions:
+        - load, create basket functions - post, put, remove functions of sales created
+
+Fixes:
+    1 - delete "IsAuthenticated" permissions on rest framework in settings
+    2 - delete "entrance_type" and "entrance_set" from ArchiveEntranceSerializer -> not necessary for now
+
+---------------------------------------------------------------------
+v_1.6.5
+Sale Phase Continue
+
+Procedures:
+    1 - Change "removeProductFormBasket" method of BasketViewSet to remove empty basket record from db
+    2 - Create "checkoutBasket" method of BasketViewSet to handling checkout process:
+        - It also create UserPurchased record
+        - ProductStatistic "purchased" increment by one in atomic way
+    3 - Add "downloaded" field to ConcoughProductStatistic Table to hold downloaded times per user per product
+
+---------------------------------------------------------------------
+v_1.6.6
+Download Entrance Package Image
+
+Procedures:
+    1 - Add get package init function to EntranceViewSet --> get initial package information from server
+
+---------------------------------------------------------------------
+v_1.6.7
+Download Entrance Package Image (Continued)
+
+Procedures:
+    1 - MediaQuestionViewSet Created to encrypt and send question image to user
+    2 - Create ConcoughUserPurchasedFullSerializer to serialize user purchased data with target field.
+    3 - purchase_views api:
+        - getAllPurchases function created to return all purchased record per user
+        - putDownloadPlus function to plus one for user purchased record and concough stats record per product
+    4 - main app --> utils --> create_product_statistic function created to create ConcoughProductStatistic record per product
+    5 - admin app --> views --> de_entrance --> delete_package function fixed for delete all related data
+    6 - admin app --> views --> de_entrance -> add new package system --> not well
+
+Fixes:
+    1 - Some Bugs fixed.
+    2 - entrance_views api --> getPackageInit base64 and some bugs fixed.
+    3 - basket_views api --> base64 and some errors fixed.
+
+---------------------------------------------------------------------
+v_1.6.8
+App Settings
+
+Procedures:
+    1 - profile edit grade function.
+    2 - Change Password function in auth view
+    3 - Create settings_view with two view sets --> Invite Friend & Report Bug
+    4 - Create UserBugReport to hold bugs that reported by user
+    5 - invite template to use in send invite friend request
+    6 - make get package info in entrance_views and question media download in media_views more encrypt by site secure key
+
+Enhancements:
+    1 - change activity views for entrance type to return extra_data and buy count
+
+Fixes:
+    1 - Some Bugs fixed.
+
+---------------------------------------------------------------------
+v_1.6.9
+Enhanced Admin Panel
+
+Procedures:
+    1 - Make upload of images for entrance ajax based:
+        - Create "entrance_question_picture_ajax" function and it's template to handle ajax upload. Also it's route added.
+        - Create "EntranceQuestionPictureAddForm2" class different from v1 - without order and questions - to handle file upload
+        - "jQuery-file-upload" library used to handle ajax upload.
+        - Create "entrance-file-uploader.js" to handling ajax and template manipulation. This file just import in "entrance_pquestions_list.html"
+
+---------------------------------------------------------------------
+v_1.7
+Change Authentication System From Email-based to SMS-based
+
+Procedures:
+    1 - api -> v1 -> views -> auth_views:
+        - Change from Email-based to SMS-based
+        - Delete mail sending procedures
+        - username is now phone number and email is <phone number>@<SITE_NAME> : SITE_NAME is in settings
+    2 - api -> v1 -> views -> profile_views:
+        - Delete mail sending procedures
+    3 - Delete uniqueness of email and username of "PreAuth" table
+
+Fixes:
+    1 - Some Bugs fixed.
+
+---------------------------------------------------------------------
+Connecting Auth to Payam-Resan SMS Center (abolfazl.beh)
+
+Procedures:
+    1 - Create PayamresanSMSProvider and "sms_handelrs" function to handle sms sending
+    2 - Modify auth_views sending sms sections
+
+---------------------------------------------------------------------
+Change "main" App Appearance   (abolfazl.beh)
+
+Procedures:
+    1 - Change "main" app htmls and make it design new
+    2 - Create "gulp.js" project on this project to generate css and js automatically
+    3 - separate development and production of static files
+    4 - Change "reset password" from email-based to sms-based
+    5 - Add Some settings
+    6 - Create Some Auth Forms
+    7 - Create and update error pages template
+
+---------------------------------------------------------------------
+Change Settings to work on server (abolfazl.beh)
+
+---------------------------------------------------------------------
+Some Bugs Fixed (abolfazl.beh)
+
+1 - Auth reset password redirect fixed
+2 - Some settings changed
+3 - "main" app AuthForms fixed
+
+---------------------------------------------------------------------
+Enhancement and Some Bugs Fixed (abolfazl.beh)
+
+1 - package generation of entrances disabled for now.
+2 - RNCryptor iteration number reduced from 10000 to 1000 for performance --> must be changed in iOS and Android version
+    - api v1 -> media_views and entrance views changed in section of encrypting data
+3 - api v1 --> archive_views --> EntranceSetViewSet queryset fixed to include just published entrances
+4 - main app authentication views changed to be sms-centric
+5 - api v1 --> purchase_views --> UserPurchaseViewSet --> bug fixed: purchase_query based on username
+6 - api v1 -> activities urls fixed
+7 - Add Sms Counting policy:
+    - Create "SmsStatus" table for logging sms sending status
+    - When sending sms needed --> first count sms per day --> if more than "settings.SMS_ALLOWED_IN_DAY" --> return error
+8 - Change "EntranceSaleData" table --> add "year" field to be more specific
+    - Change All api serializer and views that need this
+    - Create admin view in basic info section to edit and add new record
+
+---------------------------------------------------------------------
+Entrance month (abolfazl.beh)
+
+1 - Add "month" field to "Entrance" table for future reliability --> also all needed views, forms, serializers and templates changed
+
+---------------------------------------------------------------------
+Change http to https (abolfazl.beh)
+
+1 - All http occurrence changed to https
+
+---------------------------------------------------------------------
+Bug fixed (abolfazl.beh)
+
+1 - profile_views in api fixed --> post function general exception added
+2 - panel "change_password" view and template corrected and (css, js) files path fixed
+3 - Fix login redirect capability (if user logged in)
+4 - Add "month" field to "EntranceSaleData" table for best pricing mechanism
+5 - Tasks now can be hided. ("is_hide" field added to Task table, default is false)
+
+---------------------------------------------------------------------
+Ready To Deploy (abolfazl.beh)
+
+---------------------------------------------------------------------
+SendSms Repeatation fixed (abolfazl.beh)
+
+---------------------------------------------------------------------
+Fix Bug --> api authentication 1 (abolfazl.beh)
+
+---------------------------------------------------------------------
+Enabling Some App (abolfazl.beh)
+
+1 - Enable 'djangorestframwork' and 'djangorestframwork-jwt' on deploy
+
+---------------------------------------------------------------------
+Connecting to ZarinPal (abolfazl.beh)
+
+1 - Enhanced PreAuth functionality
+2 - "token" field in "PreAuth" table was 10 --> changed to 300
+3 - Payment functionality --> now connected to zarinpal --> ready for test
+4 - "verifyCheckout" function added to basket_views api
+5 - Get last version of app based on device name added to API
+6 - "grade_list" api added to profile_views api to list all available entrance types to choose from user
+
+---------------------------------------------------------------------
+Some Bugs Fixed (abolfazl.beh)
+
+1 - "urls.py" of 'main' app fixed
+2 - Change env to "deploy"
+
+---------------------------------------------------------------------
+Some Modifications (abolfazl.beh)
+
+1 - Add 'image' field to 'Organization' table to support organization logo:
+    - All forms and templates and views changed to work appropriately
+2 - "AppVersionRepo" table created to store per device version release in db:
+    - Necessary Forms and templates created
+    - "list" and "add" views created
+    - "main.de_app_manage" permission created and add to 'admin' group
+3 - "PaymentProvider" table forms and template created:
+    - "list" and "add" views created.
+4 - Some templates bugs fixed
+
+---------------------------------------------------------------------
+Some Bugs Fixed (abolfazl.beh)
+
+1 - "organization_list.html" form enctype added to handle file upload
+
+---------------------------------------------------------------------
+Add Kavenegar SMS Provider (abolfazl.beh)
+
+1 - Create KavenegarSMSProvider class to handle sms sending:
+    - Also call support and get status of sms and call functionality added.
+2 - "MediaRestAPI" class --> get organization image added
+3 - Change YEAR_CHOICES static values
+4 - Connect 'sendSms' to kavenegar, also all 'api' app and 'main' app functionality with sms sending corrected
+5 - Also add sms sending capability to checkout api
+
+---------------------------------------------------------------------
+Delete All Migrations and Sync (abolfazl.beh)
+
+---------------------------------------------------------------------
+Get Version and User Registration Per Device (abolfazl.beh)
+
+1 - "UserRegisteredDevice" table created
+2 - API's for create, lock and acquire functionalists created in "auth_views"
+3 - Get grade list api created in "settings_view"
+4 - "ArchiveEntranceSerializer" changed to include more info used in "ArchiveDetail" activities
+5 - Change get profile api to return "grade_string" also
+6 - Change "salt" string of web application
+7 - Change RNCryptor iteration
+
+---------------------------------------------------------------------
+Some Modification on API auth_views (abolfazl.beh)
+
+---------------------------------------------------------------------
+Payment (abolfazl.beh)
+
+1 - Create pay.ir payment mechanism
+2 - Change basket_views API's to include checking purchased items and verify checkout to verify payment
+3 - Modify "payment_views.py" verify method to not empty basket
+4 - Change settings of jwt expire time to 6 hours
+
+---------------------------------------------------------------------
+Some Bugs Fixed (abolfazl.beh)
+
+1 - Entrance make package changed to set extra_data to "" when it is null
+
+---------------------------------------------------------------------
+Some Bugs Fixed (abolfazl.beh)
+
+1 - basket_views post and put to basket query to database fixed
+
+---------------------------------------------------------------------
+Some Bugs Fixed (abolfazl.beh)
+
+1 - API checkout verify method changed to "POST". Also error_type fixed.
+2 - Checkou mechanism enhanced
+
+---------------------------------------------------------------------
+Payir Payment Fixed (abolfazl.beh)
+
+---------------------------------------------------------------------
+Enabling csrf_except on verify payment (abolfazl.beh)
+
+---------------------------------------------------------------------
+API basket_views change verify mechanism (abolfazl.beh)
+
+---------------------------------------------------------------------
+"main" App "payment_views" Function and "pay_result.html" fixed (abolfazl.beh)
+
+---------------------------------------------------------------------
+Some Bugs Fixed (abolfazl.beh)
+
+1 - API "auth_views" bug fixed --> "sender_type" data is wrong
+
+---------------------------------------------------------------------
+API "auth_view" Change Password Fixed to be at Minimum of 6 Chars (abolfazl.beh)
+
+---------------------------------------------------------------------
+User Financial Information (abolfazl.beh)
+
+1 - Template -> side bar menu moved to top for better user experiences.
+2 - Template -> menu regrouped and sub menu born.
+3 - Main menu includes (home, entrances, tasks, app management and settings)
+4 - Basic info section now transfer under entrances
+5 - UserFinancialInformation model created to hold bank financial info:
+    - Also it's controllers and templates to list, add, edit and remove created
+    - Can access from settings -> user management -> user financials
+6 - Two permissions born -> de_entrance, de_entrance_basic_info, de_settings.usermgmt.financial:
+    - de_entrance -> for main menu access
+    - de_entrance_basic_info -> for editing basic info of entrances
+7 - Font of templates changed to "IranSans" to better user experience.
+
+---------------------------------------------------------------------
+Job Panel Started (abolfazl.beh)
+
+1 - de_jobs view created:
+    - 2 functions just for admin now: list and detail (incomplete)
+    - Also templates created (incomplete)
+2 - Three permissions created: de_jobs, de_jobs.entrance, de_jobs.entrance.manage for now
+3 - "mongoengine" package installed to handle mongo db orm
+4 - One mongodb table created "Job"
+5 - Create job view created in "de_entrance"
+
+---------------------------------------------------------------------
+Job Panel (abolfazl.beh)
+
+1 - Job assign to typist task completed
+2 - "pymongo" package used instead of "mongoengine"
+3 - "DEJobForms" created form job related forms
+4 - "jalalitime" filter added to main app to handle geo to jalali conversion with time included
+
+---------------------------------------------------------------------
+Job Panel Continue (abolfazl.beh)
+
+1 - Some style and templates changed.
+2 - Job panel extending continued.
+
+---------------------------------------------------------------------
+Job Panel Continue (abolfazl.beh)
+
+1 - Salt changed in settings
+2 - Job panels continued
+
+---------------------------------------------------------------------
+Some Bugs Fixed (abolfazl.beh)
+
+1 - api -> profile post -> some checking
+
+---------------------------------------------------------------------
+Job Panel Continue (abolfazl.beh)
+
+1 - Job panels continued
+2 - entrance stat in product_views api modified
+
+---------------------------------------------------------------------
+Job Panel Continue (abolfazl.beh)
+
+1 - admin "de_entrance" --> "list_entrance" query changed
+2 - settings --> TEMPLATE attribute changed:
+    - New templatetags filter added to system
+3 - api > basket_views > list_sales bug fixed
+4 - de_entrance > add extra_data bug fixed (fixture is incomplete)
+5 - admin > de_app_manage > bugs report section added:
+    - 2 sections under app management
+6 - Jobs panel 90% complete
+7 - New SMS message added to system for thank of user who reports bug
+8 - Two models changed:
+    - "replyed" field added to "UserBugReport" table
+
+---------------------------------------------------------------------
+Extra Data Fixed (abolfazl.beh)
+
+---------------------------------------------------------------------
+Bugs Fix and cleanup and Job Panel Finished (abolfazl.beh)
+
+1 - "de_jobs" > entrances > typist > joined to jalali fixed
+2 - "de_entrance" -> list order changed
+3 - "Entrance" model add "is_editing" field to sync with master operator and administrator. Also all related templates changed ("entrance_list" and "entrance_booklet_list")
+4 - Job panel completed for now
+5 - Add two template to "kavenegar" sms panel:
+    - one for acknowledge editor user billing
+    - and one for get thanks to report bug users
+6 - User management edit capability added
+7 - Reports section added to panel:
+    - For now only general reports shows
+
+---------------------------------------------------------------------
+Some Features Added and Bugs Fixed (abolfazl.beh)
+
+1 - Add "seen" field to "EntranceEditorFinanialPayment" table to track seen payments
+2 - "api" app > v1 > auth_view > change_password bugs fixed
+3 - Search on user management list added
+
+---------------------------------------------------------------------
+Some Features Added and Bugs Fixed (abolfazl.beh)
+
+1 - Admin de_jobs > download term and orig filename fixed
+2 - Main Layout copyright fixed to be dynamic
+
+---------------------------------------------------------------------
+Some Bugs Fixed (abolfazl.beh)
+
+---------------------------------------------------------------------
+API Multi Question Dwonload Added and Some Bugs Fixed (abolfazl.beh)
+
+---------------------------------------------------------------------
+Job Panel Orig And Term Filename Fixed (abolfazl.beh)
+
+1 - API > auth_view > change_password min characters length changed to 4
+
+---------------------------------------------------------------------
+Job Panel Start Type Fixed (abolfazl.beh)
+
+---------------------------------------------------------------------
+Job Panel Download Orig File For Check_In Fixed (abolfazl.beh)
+
+---------------------------------------------------------------------
+Some Bugs Fixed (abolfazl.beh)
+
+1 - "de_jobs" > accounting > deposite_id fixed
+2 - "api" > media > get single question bug fixed
+
+---------------------------------------------------------------------
+API > basket_views > loopback for apple testing (abolfazl.beh)
+
+---------------------------------------------------------------------
+Add Device State API to v1 (abolfazl.beh) - 2018-01-21
+
+---------------------------------------------------------------------
+Device State API Fixed (abolfazl.beh) - 2018-01-30
+
+---------------------------------------------------------------------
+Help Management Panel (abolfazl.beh) - 2018-02-02
+
+1 - Help management panel created with all necessary views and templates:
+    - For DB mongodb used
+    - 'django-ckeditor' framework used for description of helps
+    - Some filters created
+2 - Peyment API's have some bugs in logic that fixed (basket_views)
+
+---------------------------------------------------------------------
+Some Bugs Fixed (abolfazl.beh) - 2018-02-02
+
+1 - Payment Bugs Fixed
+
+---------------------------------------------------------------------
+Job Panel Bugs Fixed (abolfazl.beh) - 2018-02-04
+
+1 - Some messages fixed.
+2 - job pay-off functionality fixed
+
+---------------------------------------------------------------------
+Job Panel Finish Job View Added (abolfazl.beh) - 2018-02-06
+
+---------------------------------------------------------------------
+Report Sections (abolfazl.beh) - 2018-02-15
+
+1 - General reports extended for more data
+2 - Campaign reports created to show total hits and charts
+3 - "reporter" group created with permissions of report panel
+4 - some bugs fixed
+
+---------------------------------------------------------------------
+Report Sections (abolfazl.beh) - 2018-02-15 Part 2
+
+1 - Campaign report object show and hide sections added:
+    - also hided sections show now.
+2 - campaign chart color changed. also "created" filter added
+
+---------------------------------------------------------------------
+Report Sections (abolfazl.beh) - 2018-02-15 Part 3
+
+1 - Reports campaign list enhanced
+
+---------------------------------------------------------------------
+Report Sections (abolfazl.beh) - 2018-02-15 Part 4
+
+1 - Reports campaign list enhanced
+
+---------------------------------------------------------------------
+Job Panel (abolfazl.beh) - 2018-02-16
+
+1 - "reporter" group access to panel granted
+2 - Editor panel changed:
+    - Now editors can upload typed file first, then finish the job
+    - Editor's finance panel updated to include "issue_tracking" and "description"
+    - "EntranceEditorFinanialPayment" model changed: "issue_tracking" and "description" fields added.
+
+---------------------------------------------------------------------
+Job Panel Extending (abolfazl.beh) - 2018-02-23
+
+1 - Job panel extended to include many "job_supervisor" that handle assigned job
+2 - 'checker' panel now extended to include payments.
+3 - Job panel now have settings for per check price
+4 - "job_supervisor" group added to system
+5 - "auth_views" of "api" app modified -> for apple lock solution
+
+---------------------------------------------------------------------
+Job Panel Bugs Fixed (abolfazl.beh) - 2018-02-26
+
+1 - Upload type save file in mongodb fixed
+2 - Some Bugs in log jobs fixed
+3 - "auth_view" api -> sms section extend for local testing
+4 - "product_views" some change
+
+---------------------------------------------------------------------
+Job Panel Bugs Fixed (abolfazl.beh) - 2018-02-26 Part 2
+
+1 - entrance job finance template changed.
+
+---------------------------------------------------------------------
+Job Panel Bugs Fixed (abolfazl.beh) - 2018-02-26 Part 3
+
+1 - Rate system fixed
+
+---------------------------------------------------------------------
+Job Panel Some Enhancement (abolfazl.beh) - 2018-02-28
+
+1 - Now "Editor" panel enhanced. Also after reject file "main_term_file" and "term_file" set to None to prevent editor fault.
+2 - "desktop" version added to version settings
+
+---------------------------------------------------------------------
+Job Panel Some Enhancement (abolfazl.beh) - 2018-03-01 Part 2
+
+1 - Now admin of panel can cancel type
+
+---------------------------------------------------------------------
+Job Panel Some Enhancement (abolfazl.beh) - 2018-03-01 Part 3
+
+1 - finance panel updated to include accounting all functionality
+
+---------------------------------------------------------------------
+Some Bugs Fixed (abolfazl.beh) - 2018-03-01 Part 4
+
+---------------------------------------------------------------------
+Job Panel Bugs Fixed (abolfazl.beh) - 2018-03-02
+
+1 - In job list for checker condition added to filter task "CHeCK_DONE" just for full user
+
+---------------------------------------------------------------------
+Content System (abolfazl.beh) - 2018-03-13
+
+1 - Content tab added to panel and help section moved from setting section to this.
+2 - Help panel bugs fixed
+3 - "content_provider" group created.
+4 - "de_content_provide" rule created to manage content system
+
+---------------------------------------------------------------------
+Content System (abolfazl.beh) - 2018-03-17
+
+1 - "de_content_quotes" and "de_content_quotes.manage" rules created on "content_provider" group
+2 - Two tables created to handle quotes: ContentQuotesCategory & ContentQuote
+3 - Quotes panel data entry created and ready to test with it's view and templates
+4 - Entrance list sorting changed.
+5 - Jobs panel bugs fixed:
+    - calculate rate on some place have some issue: fixed.
+    - mongodb gridfs files not deleted on changed > fixed
+6 - Some css changed.
+
+---------------------------------------------------------------------
+Concough User Purchased (abolfazl.beh) - 2018-03-17
+
+1 - "updated" field added to "ConcoughUserPurchased" model to store last update time.
+2 - If update time of "ConcoughUserPurchased" since last time is greater than 5 minute then update.
+3 - Also api serializers of purchased model > "updated" field added
+
+---------------------------------------------------------------------
+Concough API V2 (abolfazl.beh) - 2018-05-26
+
+1 - api > v1 > activity_views > ActivityViewSet ----> filter added to return only allowed activities
+2 - Add "cost_bon" field to "EntranceSaleData" model to support boncough currency
+3 - Add 2 models: "UserWallet" & "UserWalletTransaction" to supports wallet
+4 - api v2 created:
+    - 2 views added: userlog_views and wallet_views
+5 - EntranceMulti support added to admin to create entrance package to sell:
+    - EntranceMulti model and it's views and templates created
+    - add api support for return it
+6 - In getting jwt token or refresh token -> last_login of user saved for accounting
+7 - BonCough digital coins created.
+
+---------------------------------------------------------------------
+Some Bugs Fixed (abolfazl.beh) - 2018-12-13
+
+1 - "add_to_library" of entrance multi api fixed
+2 - Some UI Enhanced
+
+---------------------------------------------------------------------
+Some Modifications on API (abolfazl.beh) - 2019-01-09
+
+---------------------------------------------------------------------
+Job Panel Modification (abolfazl.beh) - 2019-03-05
+
+1 - Job panel check_wrong functionality fixed.
+
+---------------------------------------------------------------------
+Job Panel Modification (abolfazl.beh) - 2019-03-08
+
+1 - Job panel check_wrong functionality fixed.
+
+---------------------------------------------------------------------
+Tags Feature For Entrance (abolfazl.beh) - 2019-05-31
+
+1 - Tags model added to store Tags data for all products
+2 - "de_general" view added to admin app for general purpose functionality
+3 - List, aad and remove functionality with its forms added to "de_entrance" view.
+
+---------------------------------------------------------------------
+Tags Log For Entrance & Entrance Tags By File (abolfazl.beh) - 2019-06-02
+
+1 - Two log types added to EntranceLogType model: "tag_add" and "tag_remove"
+2 - in add and remove tag function log created and saved
+3 - Add new feature to panel for uploading entrance tags by file to system.
+4 - New model (EntranceLessonTagPackage) created to hold entrance tags package data per lesson
+
+---------------------------------------------------------------------
+Entrance Tag Package Panel (abolfazl.beh) - 2019-06-06
+
+1 - Page created to show published and unpublished tag packages
+2 - Publish and delete functionality created on tag packages
+
+---------------------------------------------------------------------
+Refactor Costs Panel (abolfazl.beh) - 2019-06-29
+
+1 - Entrance costs section have moved to new menu item from "basic_info"
+2 - Cache mechanism have removed from templates.
+
+---------------------------------------------------------------------
+Entrance Tags Sale Data Panel (abolfazl.beh) - 2019-06-29
+
+1 - Entrance tags sale data form and panel have created to handle store costs of Entrance Tags price.
+
+---------------------------------------------------------------------
+Entrance Tags API (abolfazl.beh) - 2019-06-29
+
+1 - Some bugs fixed.
+2 - Making package of entrance tags changed to include booklet detail in target of Concough activity model.
+3 - API > v2 > /activities > changed to return entrance tags updates.
+4 - "product_views" > "getEntranceTagsData" function api created to return entrance tags package data with sale and stat info.
+5 - "EntranceTagsPackageSerializer", "EntranceTagsSaleDataSerializer", "EntranceBookletDetailSerializer", "EntranceBookletSerializer" have created.
+6 - Some serializer changed.
+
+---------------------------------------------------------------------
+Some APIs Modification (abolfazl.beh) - 2019-07-04
+
+1 - Some API serializer refactored to prevent bugs
+2 - Entrance tags product_views and entrance_views API created.
+3 - "add_to_library" feature of "purchase_views" have extended to care about purchasing entrance tags.
+4 - Get all purchased API have changed to return all purchased including EntranceTags.
+5 - Some bugs have fixed.
+
+---------------------------------------------------------------------
+Concough Gift Card (abolfazl.beh) - 2019-07-04
+
+1 - "ConcoughGiftCard" model have created. It'll hold the different gift card types.
+2 - Some costs forms have refactored.
+
+---------------------------------------------------------------------
+Mongo Address Changed (abolfazl.beh) - 2020-11-27
+
+1 - Mongo Url Changed

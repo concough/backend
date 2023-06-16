@@ -1,0 +1,89 @@
+{% extends 'dataentry/main_layout.html' %}
+{% block title %}بیغام ها - جواب{% endblock %}
+{% block content %}
+    <h3><span class="fa fa-desktop"></span>&nbsp;&nbsp;
+        <a href="{% url 'dataentry.home' %}">پنل مدیریت سامانه</a>&nbsp;&nbsp;
+        <span class="fa fa-angle-left small"></span>&nbsp;&nbsp;
+        {% if next_url %}
+            <a href="{{ next_url }}">پیغام ها</a>&nbsp;&nbsp;
+        {% else %}
+            <a href="{% url 'dataentry.messages' %}">پیغام ها</a>&nbsp;&nbsp;
+        {% endif %}
+        <span class="fa fa-angle-left small"></span>&nbsp;&nbsp;
+        {% if err %}
+        خطا
+        {% else %}
+        پاسخ پیغام
+        {% endif %}
+    </h3>
+    <hr>
+    <div class="container-fluid">
+    {% if err %}
+        {% ifequal error_no 1 %}
+            <div class="alert alert-danger">
+                چنین پیغامی موجود نیست!
+            <br>
+            <a href="{% url 'dataentry.messages' %}" class="btn btn-danger">بازگشت</a>
+            </div>
+        {% endifequal %}
+    {% else %}
+    <h4>
+    <span class="fa fa-plus text-success"></span>&nbsp;&nbsp;<span class="">پاسخ پیغام</span>
+    &nbsp;<span class="">بر روی کار</span>
+    &nbsp;&nbsp;<span class="text-primary">{{ message.task.entrance }}</span>
+    </h4>
+    <br>
+        <h5><span class="text-muted">متن پیغام:</span>&nbsp;&nbsp;
+            <span>{{ message.message_content }}</span>
+        </h5>
+        <br>
+    <div class="">
+    <div class="col-sm-12">
+        <form class="form-horizontal" method="post" action="{% url 'dataentry.messages.reply' pk=message.id %}?next={{ next_url }}" enctype="multipart/form-data">
+            {% csrf_token %}
+            <div class="form-group">
+                <label class="control-label col-sm-2" for="{{ form.message_type.id_for_label }}">نوع پیغام:</label>
+                <div class="col-sm-3">
+                {{ form.message_type }}
+                </div>
+                <div class="col-sm-6">
+                    <span class="text-danger">{{ form.message_type.errors.0 }}</span>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="control-label col-sm-2" for="{{ form.attached_file.id_for_label }}">الصاق فایل:</label>
+                <div class="col-sm-6">
+                {{ form.attached_file }}
+                </div>
+                <div class="col-sm-4">
+                    <span class="text-danger">{{ form.attached_file.errors.0 }}</span>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="control-label col-sm-2" for="{{ form.message_content.id_for_label }}">متن پیغام:</label>
+                <div class="col-sm-6">
+                {{ form.message_content }}
+                </div>
+                <div class="col-sm-4">
+                    <span class="text-danger">{{ form.message_content.errors.0 }}</span>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-sm-2">&nbsp;</div>
+                <div class="col-sm-2">
+                    <button type="submit" class="btn btn-primary btn-block">اضافه</button>
+                </div>
+                <div class="col-sm-1">
+                    {% if next_url %}
+                    <a href="{{ next_url }}" class="btn btn-link">بازگشت</a>
+                    {% else %}
+                    <a href="{% url 'dataentry.messages' %}" class="btn btn-link">بازگشت</a>
+                    {% endif %}
+                </div>
+            </div>
+        </form>
+    </div>
+    </div>
+    {% endif %}
+    </div>
+{%  endblock %}

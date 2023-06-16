@@ -1,0 +1,85 @@
+{% extends 'admin/contest_layout.html' %}
+{% load staticfiles %}
+{% block title %}مدیریت راهنما - بخش ها{% endblock %}
+{% block content %}
+{{ block.super }}
+<div class="panel panel-default cpanel">
+    <div class="panel-heading">
+    <h5><span class="fa fa-desktop"></span>&nbsp;&nbsp;
+        <a href="{% url 'admin.home' %}">پنل مدیریت سامانه</a>&nbsp;&nbsp;
+        <span class="fa fa-angle-left small"></span>&nbsp;&nbsp;
+        <a href="{% url 'admin.help_manage.sections' %}">مدیریت راهنما</a>&nbsp;&nbsp;
+        <span class="fa fa-angle-left small"></span>&nbsp;&nbsp;
+        بخش ها
+    </h5>
+        </div><br>
+    <div class="panel-body"><br>
+    <div class="container-fluid">
+    <div role="tabpanel">
+      <ul class="nav nav-tabs" role="tablist">
+        <li role="presentation" class="active"><a href="{% url 'admin.help_manage.sections' %}"  role="tab">بخش ها</a></li>
+      </ul>
+    </div>
+    <br><br>
+    <div class="container-fluid">
+        {% if err %}
+            {% ifequal error_no 1 %}
+            <div class="alert alert-danger" role="alert">
+                چنین رکوردی موجود نیست
+                <a href="{% url 'admin.help_manage.sections' %}" class="btn btn-danger pull-left">بازگشت</a>
+            </div>
+            {% endifequal %}
+        {% else %}
+    <h4>
+        <span class="fa fa-plus text-success"></span>&nbsp;&nbsp;<span class="">ویرایش اطلاعات:
+        <span class="text-primary">{{ section.title }}</span>
+    </span>
+    </h4>
+    <br>
+    <div class="row">
+    <div class="col-sm-12">
+        <form class="form-horizontal" method="post" action="{% url 'admin.help_manage.sections.edit' unique_id=section.unique_id.hex %}" enctype="multipart/form-data">
+            {% csrf_token %}
+            <div class="form-group">
+                <label class="control-label col-sm-2" for="{{ form.title.id_for_label }}">عنوان:</label>
+                <div class="col-sm-5">
+                {{ form.title }}
+                </div>
+                <div class="col-sm-3">
+                    <span class="text-danger">{{ form.title.errors.0 }}</span>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="control-label col-sm-2" for="{{ form.color.id_for_label }}">رنگ:</label>
+                <div class="col-sm-3">
+                {{ form.color }}
+                </div>
+                <div class="col-sm-6">
+                    <span class="text-danger">{{ form.color.errors.0 }}</span>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="control-label col-sm-2" for="{{ form.image.id_for_label }}">عکس:</label>
+                <div class="col-sm-3">
+                {{ form.image }}
+                </div>
+                <div class="col-sm-6">
+                    <span class="text-danger">{{ form.image.errors.0 }}</span>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-sm-2">&nbsp;</div>
+                <div class="col-sm-2">
+                    <button type="submit" class="btn btn-primary btn-block">اضافه</button>
+                </div>
+                <div class="col-sm-1">
+                    <a href="{% url 'admin.help_manage.sections' %}" class="btn btn-link">بازگشت</a>
+                </div>
+            </div>
+        </form>
+    </div>
+    </div>
+        {% endif %}
+    </div>
+    </div></div></div>
+{%  endblock %}

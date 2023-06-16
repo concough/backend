@@ -1,0 +1,95 @@
+{% extends 'admin/contest_layout.html' %}
+{% block title %}
+    {% if has_error %}
+        بسته های کلیدواژه آزمون - بروز خطا
+    {% else %}
+        بسته های کلیدواژه آزمون - {{ entrance.entrance_set.title }}: {{ entrance.entrance_type.title }} ({{ entrance.year }}/{{ entrance.month)
+    {% endif %}
+{% endblock %}
+{% block content %}
+{{ block.super }}
+<div class="panel panel-default cpanel">
+    <div class="panel-heading">
+    <h5><span class="fa fa-desktop"></span>&nbsp;&nbsp;
+        <a href="{% url 'admin.home' %}">پنل مدیریت سامانه</a>&nbsp;&nbsp;
+        <span class="fa fa-angle-left small"></span>&nbsp;&nbsp;
+        <a href="{% url 'admin.de_entrance' %}">کنکورها</a>&nbsp;&nbsp;
+        <span class="fa fa-angle-left small"></span>&nbsp;&nbsp;
+        {% if has_error %}
+            خطا
+        {% else %}
+            <a href="{% url 'admin.de_entrance.booklets' pk=entrance.id %}">
+            {{ entrance.entrance_set.title }}: <span class="text-muted">{{ entrance.entrance_type.title }} ({{ entrance.year }}/{{ entrance.month }})</span>
+            </a>&nbsp;&nbsp;
+            <span class="fa fa-angle-left small"></span>&nbsp;&nbsp;
+            بسته های کلیدواژه
+        {% endif %}
+    </h5>
+        </div><br>
+    <div class="panel-body"><br>
+    <div class="container-fluid">
+    {% if has_error %}
+        {% ifequal error_no 1 %}
+        <div class="alert alert-danger" role="alert">
+             چنین رکوردی موجود نیست
+            <br>
+            <a href="{% url 'admin.de_entrance' %}" class="btn btn-danger">بازگشت</a>
+        </div>
+        {% endifequal %}
+    {% else %}
+        <br>
+        <div class="row">
+            <div class="col-sm-12">
+                {% if packages or booklet_details %}
+                <table class="table table-hover">
+                    <thead>
+                        <tr>
+                            <th>درس</th>
+                            <th>کلید شاخص</th>
+                            <th>زمان انتشار</th>
+                            <th>زمان بروزرسانی</th>
+                            <th>انتشار</th>
+                            <th>عملیات</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% load filters %}
+                        {% for bd in booklet_details %}
+                        <tr>
+                            <td><a href="{% url 'admin.de_entrance.tags.list' pk=bd.id %}">{{bd.lesson.full_title}}</a></td>
+                            <td>-</td>
+                            <td>-</td>
+                            <td>-</td>
+                            <td><a class="btn btn-success" href="{% url 'admin.de_entrance.tags.packages.publish' pk=entrance.id bd_id=bd.id %}">انتشار</a></td>
+                            <td>&nbsp;</td>
+                        </tr>
+                        {% endfor %}
+                        {% for pack in packages %}
+                            <tr>
+                            <td><a href="{% url 'admin.de_entrance.tags.list' pk=pack.booklet_detail.id %}">{{pack.booklet_detail.lesson.full_title}}</a></td>
+                            <td>{{pack.unique_key.hex}}</td>
+                            <td>{{ pack.create_time|jalali }}</td>
+                            <td>{{ pack.update_time|jalali }}</td>
+                            <td>
+                                {% if pack.is_changed %}
+                                <a class="btn btn-success" href="{% url 'admin.de_entrance.tags.packages.publish' pk=entrance.id bd_id=pack.booklet_detail.id %}">انتشار</a>
+                                {% else %}
+                                <span class="text-muted">بدون تغییرات</span>
+                                {% endif %}
+                            </td>
+                            <td>
+                                <a href="{% url 'admin.de_entrance.tags.packages.del' pk=entrance.id p_id=pack.id %}" class="btn btn-sm btn-default text-danger fa fa-power-off"
+                                    data-toggle="tooltip" data-placement="top" data-original-title="حذف"></a>
+                            </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+                {% else %}
+                    <div class="text-muted text-center">رکوردی ثبت نشده است!</div>
+                {% endif %}
+            </div>
+        </div>
+    {% endif %}
+    </div></div></div>
+{% endblock %}

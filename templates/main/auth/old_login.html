@@ -1,0 +1,63 @@
+{% extends 'main/noauth_layout.html' %}
+{% block title %}ورود کاربر{% endblock %}
+{% block content %}
+    {% if error_msg_code >= 1 %}
+        {% ifequal error_msg_code 1 %}
+        <div class="col-sm-6 col-md-4 col-sm-offset-3 col-md-offset-4">
+            <div class="alert alert-danger text-center">
+                اکانت شما غیر فعال شده است. لطفا با بخش مدیریت تماس بگیرید.
+            </div>
+        </div>
+        {% endifequal %}
+        {% ifequal error_msg_code 3 %}
+        <div class="col-sm-6 col-md-4 col-sm-offset-3 col-md-offset-4">
+            <div class="alert alert-danger text-center">
+                شما اجازه دسترسی به این قسمت را ندارید!
+            </div>
+        </div>
+        {% endifequal %}
+    {% else %}
+        <div class="col-sm-6 col-md-4 col-sm-offset-2 col-md-offset-4">
+        <br><br>
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <div class="panel-title">ورود کاربر</div>
+        </div>
+        <div class="panel-body">
+            <form class="form-horizontal" method="post" action="{% url 'main.auth.login' %}?next={{ next_path }}">
+                {% csrf_token %}
+                {% if has_auth_error %}
+                    {% ifequal error_msg_code -1 %}
+                        <div class="alert alert-danger text-center alert-dismissable">
+                            نام کاربری یا گذرواژه اشتباه است!
+                        </div>
+                    {% endifequal %}
+                {% endif %}
+                <div class="form-group">
+                    <div class="col-sm-12">
+                {{ form.username }}
+                </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-sm-12">
+                {{ form.password }}
+                </div>
+                </div>
+                <div class="checkbox">
+                    <div class="col-sm-10">{{ form.keep_me_logged_in }}&nbsp;&nbsp;
+                        <label class="control-label" for="{{ form.keep_me_logged_in.id_for_label }}">مرا بخاطر بسپار</label></div>
+
+
+                </div>
+                <br>
+                <div class="form-group">
+                    <div class="col-sm-12">
+                        <button type="submit" class="btn btn-primary btn-block">ورود</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+        </div>
+        </div>
+    {% endif %}
+{% endblock %}

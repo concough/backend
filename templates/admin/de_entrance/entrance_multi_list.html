@@ -1,0 +1,110 @@
+{% extends 'admin/contest_layout.html' %}
+{% load staticfiles %}
+{% block title %}لیست آزمون ها{% endblock %}
+{% block content %}
+{{ block.super }}
+<div class="panel panel-default cpanel">
+    <div class="panel-heading">
+    <h5><span class="fa fa-desktop"></span>&nbsp;&nbsp;
+        <a href="{% url 'admin.home' %}">پنل مدیریت سامانه</a>&nbsp;&nbsp;
+        <span class="fa fa-angle-left small"></span>&nbsp;&nbsp;
+        پکیج آزمون ها
+    </h5>
+
+    </div>
+    <div class="panel-body">
+<br>
+    <div class="container-fluid"><br>
+
+    <h4>
+            <span class="search-box">
+                <a href="{% url 'admin.de_entrance_multi.add' %}" class="btn btn-lg btn-success pull-left">پکیج آزمون جدید</a>
+            </span>
+    </h4>
+    <br>
+    <div class="row">
+    <div class="col-sm-12">
+        {% if entrances %}
+            <nav class="">
+            <ul class="pager pager-lg">
+                    <li><a href="?page=1"><span>&rarr;</span>&nbsp;ابتدا</a></li>
+                    {% if entrances.has_previous %}
+                        <li><a href="?page={{ entrances.previous_page_number }}">قبلی</a></li>
+                    {% else %}
+                        <li class="disabled"><a href="#">قبلی</a></li>
+                    {% endif %}
+
+                    &nbsp;&nbsp;&nbsp;&nbsp;صفحه {{ entrances.number }} از {{ entrances.paginator.num_pages }}&nbsp;&nbsp;&nbsp;&nbsp;
+
+                    {% if entrances.has_next %}
+                        <li><a href="?page={{ entrances.next_page_number }}">بعدی</a></li>
+                    {% else %}
+                        <li class="disabled"><a href="#">بعدی</a></li>
+                    {% endif %}
+                    <li><a href="?page={{ entrances.paginator.num_pages }}">انتها&nbsp;<span>&larr;</span></a></li>
+            </ul>
+            </nav>
+
+        <table class="table table-hover">
+            <thead>
+                <tr>
+                    <th>مجموعه آزمایشی</th>
+                    <th>آزمون ها</th>
+                    <th>تاریخ آخرین انتشار</th>
+                    <th>عملیات</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% load static %}
+                {% load filters %}
+                {% load afilters %}
+                {% for ent in entrances %}
+                    <tr>
+                        <td class="col-md-4 col-sm-4">
+                            {% if ent.entrances.all.0.entrance_set.image %}
+                            <img class="img-circle" src="{{ ent.entrances.all.0.entrance_set.image.url }}"
+                                                           alt="" width="40" height="40">
+                            {% else %}
+                                <img class="img-circle" src="{% static 'image/noimage.jpg' %}"
+                                                           alt="no image" width="40" height="40">
+                            {% endif %}
+                            &nbsp;&nbsp;&nbsp;
+                            <a href="#">{{ ent.entrances.all.0.entrance_set }} - {{ ent.entrances.all.0.organization.title }}</a>
+                        </td>
+                        <td class="col-md-4 col-sm-4">
+                            {% for entrance in ent.entrances.all %}
+                                <span class="label label-info">{{ entrance.year }}/{{ entrance.month }}</span>
+                            {% endfor %}
+                        </td>
+                        <td class="col-md-1 col-sm-1">
+                            {% if ent.published %}
+                                <span class="text-success fa fa-check-square-o"></span>&nbsp;&nbsp;
+                                {{ ent.updated|jalali }}
+                            {% else %}
+                                <span class="text-danger fa fa-square-o"></span>&nbsp;&nbsp;
+                                <span class="text-muted">انتشار نیافته</span>
+                            {% endif %}
+                        </td>
+                        <td class="col-sm-1 col-sm-1">
+                            {% if ent.published %}
+                            <a href="{% url 'admin.de_entrance_multi.unpublish' pk=ent.id %}" class="btn btn-sm btn-default text-warning fa fa-thumbs-down"
+                                    data-toggle="tooltip" data-placement="top" data-original-title="عدم انتشار"></a>
+                            {% else %}
+                            <a href="{% url 'admin.de_entrance_multi.publish' pk=ent.id %}" class="btn btn-sm btn-default text-warning fa fa-thumbs-up"
+                                    data-toggle="tooltip" data-placement="top" data-original-title="انتشار"></a>
+                            {% endif %}
+                            <a href="{% url 'admin.de_entrance_multi.del' pk=ent.id %}" class="btn btn-sm btn-default text-danger fa fa-power-off"
+                                    data-toggle="tooltip" data-placement="top" data-original-title="حذف"></a>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        {% else %}
+            <div class="text-muted text-center">رکوردی ثبت نشده است!</div>
+        {% endif %}
+    </div>
+    </div>
+    </div>
+    </div></div>
+{%  endblock %}

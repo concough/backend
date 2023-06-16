@@ -1,0 +1,149 @@
+{% extends 'admin/contest_layout.html' %}
+{% block title %}
+    {% if has_error %}
+        کنکور - بروز خطا
+    {% else %}
+        کنکور - {{ booklet_detail.booklet.entrance.entrance_set.title }}: {{ booklet_detail.booklet.entrance.entrance_type.title }} ({{ booklet_detail.booklet.entrance.year }}/{{ booklet_detail.booklet.entrance.month) - سوالات
+    {% endif %}
+{% endblock %}
+{% block content %}
+{{ block.super }}
+<div class="panel panel-default cpanel">
+    <div class="panel-heading">
+    <h5><span class="fa fa-desktop"></span>&nbsp;&nbsp;
+        <a href="{% url 'admin.home' %}">پنل مدیریت سامانه</a>&nbsp;&nbsp;
+        <span class="fa fa-angle-left small"></span>&nbsp;&nbsp;
+        <a href="{% url 'admin.de_entrance' %}">کنکورها</a>&nbsp;&nbsp;
+        <span class="fa fa-angle-left small"></span>&nbsp;&nbsp;
+        {% if has_error %}
+            خطا
+        {% else %}
+            <a href="{% url 'admin.de_entrance.booklets' pk=booklet_detail.booklet.entrance.id %}">
+            {{ booklet_detail.booklet.entrance.entrance_set.title }}: <span class="text-muted">
+            {{ booklet_detail.booklet.entrance.entrance_type.title }}-{{ booklet_detail.booklet.entrance.organization.title }} ({{ booklet_detail.booklet.entrance.year }}/{{ booklet_detail.booklet.entrance.month }})</span></a>&nbsp;&nbsp;
+            <span class="fa fa-angle-left small"></span>&nbsp;&nbsp;
+            <a href="{% url 'admin.de_entrance.booklets.list' pk=booklet_detail.booklet.entrance.id %}">{{ booklet_detail.booklet.title }}</a>&nbsp;&nbsp;
+            <span class="fa fa-angle-left small"></span>&nbsp;&nbsp;
+            <a href="{% url 'admin.de_entrance.questions.list' pk=booklet_detail.id %}">{{ booklet_detail.lesson.title }}</a>&nbsp;&nbsp;
+            <span class="fa fa-angle-left small"></span>&nbsp;&nbsp;
+            سوالات
+        {% endif %}
+    </h5>
+    </div><br>
+    <div class="panel-body"><br>
+    <div class="container-fluid">
+    {% if has_error %}
+        {% ifequal error_no 1 %}
+        <div class="alert alert-danger" role="alert">
+             چنین رکوردی موجود نیست
+            <br>
+            <a href="{% url 'admin.de_entrance' %}" class="btn btn-danger">بازگشت</a>
+        </div>
+        {% endifequal %}
+    {% else %}
+            {% load static %}
+                <div class="row">
+            {% if booklet_detail.booklet.entrance.entrance_set.image %}
+            <img class="img-thumbnail img-circle pull-right" src="{{ booklet_detail.booklet.entrance.entrance_set.image.url }}" alt="" width="80" height="80" style="margin-left: 15px;">
+                {%  else %}
+            <img class="img-thumbnail img-circle pull-right" src="{% static 'image/noimage.jpg' %}" alt="no image" style="margin-left: 15px;" width="80" height="80">
+                {% endif %}
+            <div class="container-fluid" style="overflow: hidden">
+                <div class="pull-left text-center">
+                    <h3 style="position: relative; margin-bottom: 20px"><span class="label label-success" >سال {{ booklet_detail.booklet.entrance.year }}&nbsp;ماه {{booklet_detail.booklet.entrance.month}}</span></h3>
+                    <h4 class="">{{ booklet_detail.booklet.title }}</h4>
+                </div>
+                <h3><a href="{% url 'admin.de_entrance.booklets' pk=booklet_detail.booklet.entrance.id %}">
+                    {{ booklet_detail.booklet.entrance.entrance_set.title }}&nbsp;({{ booklet_detail.booklet.entrance.entrance_set.group.title }})</a></h3>
+                <h5>{{ booklet_detail.booklet.entrance.entrance_type.title }} - {{ booklet_detail.booklet.entrance.organization.title }}</h5>
+                <h5 class="">
+                    {% for key, value in edata.items %}
+                        <span class="label label-warning">
+                        <span>{{ key }}:</span>&nbsp;
+                        <span>{{ value }}</span></span>
+                    {% endfor %}
+                </h5>
+        </div></div>
+            <hr>
+            <div class="row">
+                <h2 class="text-center text-success">
+                    {{ booklet_detail.lesson.full_title }}
+                </h2>
+            </div>
+            <hr>
+            <div class="row">
+                <div class="container-fluid">
+                  <ul class="nav nav-pills" role="tablist">
+                    <li role="presentation" class="active"><a href="{% url 'admin.de_entrance.questions.list' pk=booklet_detail.id %}" >سوالات</a></li>
+                    <li role="presentation"><a href="{% url 'admin.de_entrance.pquestions.list' pk=booklet_detail.id %}" >عکس سوالات</a></li>
+                                      <li role="presentation"><a href="{% url 'admin.de_entrance.tags.list' pk=booklet_detail.id %}">کلیدواژه ها</a></li>
+
+                  </ul>
+                </div>
+            <br>
+                    {% if questions %}
+                <div class="col-sm-6 col-sm-push-6">
+                        <div class="panel panel-success" style="position: fixed; width: 35%">
+                <div class="panel-heading">تغییر جواب سوال</div>
+                <div class="panel-body">
+
+        <form id="form1" class="form-inline" method="post" action="{% url 'admin.de_entrance.questions.list' pk=booklet_detail.id %}">
+            {% csrf_token %}
+            {% if has_form_message %}
+                {% ifequal form_message 1 %}
+                    <div class="alert alert-danger text-center">
+                        مشخصات تکراری وارد شده است!
+                    </div>
+                {% endifequal %}
+            {% endif %}
+            <div class="form-group">
+                <label class="sr-only" for="{{ form.question_number.id_for_label }}">شماره سوال:</label>
+                {{ form.question_number }}
+            </div>
+            <div class="form-group">
+                <label class="sr-only" for="{{ form.answer_key.id_for_label }}">جواب سوال</label>
+                {{ form.answer_key }}
+            </div>
+            <button type="submit" class="btn btn-success">اضافه</button>&nbsp;&nbsp;&nbsp;
+            <span class="text-danger">{{ form.question_number.errors.0 }}</span>
+        </form><br />
+        <form id="form2" class="form-inline" method="post" action="{% url 'admin.de_entrance.questions.file' pk=booklet_detail.id %}" enctype="multipart/form-data">
+            {% csrf_token %}
+            <div class="form-group">
+                <label class="sr-only" for="{{ form2.file.id_for_label }}">فایل کلید ها</label>
+                {{ form2.file }}
+            </div>
+            <button type="submit" class="btn btn-info">بار گذاری</button>&nbsp;&nbsp;&nbsp;
+        </form>
+                </div></div>
+
+                </div>
+                <div class="col-sm-6 col-sm-pull-6">
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th>سوال</th>
+                                    <th>جواب</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% load filters %}
+                                {% for q in questions %}
+                                <tr>
+                                    <td>{{ q.question_number }}</td>
+                                    <td>گزینه &nbsp;&nbsp;<strong class="badge">{{ q.answer_key|qa_to_text }}</strong></td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                </div>
+                    {% else %}
+                        <div class="h4 text-center text-muted">
+                            سوالات وارد نشده است!<br><br>
+                            <a href="{% url 'admin.de_entrance.questions.generate' pk=booklet_detail.id %}">تولید سوالات</a>
+                        </div>
+                    {% endif %}
+            </div>
+    {% endif %}
+    </div></div></div>
+{% endblock %}

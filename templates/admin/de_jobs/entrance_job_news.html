@@ -1,0 +1,276 @@
+{% extends 'admin/contest_layout.html' %}
+{% block title %}پنل وظایف | آزمون ها | جدیدترین تغییرات{% endblock %}
+{% block content %}
+{{ block.super }}
+<div class="panel panel-default cpanel">
+    <div class="panel-heading">
+    <h3><span class="fa fa-desktop"></span>&nbsp;&nbsp;
+        <a href="{% url 'admin.home' %}">پنل مدیریت سامانه</a>&nbsp;&nbsp;
+        <span class="fa fa-angle-left small"></span>&nbsp;&nbsp;
+        <a href="{% url 'admin.de_jobs.entrance.list' %}">پنل وظایف | آزمون ها</a>&nbsp;&nbsp;
+        <span class="fa fa-angle-left small"></span>&nbsp;&nbsp;
+        جدیدترید تغییرات
+    </h3>
+        </div>
+    <div class="panel-body"><br>
+    <div class="container-fluid">
+    <div role="tabpanel">
+        {% ifequal ugn 'master_operator' %}
+
+      <ul class="nav nav-tabs" role="tablist">
+        <li role="presentation"><a href="{% url 'admin.de_jobs.entrance.list' %}"  role="tab">همه آزمون ها</a></li>
+        <li role="presentation" class="active"><a href="{% url 'admin.de_jobs.entrance.news.list' %}"  role="tab">جدیدترین تغییرات</a></li>
+        <li role="presentation"><a href="{% url 'admin.de_jobs.entrance.typists' %}"  role="tab">تایپیست ها</a></li>
+      </ul>
+        {% endifequal %}
+    </div>
+    <br><br>
+
+    <div class="container-fluid">
+        <nav class="">
+            <ul class="pager pager-lg">
+                    <li><a href="?page=1"><span>&rarr;</span>&nbsp;ابتدا</a></li>
+                    <li><a href="?page={{ page }}">صفحه {{page}}&nbsp;<span>&larr;</span></a></li>
+            </ul>
+        </nav>
+
+    <br>
+    <div class="row">
+    <div class="col-sm-12">
+        {% if jobs %}
+        <table class="table table-hover">
+            {% ifequal ugn 'master_operator' %}
+            <thead>
+                <tr>
+                    <th>عنوان</th>
+                    <th>پیغام</th>
+                    <th>آخرین بروزرسانی</th>
+                    <th>عملیات</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% load static %}
+                {% load filters %}
+                {% load afilters %}
+                {% for job in jobs %}
+                        <tr>
+                            <td colspan="4">
+                                <a href="{% url 'admin.de_jobs.entrance.detail' unique_id=job.job_relate_uniqueid.hex %}">
+                                        <span class="text-muted"><b>
+                                        {{job.data.set}} ({{job.data.group}}) ~~ {{ job.data.organization }} - {{job.data.type}} ({{job.data.year}}/{{job.data.month}})
+                                            </b></span>
+                                </a>
+                            </td>
+                        </tr>
+                    {% for task in job.data.tasks %}
+                        {% if task.state == "CREATED" or task.state == "TYPE_DONE" or task.state == "ACCEPTED" or task.state == "WAIT_FOR_REJECTED" %}
+                            <tr>
+                                <td class="col-md-3 col-sm-3">
+                                    <a href="{% url 'admin.de_jobs.entrance.detail_with_id' unique_id=job.job_relate_uniqueid.hex detail_id=task.task_unique_id.hex %}">
+                                         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                        <span class="">{{task.lesson_title}}</span>
+                                    </a>
+                                </td>
+                                <td class="col-md-4 col-sm-4">
+                                    {% if task.state == "CREATED" %}
+                                        <span><b>در انتظار انتخاب تایپیست</b></span>
+                                    {% elif task.state == "TYPE_DONE" %}
+                                    <span class="text-warning">
+<span> تایپ توسط:</span>&nbsp;<span><b>{{task.main_editor.fullname}}</b></span>
+                    با نام کاربری
+                    <span><b>{{task.main_editor.username}}</b></span>&nbsp;
+به اتمام رسید.
+                                        </span>
+                                    {% elif task.state == "ACCEPTED" %}
+                                    <span class="text-success">
+                    <span> بررسی مرحله دوم توسط:</span>&nbsp;<span><b>{{task.holding_editor.fullname}}</b></span>
+                    با نام کاربری
+                    <span><b>{{task.holding_editor.username}}</b></span>&nbsp;
+به اتمام رسید.
+</span>
+                                    {% elif task.state == "WAIT_FOR_REJECTED" %}
+                                    <span class="text-danger">
+                    <span> بررسی توسط:</span>&nbsp;<span><b>{{task.holding_editor.fullname}}</b></span>
+                    با نام کاربری
+                    <span><b>{{task.holding_editor.username}}</b></span>&nbsp;
+مردود شد.
+                        &nbsp;&nbsp;
+                        <span class="text-muted">(
+                            {% for d in task.reject_reason %}
+                            <b>{{d|ereject_res}}</b>&nbsp;&nbsp;
+                            {% endfor %}
+                            &nbsp;&nbsp;
+                            توضیحات:
+                            {{task.reject_description}}
+                            )</span>
+</span>
+                                        {% endif %}
+                                </td>
+                                <td class="col-md-1 col-sm-1">
+                                    {{ task.updated |jalali }}
+                                </td>
+                                <td class="col-md-4 col-sm-4">
+                                    {% if task.state == "CREATED" %}
+                                    <button type="button" class="btn btn-success"
+                            data-toggle="modal" data-target="#chooseTypist"
+                            data-task_title="{{task.lesson_title}}"
+                            data-entranceid="{{job.job_relate_uniqueid.hex}}"
+                            data-taskid="{{task.task_unique_id.hex}}">انتخاب تایپیست</button>
+                                    {% elif task.state == "TYPE_DONE" %}
+                            <a class="btn btn-warning" href="{% url 'admin.de_jobs.entrance.task.wait_for_check' unique_id=job.job_relate_uniqueid.hex detail_id=task.task_unique_id.hex %}">ارسال برای بررسی</a>
+                                        <button type="button" class="btn btn-danger"  data-toggle="modal" data-target="#rejectform"
+                                    data-task_title="{{job.data.set}} ({{job.data.group}}) ~~ {{ job.data.organization }} - {{job.data.type}} ({{job.data.year}}) - {{task.lesson_title}}"
+                                    data-entranceid="{{job.job_relate_uniqueid.hex}}"
+                                    data-taskid="{{task.task_unique_id.hex}}">
+        رد فایل تایپی
+                                        </button>
+
+                                    {% elif task.state == "ACCEPTED" %}
+                                                            <button type="button" class="btn btn-success"
+                            data-toggle="modal" data-target="#finalCost"
+                            data-task_title="{{task.lesson_title}}"
+                            data-entranceid="{{job.job_relate_uniqueid.hex}}"
+                            data-taskid="{{task.task_unique_id.hex}}">ارسال برای مالی</button>
+                                    <a class="btn btn-warning" href="{% url 'admin.de_jobs.entrance.task.wait_for_recheck' unique_id=job.job_relate_uniqueid.hex detail_id=task.task_unique_id.hex %}">بررسی مجدد</a>
+                                    <a class="btn btn-danger" href="{% url 'admin.de_jobs.entrance.task.check2_wrong' unique_id=job.job_relate_uniqueid.hex detail_id=task.task_unique_id.hex %}">ارسال به بررسی کننده دوم (فایل اشتباه)</a>
+                                    {% elif task.state == "WAIT_FOR_REJECTED" %}
+                                    <a class="btn btn-warning" href="{% url 'admin.de_jobs.entrance.task.continue_check' unique_id=job.job_relate_uniqueid.hex detail_id=task.task_unique_id.hex %}">ادامه بررسی</a>
+                                    <a class="btn btn-danger" href="{% url 'admin.de_jobs.entrance.task.reject_retype' unique_id=job.job_relate_uniqueid.hex detail_id=task.task_unique_id.hex %}">ارسال به تایپیست برای اصلاحات</a>
+                                        {% if 'WRONG_FILE' in task.reject_reason %}
+                                    <a class="btn btn-danger" href="{% url 'admin.de_jobs.entrance.task.check_wrong' unique_id=job.job_relate_uniqueid.hex detail_id=task.task_unique_id.hex %}">ارسال به بررسی کننده اول (فایل اشتباه)</a>
+                                        {% endif %}
+                                    {% endif %}
+                                    &nbsp;&nbsp;
+                                <a class="btn btn-primary" style="background-color: #FFF !important; color: #2e6da4 !important;" href="{% url 'admin.de_jobs.entrance.task.download_orig' unique_id=job.job_relate_uniqueid.hex detail_id=task.task_unique_id.hex %}" target="_blank">فایل اصلی</a>
+                            {% if task.state != "WAIT_FOR_TYPE" and task.state != "TYPE_STARTED" and task.state != "CREATED" %}
+                                {% if task.main_term_file %}
+                                <a class="btn btn-success" style="background-color: #FFF !important; color: #5cb85c !important;"
+                                   href="{% url 'admin.de_jobs.entrance.task.download_main_term' unique_id=job.job_relate_uniqueid.hex detail_id=task.task_unique_id.hex %}" target="_blank">فایل اصلی تایپ شده</a>
+                                {% endif %}
+
+                                <a class="btn btn-primary" style="background-color: #FFF !important; color: #2e6da4 !important;"
+                                   href="{% url 'admin.de_jobs.entrance.task.download_term' unique_id=job.job_relate_uniqueid.hex detail_id=task.task_unique_id.hex %}" target="_blank">فایل جهت بررسی</a>
+                                {% endif %}
+                                </td>
+                            </tr>
+                        {% endif %}
+                    {% endfor %}
+                {% endfor %}
+            </tbody>
+        {% endifequal %}
+        </table>
+        {% else %}
+            <div class="text-muted text-center">رکوردی ثبت نشده است!</div>
+        {% endif %}
+                    <div class="modal fade" id="chooseTypist" tabindex="-1" role="dialog" aria-labelledby="chooseTypistLabel">
+              <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <form class="form-horizontal" method="post" enctype="multipart/form-data" action="{% url 'admin.de_jobs.entrance.task.choose_typist' %}">
+                        {% csrf_token %}
+                  <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="exampleModalLabel"></h4>
+                  </div>
+                  <div class="modal-body">
+                      {{ form.job_unique_key }}
+                      {{ form.task_unique_key }}
+                        <div class="form-group">
+                            <label class="control-label col-sm-3" for="{{ form.typist.id_for_label }}">تایپیست:</label>
+                            <div class="col-sm-4">
+                            {{ form.typist }}
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-sm-3" for="{{ form.file_type.id_for_label }}">نوع فایل:</label>
+                            <div class="col-sm-4">
+                            {{ form.file_type }}
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-sm-3" for="{{ form.price_per_q.id_for_label }}">قیمت هر سوال:</label>
+                            <div class="col-sm-3">
+                            {{ form.price_per_q }}
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-sm-3" for="{{ form.orig_file.id_for_label }}">فایل:</label>
+                            <div class="col-sm-6">
+                            {{ form.orig_file }}
+                            </div>
+                        </div>
+                  </div>
+                  <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">بیخیال</button>
+                    <button type="submit" class="btn btn-primary">ذخیره</button>
+                  </div>
+                    </form>
+                </div>
+              </div>
+            </div>
+            <div class="modal fade" id="finalCost" tabindex="-1" role="dialog" aria-labelledby="finalCostLabel">
+              <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <form class="form-horizontal" method="post" enctype="multipart/form-data" action="{% url 'admin.de_jobs.entrance.task.send_finance' %}">
+                        {% csrf_token %}
+                  <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="exampleModalLabel2"></h4>
+                  </div>
+                  <div class="modal-body">
+                      {{ form2.job_unique_key }}
+                      {{ form2.task_unique_key }}
+                        <div class="form-group">
+                            <label class="control-label col-sm-3" for="{{ form2.final_cost.id_for_label }}">مبلغ تایید نهایی:</label>
+                            <div class="col-sm-4">
+                            {{ form2.final_cost }}
+                            </div>
+                        </div>
+                  </div>
+                  <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">بیخیال</button>
+                    <button type="submit" class="btn btn-primary">ذخیره</button>
+                  </div>
+                    </form>
+                </div>
+              </div>
+            </div>
+        <div class="modal fade" id="rejectform" tabindex="-1" role="dialog" aria-labelledby="rejectformlabel">
+              <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    {% if form3 %}
+                    <form name="rejectform2" class="form-horizontal" method="post" action="{% url 'admin.de_jobs.entrance.task.rejected' %}" enctype="multipart/form-data">
+                        {% csrf_token %}
+                  <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="exampleModalLabel4"></h4>
+                  </div>
+                  <div class="modal-body">
+                      {{ form3.job_unique_key }}
+                      {{ form3.task_unique_key }}
+                        <div class="form-group">
+                            <label class="control-label col-sm-3" for="{{ form3.reject_reason.id_for_label }}">دلیل رد شدن:</label>
+                            <div class="col-sm-9">
+                            {{ form3.reject_reason }}
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-sm-3" for="{{ form3.description.id_for_label }}">توضیحات:</label>
+                            <div class="col-sm-9">
+                            {{ form3.description }}
+                            </div>
+                        </div>
+                  </div>
+                  <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">بیخیال</button>
+                    <button type="submit" class="btn btn-primary" value="save_check_done2">ذخیره</button>
+                  </div>
+                    </form>
+                    {% endif %}
+                </div>
+              </div>
+            </div>
+
+    </div>
+    </div>
+    </div></div></div></div>
+{%  endblock %}
